@@ -23,7 +23,7 @@ get_ocs_cont_z <- function(n, x_0, x_1, rho_0, rho_1, sigma){
     0.5*(stats::pnorm(x_1, mean = 0, sd = 1) - stats::pnorm(x_0, mean = 0, sd = 1))
   
   ncp_beta <- (rho_1 - rho_0)/sqrt(sigma^2/n)
-  beta <- 1 - stats::pnorm(x_1, mean = ncp_beta, sd = 1) +
+  beta <- stats::pnorm(x_0, mean = ncp_beta, sd = 1) +
     0.5*(stats::pnorm(x_1, mean = ncp_beta, sd = 1) - stats::pnorm(x_0, mean = ncp_beta, sd = 1))
   
   ncp_gamma <- 0.5*(rho_1 - rho_0)/sqrt(sigma^2/n)
