@@ -35,22 +35,14 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom){
   df <- df[df$x0 <= df$n & df$x1 <= df$n & df$x0 <= df$x1,]
 
   # Calculate the error rates for each design
-  alpha <- 1 - stats::pbinom(df$x1, df$n, rho_0) +
-    0.5*(stats::pbinom(df$x1, df$n, rho_0) - stats::pbinom(df$x0, df$n, rho_0))
-
-  beta <- stats::pbinom(df$x0, df$n, rho_1) +
-    0.5*(stats::pbinom(df$x1, df$n, rho_1) - stats::pbinom(df$x0, df$n, rho_1))
-
-  gamma_U <- 1 - stats::pbinom(df$x1, df$n, rho_0 + (rho_1 - rho_0)/2)
-  gamma_L <- stats::pbinom(df$x0, df$n, rho_0 + (rho_1 - rho_0)/2)
-  gamma <- gamma_L + gamma_U
+  ocs <- get_ocs(df$n, df$x0, df$x1, rho_0, rho_1)
 
   # Find which designs satisfy all operating characteristic constraints
-  valid <- alpha <= alpha_nom & beta <= beta_nom & gamma <= gamma_nom
+  valid <- ocs[,1] <= alpha_nom & ocs[,2] <= beta_nom & ocs[,3] <= gamma_nom
 
   if(sum(valid) > 0){
     # Compute the average of all operating characteristics for all designs
-    mean_ocs <- rowMeans(cbind(alpha, beta, gamma_L + gamma_U))
+    mean_ocs <- rowMeans(ocs)
     # Get index of the valid design with minimal mean OC
     j <- which.min(mean_ocs[valid])
     # Get corresponding index of all designs and note the result
