@@ -21,7 +21,9 @@ You can install the development version of TOut from
 devtools::install_github("DTWilson/TOut")
 ```
 
-## Example
+## Example - binary outcome
+
+### Fixed sample size
 
 Suppose we want to use a pilot trial with $n$ participants per arm to
 decide if a larger, definitive trial will be feasible with respect to
@@ -74,3 +76,18 @@ intervention arm will satisfy our constraints
 $\alpha < 0.05, \beta < 0.2, \gamma < 0.5$ if we $stop$ if observing 109
 patients or fewer adhere, $go$ if we observe more that 131 patients
 adhere, and $pause$ otherwise.
+
+### Optimising sample size
+
+TOut uses a simple bisection search to find the lowest sample size which
+can give a valid design satisfying all operating characteristic
+constraints:
+
+``` r
+opt_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
+#> [1] 85 48 55
+```
+
+Here we find that our earlier choice of $n = 200$ was unnecessarily
+large and can be reduced down to $n = 85$ with prgression criteria
+$x_0 = 48$ and $x_1 = 55$.

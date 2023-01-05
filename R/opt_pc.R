@@ -26,6 +26,7 @@
 #' gamma_nom <- 0.9
 #'
 #' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+#' 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom){
   # Create a dataframe of all possible progression criteria for given n
   df <- expand.grid(n = n,
