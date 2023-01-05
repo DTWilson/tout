@@ -2,9 +2,17 @@
 % Please edit documentation in R/opt_design.R
 \name{opt_design}
 \alias{opt_design}
-\title{Find optimal sample zize and progression criteria}
+\title{Find optimal sample size and progression criteria}
 \usage{
-opt_design(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, max_n = NULL)
+opt_design(
+  rho_0,
+  rho_1,
+  alpha_nom,
+  beta_nom,
+  gamma_nom,
+  max_n = NULL,
+  n = NULL
+)
 }
 \arguments{
 \item{rho_0}{Null hypothesis.}
@@ -18,13 +26,18 @@ opt_design(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, max_n = NULL)
 \item{gamma_nom}{Nominal upper constraint on gamma.}
 
 \item{max_n}{Optional upper limit to use in search over sample sizes.}
+
+\item{n}{Optional sample size.}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
 and upper decision threshold; or NULL when no valid designs exist.
 }
 \description{
-Find optimal sample zize and progression criteria
+Given a null and alternative hypothesis, this function searches for the
+lowest sample size such that a design with optimal progression criteria (as
+determined by the function \code{opt_pc}) satisfies upper constraints on three
+operating characteristics.
 }
 \examples{
 rho_0 <- 0.5
