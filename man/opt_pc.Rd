@@ -39,4 +39,5 @@ beta_nom <- 0.2
 gamma_nom <- 0.9
 
 opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+
 }
