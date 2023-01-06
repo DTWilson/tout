@@ -27,7 +27,7 @@
 #' beta_nom <- 0.2
 #' gamma_nom <- 0.9
 #'
-#' opt_pc_cont(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+#' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom)
 #' 
 opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom){
   # Find the value of x_1 which gives a value of beta close to beta_nom

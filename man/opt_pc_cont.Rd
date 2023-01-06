@@ -41,6 +41,6 @@ alpha_nom <- 0.05
 beta_nom <- 0.2
 gamma_nom <- 0.9
 
-opt_pc_cont(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom)
 
 }

@@ -1,10 +1,9 @@
-#' Find optimal progression criteria for a fixed sample size
+#' Find optimal progression criteria for a fixed sample size and binary outcome
 #'
 #' Given a fixed sample size and a null and alternative hypothesis, this function
-#' will enumerate all possible three-outcome decision rules (i.e. all lower and
-#' upper thresholds) and calculate three opiating characteristics (OCs) for each.
-#' If designs which satisfy the three upper constraints on these OCs exist, that
-#' which gives the lowest average OC is returned.
+#' will determine upper and lower progression criteria such that alpha is controlled
+#' exactly, beta is controlled or minimised when control is not feasible, and gamma
+#' is minimised.
 #'
 #' @param n Sample size.
 #' @param rho_0 Null hypothesis.
@@ -14,7 +13,8 @@
 #' @param gamma_nom Nominal upper constraint on gamma.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
-#' and upper decision threshold; or NULL when no valid designs exist.
+#' and upper decision threshold; or NULL when no valid designs exist. Decision 
+#' thresholds are on the outcome scale.
 #' @export
 #'
 #' @examples
@@ -28,28 +28,35 @@
 #' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom){
-  # Create a dataframe of all possible progression criteria for given n
-  df <- expand.grid(n = n,
-                    x0 = 0:n,
-                    x1 = 0:n)
-  df <- df[df$x0 <= df$n & df$x1 <= df$n & df$x0 <= df$x1,]
-
-  # Calculate the error rates for each design
-  ocs <- get_ocs(df$n, df$x0, df$x1, rho_0, rho_1)
-
-  # Find which designs satisfy all operating characteristic constraints
-  valid <- ocs[,1] <= alpha_nom & ocs[,2] <= beta_nom & ocs[,3] <= gamma_nom
-
-  if(sum(valid) > 0){
-    # Compute the average of all operating characteristics for all designs
-    mean_ocs <- rowMeans(ocs)
-    # Get index of the valid design with minimal mean OC
-    j <- which.min(mean_ocs[valid])
-    # Get corresponding index of all designs and note the result
-    i <- which(valid)[j]
-    design <- c(n, df[i, "x0"], df[i, "x1"])
+  
+  x_1s <- 0:n
+  beta <- local_beta(x_1s, n, rho_0, rho_1, alpha_nom)
+  beta2 <- abs(beta - beta_nom)
+  beta3 <- beta2 + (beta > beta_nom)*10
+  
+  x_1 <- x_1s[which.min(beta3)]
+  
+  # Determine the corresponding x_0 to give alpha = alpha_nom
+  z <- 2 - 2*alpha_nom - stats::pbinom(x_1, n, rho_0)
+  x_0 <- stats::qbinom(z, n, rho_0)
+  
+  # Get operating characteristics and check if gamma_nom is satisfied
+  ocs <- get_ocs(n, x_0, x_1, rho_0, rho_1)
+  
+  if(ocs[1] <= alpha_nom & ocs[2] <= beta_nom & ocs[3] <= gamma_nom){
+    design <- c(n, x_0, x_1)
   } else {
     design <- NULL
   }
+  
   return(design)
+}
+
+local_beta <- function(x_1, n, rho_0, rho_1, alpha_nom){
+  # For given x_1 find the x_0 which best satisfies alpha_nom
+  # and return corresponding beta
+  z <- 2 - 2*alpha_nom - stats::pbinom(x_1, n, rho_0)
+  x_0 <- stats::qbinom(z, n, rho_0)
+  ocs <- get_ocs(n, x_0, x_1, rho_0, rho_1)
+  return(ocs[,2] + (x_0 > x_1)*10)
 }

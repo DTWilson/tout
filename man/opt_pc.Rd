@@ -2,7 +2,7 @@
 % Please edit documentation in R/opt_pc.R
 \name{opt_pc}
 \alias{opt_pc}
-\title{Find optimal progression criteria for a fixed sample size}
+\title{Find optimal progression criteria for a fixed sample size and binary outcome}
 \usage{
 opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 }
@@ -21,14 +21,14 @@ opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
-and upper decision threshold; or NULL when no valid designs exist.
+and upper decision threshold; or NULL when no valid designs exist. Decision
+thresholds are on the outcome scale.
 }
 \description{
 Given a fixed sample size and a null and alternative hypothesis, this function
-will enumerate all possible three-outcome decision rules (i.e. all lower and
-upper thresholds) and calculate three opiating characteristics (OCs) for each.
-If designs which satisfy the three upper constraints on these OCs exist, that
-which gives the lowest average OC is returned.
+will determine upper and lower progression criteria such that alpha is controlled
+exactly, beta is controlled or minimised when control is not feasible, and gamma
+is minimised.
 }
 \examples{
 n <- 100
