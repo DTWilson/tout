@@ -2,3 +2,4 @@
 
 export(opt_design)
 export(opt_pc)
+export(opt_pc_cont)

@@ -1,10 +1,9 @@
-#' Find optimal progression criteria for a fixed sample size
+#' Find optimal progression criteria for a fixed sample size and continuous outcome
 #'
 #' Given a fixed sample size and a null and alternative hypothesis, this function
-#' will enumerate all possible three-outcome decision rules (i.e. all lower and
-#' upper thresholds) and calculate three opiating characteristics (OCs) for each.
-#' If designs which satisfy the three upper constraints on these OCs exist, that
-#' which gives the lowest average OC is returned.
+#' will determine upper and lower progression criteria such that alpha is controlled
+#' exactly, beta is controlled or minimised when control is not feasible, and gamma
+#' is minimised.
 #'
 #' @param n Sample size.
 #' @param rho_0 Null hypothesis.
@@ -15,7 +14,8 @@
 #' @param gamma_nom Nominal upper constraint on gamma.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
-#' and upper decision threshold; or NULL when no valid designs exist.
+#' and upper decision threshold; or NULL when no valid designs exist. Decision 
+#' thresholds are on the Z-statistic scale.
 #' @export
 #'
 #' @examples
@@ -30,49 +30,39 @@
 #' opt_pc_cont(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
 opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom){
+  # Find the value of x_1 which gives a value of beta close to beta_nom
+  x_1 <- stats::optimize(objective_f, interval = c(-5, 5),
+           n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 
+           alpha_nom=alpha_nom, beta_nom=beta_nom)$minimum
+  
+  # Determine the corresponding x_0 to give alpha = alpha_nom
+  z <- 2 - 2*alpha_nom - stats::pnorm(x_1)
+  x_0 <- stats::qnorm(2 - 2*alpha_nom - stats::pnorm(x_1))
+  
+  # Get operating characteristics and check if gamma_nom is satisfied
+  ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma)
 
-  
-  
-  # Find which designs satisfy all operating characteristic constraints
-  valid <- alpha <= alpha_nom & beta <= beta_nom & gamma <= gamma_nom
-  
-  if(sum(valid) > 0){
-    # Compute the average of all operating characteristics for all designs
-    mean_ocs <- rowMeans(cbind(alpha, beta, gamma_L + gamma_U))
-    # Get index of the valid design with minimal mean OC
-    j <- which.min(mean_ocs[valid])
-    # Get corresponding index of all designs and note the result
-    i <- which(valid)[j]
-    design <- c(n, df[i, "x0"], df[i, "x1"])
+  if(ocs[3] <= gamma_nom){
+    design <- c(n, x_0, x_1)
   } else {
     design <- NULL
   }
+
   return(design)
 }
 
-get_x_0 <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom){
-  # For any given x_1, we can find the value of x_0 needed
-  # to give exactly alpha = alpha_nom (and return NA if this 
-  # is not possible)
-  z <- 2 - 2*alpha_nom - pnorm(x_1)
+objective_f <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom){
+  z <- 2 - 2*alpha_nom - stats::pnorm(x_1)
   if(z <= 1){
-    x_0 <- qnorm(2 - 2*alpha_nom - pnorm(x_1))
+    x_0 <- stats::qnorm(2 - 2*alpha_nom - stats::pnorm(x_1))
+    if(x_0 <= x_1){
+      ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma)
+      return((ocs[2] - beta_nom)^2)
+    } else {
+      return(10)
+    }
   } else {
-    x_0 <- NA
+    return(10)
   }
 }
-
-objective_f <- function(x_0, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom)
-
-x_1s <- seq(0, 10, 0.1)
-x_0s <- NULL
-for(i in x_1s){
-  x_0s <- c(x_0s, get_x_0(i, n, rho_0, rho_1, sigma, alpha_nom))
-}
-
-# find x_1 which leads to beta = beta_nom, then check if viable w.r.t.
-# gamma < gamma_nom. Note difference to binary case where avg OCs was 
-# minimised when choosing between multiple valid options. Consider revising
-# to make both consistent.
-
 
