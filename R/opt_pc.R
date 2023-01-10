@@ -56,16 +56,16 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   if(ocs[1] <= alpha_nom & ocs[2] <= beta_nom & ocs[3] <= gamma_nom){
     design <- c(n, x_0, x_1)
   } else {
-    design <- NULL
+    design <- c(NA, NA, NA)
   }
   
-  return(design)
+  return(c(design, ocs))
 }
 
-min_x_1 <- function(n, rho_0, alpha_nom, eta =0.5){
+min_x_1 <- function(n, rho_0, alpha_nom, eta = 0.5){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
-  qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
+  stats::qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
 }
 
 opt_x_0 <- function(x_1, n, rho_0, alpha_nom, eta = 0.5){

@@ -20,7 +20,7 @@ opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
 \item{gamma_nom}{Nominal upper constraint on gamma.}
 
 \item{eta}{Probability of an incorrect decision under the null or alternative
-after an intermediate result}
+after an intermediate result. Defaults to 0.5.}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
