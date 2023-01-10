@@ -11,6 +11,8 @@
 #' @param alpha_nom Nominal upper constraint on alpha.
 #' @param beta_nom Nominal upper constraint on beta.
 #' @param gamma_nom Nominal upper constraint on gamma.
+#' @param eta Probability of an incorrect decision under the null or alternative
+#' after an intermediate result. Defaults to 0.5.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold; or NULL when no valid designs exist. Decision 
@@ -27,12 +29,12 @@
 #'
 #' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
-opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom){
+opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   
   x_1s <- 0:n
   
   # For each possible x_1, find the x_0 which gives "exact" control of alpha.
-  x_0s <- opt_x_0(x_1s, n, rho_0, alpha_nom)
+  x_0s <- opt_x_0(x_1s, n, rho_0, alpha_nom, eta)
   
   # Get cosponsoring error rates and extract beta
   ocs <- get_ocs(n, x_0s, x_1s, rho_0, rho_1)
@@ -59,9 +61,9 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom){
   return(design)
 }
 
-opt_x_0 <- function(x_1, n, rho_0, alpha_nom){
+opt_x_0 <- function(x_1, n, rho_0, alpha_nom, eta = 0.5){
   # For given x_1 find the x_0 which best satisfies alpha_nom
-  z <- 2 - 2*alpha_nom - stats::pbinom(x_1, n, rho_0)
+  z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pbinom(x_1, n, rho_0)
   x_0 <- stats::qbinom(z, n, rho_0)
   return(x_0)
 }
