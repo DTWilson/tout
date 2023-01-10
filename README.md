@@ -67,7 +67,6 @@ library(TOut)
 
 opt_pc(n = 100, rho_0 = 0.5, rho_1 = 0.7,
                      alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.5)
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
 #> [1] 100  56  68
 ```
 
@@ -85,24 +84,9 @@ operating characteristic constraints:
 
 ``` r
 opt_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
-
-#> Warning in stats::qbinom(z, n, rho_0): NaNs produced
 #> [1] 85 48 55
 ```
 
 Here we find that our earlier choice of $n = 200$ was unnecessarily
 large and can be reduced down to $n = 85$, with progression criteria
-$x_0 = 48$ and $x_1 = 55$.
+$x_0 = 48$ and $x_1 = 55$ .
