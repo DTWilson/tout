@@ -67,15 +67,16 @@ library(TOut)
 
 opt_pc(n = 100, rho_0 = 0.5, rho_1 = 0.7,
                      alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.5)
-#> [1] 100  56  68
+#> [1] 100.00000000  56.00000000  68.00000000   0.04838276   0.18450332
+#> [6]   0.27637906
 ```
 
-The function `opt_pc` returns a vector of the form $(n, x_0, x_1)$. In
-this case we find that a pilot trial with $n = 200$ patients in the
-intervention arm will satisfy our constraints
-$\alpha < 0.05, \beta < 0.2, \gamma < 0.5$ if we $stop$ when we observe
-109 patients or fewer adhering, $go$ if we observe more that 131
-patients adhering, and $pause$ otherwise.
+The function `opt_pc` returns a vector of the form
+$(n, x_0, x_1, \alpha, \beta, \gamma)$. In this case we find that a
+pilot trial with $n = 100$ patients in the intervention arm will satisfy
+our constraints $\alpha < 0.05, \beta < 0.2, \gamma < 0.5$ if we $stop$
+when we observe 56 patients or fewer adhering, $go$ if we observe more
+that 68 patients adhering, and $pause$ otherwise.
 
 ### Optimising sample size
 
@@ -83,10 +84,10 @@ TOut can also find the lowest sample size which can satisfy all
 operating characteristic constraints:
 
 ``` r
-opt_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
-#> [1] 85 48 55
+TOut_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
+#> [1] 83.00000000 47.00000000 54.00000000  0.04787477  0.09992842  0.44729885
 ```
 
-Here we find that our earlier choice of $n = 200$ was unnecessarily
-large and can be reduced down to $n = 85$, with progression criteria
-$x_0 = 48$ and $x_1 = 55$ .
+Here we find that our earlier choice of $n = 100$ was unnecessarily
+large and can be reduced down to $n = 83$, with progression criteria
+$x_0 = 47$ and $x_1 = 54$.
