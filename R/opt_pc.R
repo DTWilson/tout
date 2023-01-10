@@ -31,7 +31,8 @@
 #' 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   
-  x_1s <- 0:n
+  # Get range of possible x_1s
+  x_1s <- min_x_1(n, rho_0, alpha_nom, eta):n
   
   # For each possible x_1, find the x_0 which gives "exact" control of alpha.
   x_0s <- opt_x_0(x_1s, n, rho_0, alpha_nom, eta)
@@ -59,6 +60,12 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   }
   
   return(design)
+}
+
+min_x_1 <- function(n, rho_0, alpha_nom, eta =0.5){
+  # For given n, find the minimum x_1 which can lead to a valid choice of
+  # x_0 (i.e. one which will give alpha <= alpha_nom).
+  qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
 }
 
 opt_x_0 <- function(x_1, n, rho_0, alpha_nom, eta = 0.5){
