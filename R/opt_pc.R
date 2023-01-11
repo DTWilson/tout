@@ -54,7 +54,9 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, s
     max_x_1 <- n
   } else {
     min_x_1 <- min_x_1_cont(alpha_nom, eta)
-    max_x_1 <- 5
+    # Use the mean of the test statistic distribution under the alternative
+    # hypothesis as the upper limit of x_1
+    max_x_1 <- (rho_1 - rho_0)/sqrt(sigma^2/n)
   }
   
   # Find optimal choice of x_1 - that which gives beta ~ beta_nom
@@ -137,8 +139,9 @@ opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, eta){
 beta_objective <- function(beta, beta_nom, x_0, x_1){
   # Take absolute value to minimise
   beta2 <- abs(beta - beta_nom)
-  # Penalise (i) beta constrain violation, and (ii) cases where x_0 > x_1
-  return(beta2 + (beta > beta_nom)*10 + (x_0 > x_1)*10)
+  # Find largest x_1 while penalising (i) beta constrain violation, 
+  # and (ii) cases where x_0 > x_1
+  return(-x_1 + 1000*(beta > beta_nom) + (x_0 > x_1)*1000)
 }
 
 check_arguments <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary){
