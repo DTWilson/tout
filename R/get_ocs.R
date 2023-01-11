@@ -16,8 +16,6 @@ get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, eta = 0.5){
 }
 
 get_ocs_cont_z <- function(n, x_0, x_1, rho_0, rho_1, sigma, eta = 0.5){
-  
-  # Calculate the error rates for each design - continuous case
 
   alpha <- 1 - stats::pnorm(x_1, mean = 0, sd = 1) +
     eta*(stats::pnorm(x_1, mean = 0, sd = 1) - stats::pnorm(x_0, mean = 0, sd = 1))
