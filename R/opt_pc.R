@@ -45,6 +45,9 @@
 #' 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, sigma = 1, binary = TRUE){
   
+  # Check that the arguments are specified correctly
+  check_arguments(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary)
+  
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
   if(binary){
     min_x_1 <- min_x_1_bin(n, rho_0, alpha_nom, eta)
@@ -138,3 +141,35 @@ beta_objective <- function(beta, beta_nom, x_0, x_1){
   return(beta2 + (beta > beta_nom)*10 + (x_0 > x_1)*10)
 }
 
+check_arguments <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary){
+  if(n < 0){
+    stop("Sample size n is negative.")
+  }
+  
+  if(alpha_nom < 0 | alpha_nom > 1){
+    stop("Constraint alpha_nom is outside the [0, 1] interval.")
+  }
+  if(beta_nom < 0 | beta_nom > 1){
+    stop("Constraint beta_nom is outside the [0, 1] interval.")
+  }
+  if(gamma_nom < 0 | gamma_nom > 1){
+    stop("Constraint gamma_nom is outside the [0, 1] interval.")
+  }
+  
+  if(eta < 0 | eta > 1){
+    stop("Probability eta is outside the [0, 1] interval")
+  }
+  
+  if(binary){
+    if(rho_0 < 0 | rho_0 > 1){
+      stop("Hypothesis rho_0 is outside the [0, 1] interval.")
+    }
+    if(rho_1 < 0 | rho_1 > 1){
+      stop("Hypothesis rho_1 is outside the [0, 1] interval.")
+    }
+  } else {
+    if(sigma < 0){
+      stop("Standard deviation sigma is negative.")
+    }
+  }
+}
