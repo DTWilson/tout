@@ -11,6 +11,8 @@ TOut_design(
   beta_nom,
   gamma_nom,
   eta = 0.5,
+  sigma = 1,
+  binary = TRUE,
   max_n = NULL
 )
 }
@@ -27,6 +29,11 @@ TOut_design(
 
 \item{eta}{Probability of an incorrect decision under the null or alternative
 after an intermediate result. Defaults to 0.5.}
+
+\item{sigma}{Standard deviation of outcome (in the continuous case).}
+
+\item{binary}{Logical. Is the outcome binary (TRUE, default) or continuous
+(FALSE)?}
 
 \item{max_n}{Optional upper limit to use in search over sample sizes.}
 

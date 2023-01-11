@@ -13,6 +13,9 @@
 #' @param gamma_nom Nominal upper constraint on gamma.
 #' @param eta Probability of an incorrect decision under the null or alternative
 #' after an intermediate result. Defaults to 0.5.
+#' @param sigma Standard deviation of outcome (in the continuous case).
+#' @param binary Logical. Is the outcome binary (TRUE, default) or continuous
+#' (FALSE)?
 #' @param max_n Optional upper limit to use in search over sample sizes.
 #' 
 #' @return A numeric vector containing the sample size, lower decision threshold,
@@ -28,8 +31,8 @@
 #'
 #' TOut_design(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
-TOut_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, max_n = NULL)
-{
+TOut_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, 
+                         sigma = 1, binary = TRUE, max_n = NULL){
   if(is.null(max_n)){
     # Get sample size for standard two outcome design taking a normal approx
     # and making conservative assumption on variance (maximised at rho = 0.5)
@@ -39,7 +42,8 @@ TOut_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5
   }
   results <- NULL
   for(n in 0:max_n){
-    results <- rbind(results, opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta))
+    results <- rbind(results, opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, 
+                                     gamma_nom, eta, sigma, binary))
   }
   return(results[!is.na(results[,1]),][1,])
 }

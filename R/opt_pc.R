@@ -56,7 +56,8 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, s
     min_x_1 <- min_x_1_cont(alpha_nom, eta)
     # Use the mean of the test statistic distribution under the alternative
     # hypothesis as the upper limit of x_1
-    max_x_1 <- (rho_1 - rho_0)/sqrt(sigma^2/n)
+    max_x_1 <- sqrt(n)*(rho_1 - rho_0)/sigma
+    if(max_x_1 < min_x_1) return(rep(NA, 6))
   }
   
   # Find optimal choice of x_1 - that which gives beta ~ beta_nom
@@ -75,7 +76,7 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, s
     ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1)
   } else {
     # Use optimise() to find the best choice of x_1
-    x_1 <- stats::optimize(opt_x_1_cont, interval = c(min_x_1, max_x_1),
+    x_1 <- stats::optimize(opt_x_1_cont, lower = min_x_1, upper = max_x_1,
                            n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 
                            alpha_nom=alpha_nom, beta_nom=beta_nom, eta=eta)$minimum
     
