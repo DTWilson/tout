@@ -13,10 +13,13 @@
 #' @param gamma_nom Nominal upper constraint on gamma.
 #' @param eta Probability of an incorrect decision under the null or alternative
 #' after an intermediate result. Defaults to 0.5.
+#' @param sigma Standard deviation of outcome (in the continuous case).
+#' @param binary Logical. Is the outcome binary (TRUE, default) or continuous
+#' (FALSE)?
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold; or NULL when no valid designs exist. Decision 
-#' thresholds are on the outcome scale.
+#' thresholds are on the outcome (binary) or z-statistic (continuous) scale.
 #' @export
 #'
 #' @examples
@@ -29,31 +32,56 @@
 #'
 #' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
-opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
+#' n <- 200
+#' rho_0 <- 0
+#' rho_1 <- 0.3
+#' alpha_nom <- 0.05
+#' beta_nom <- 0.1
+#' gamma_nom <- 0.9
+#' eta <- 0.4
+#' sigma <- 1
+#'
+#' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary = FALSE)
+#' 
+opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, sigma = 1, binary = TRUE){
   
-  # Get range of possible x_1s
-  x_1s <- min_x_1(n, rho_0, alpha_nom, eta):n
+  # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
+  if(binary){
+    min_x_1 <- min_x_1_bin(n, rho_0, alpha_nom, eta)
+    max_x_1 <- n
+  } else {
+    min_x_1 <- min_x_1_cont(alpha_nom, eta)
+    max_x_1 <- 5
+  }
   
-  # For each possible x_1, find the x_0 which gives "exact" control of alpha.
-  x_0s <- opt_x_0(x_1s, n, rho_0, alpha_nom, eta)
+  # Find optimal choice of x_1 - that which gives beta ~ beta_nom
+  if(binary){
+    # Run an exhaustive search over all possible choices of x_1
+    x_1s <- min_x_1:max_x_1
+    # For each, find the optimal x_0
+    x_0s <- opt_x_0_bin(x_1s, n, rho_0, alpha_nom, eta)
+    # Get resulting betas
+    betas <- get_ocs_bin(n, x_0s, x_1s, rho_0, rho_1, eta)[,2]
+    # Convert betas to a measure to be minimised when optimising
+    to_min <- beta_objective(betas, beta_nom, x_0s, x_1s)
+    x_0 <- x_0s[which.min(to_min)]
+    x_1 <- x_1s[which.min(to_min)]
+    
+    ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1)
+  } else {
+    # Use optimise() to find the best choice of x_1
+    x_1 <- stats::optimize(opt_x_1_cont, interval = c(min_x_1, max_x_1),
+                           n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 
+                           alpha_nom=alpha_nom, beta_nom=beta_nom, eta=eta)$minimum
+    
+    # Determine the corresponding x_0 to give alpha = alpha_nom
+    x_0 <- opt_x_0_cont(x_1, alpha_nom, eta)
+    
+    ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, eta)
+  }
   
-  # Get cosponsoring error rates and extract beta
-  ocs <- get_ocs(n, x_0s, x_1s, rho_0, rho_1)
-  beta <- ocs[,2]
-  
-  # Convert this beta into an objective to minimise, penalising any beta
-  # constraint violations and any cases where x_0 > x_1
-  beta2 <- abs(beta - beta_nom)
-  beta3 <- beta2 + (beta > beta_nom)*10 + (x_0s > x_1s)*10
-  
-  # Use this objective to determine the best x_1
-  x_1 <- x_1s[which.min(beta3)]
-  x_0 <- x_0s[which.min(beta3)]
-  
-  # Get operating characteristics and check if gamma_nom is satisfied
-  ocs <- get_ocs(n, x_0, x_1, rho_0, rho_1)
-  
-  if(ocs[1] <= alpha_nom & ocs[2] <= beta_nom & ocs[3] <= gamma_nom){
+  # Check if all constraints are (approximately) satisfied
+  if(all(ocs < (c(alpha_nom, beta_nom, gamma_nom) + 0.0001))){
     design <- c(n, x_0, x_1)
   } else {
     design <- c(NA, NA, NA)
@@ -62,15 +90,51 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   return(c(design, ocs))
 }
 
-min_x_1 <- function(n, rho_0, alpha_nom, eta = 0.5){
+# Functions for binary case
+
+min_x_1_bin <- function(n, rho_0, alpha_nom, eta){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   stats::qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
 }
 
-opt_x_0 <- function(x_1, n, rho_0, alpha_nom, eta = 0.5){
+opt_x_0_bin <- function(x_1, n, rho_0, alpha_nom, eta){
   # For given x_1 find the x_0 which best satisfies alpha_nom
   z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pbinom(x_1, n, rho_0)
   x_0 <- stats::qbinom(z, n, rho_0)
   return(x_0)
 }
+
+# Functions for continuous case
+
+min_x_1_cont <- function(alpha_nom, eta){
+  # For given n, find the minimum x_1 which can lead to a valid choice of
+  # x_0 (i.e. one which will give alpha <= alpha_nom).
+  stats::qnorm((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), mean = 0, sd = 1)
+}
+
+opt_x_0_cont <- function(x_1, alpha_nom, eta){
+  # For given x_1 find the x_0 which best satisfies alpha_nom
+  z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pnorm(x_1, mean = 0, sd = 1)
+  x_0 <- stats::qnorm(z, mean = 0, sd = 1)
+  return(x_0)
+}
+
+opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, eta){
+  x_0 <- opt_x_0_cont(x_1, alpha_nom, eta)
+  # Get corresponding error rates
+  beta <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, eta)[2]
+  # Covert to objective function to be minimised
+  to_min <- beta_objective(beta, beta_nom, x_0, x_1)
+  return(to_min)
+}
+
+# Common functions
+
+beta_objective <- function(beta, beta_nom, x_0, x_1){
+  # Take absolute value to minimise
+  beta2 <- abs(beta - beta_nom)
+  # Penalise (i) beta constrain violation, and (ii) cases where x_0 > x_1
+  return(beta2 + (beta > beta_nom)*10 + (x_0 > x_1)*10)
+}
+

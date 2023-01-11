@@ -1,4 +1,4 @@
-get_ocs <- function(n, x_0, x_1, rho_0, rho_1, eta = 0.5){
+get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, eta = 0.5){
   
   # Calculate the error rates for each design - binary case
   

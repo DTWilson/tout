@@ -4,7 +4,17 @@
 \alias{opt_pc}
 \title{Find optimal progression criteria for a fixed sample size and binary outcome}
 \usage{
-opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
+opt_pc(
+  n,
+  rho_0,
+  rho_1,
+  alpha_nom,
+  beta_nom,
+  gamma_nom,
+  eta = 0.5,
+  sigma = 1,
+  binary = TRUE
+)
 }
 \arguments{
 \item{n}{Sample size.}
@@ -21,11 +31,16 @@ opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
 
 \item{eta}{Probability of an incorrect decision under the null or alternative
 after an intermediate result. Defaults to 0.5.}
+
+\item{sigma}{Standard deviation of outcome (in the continuous case).}
+
+\item{binary}{Logical. Is the outcome binary (TRUE, default) or continuous
+(FALSE)?}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
 and upper decision threshold; or NULL when no valid designs exist. Decision
-thresholds are on the outcome scale.
+thresholds are on the outcome (binary) or z-statistic (continuous) scale.
 }
 \description{
 Given a fixed sample size and a null and alternative hypothesis, this function
@@ -42,5 +57,16 @@ beta_nom <- 0.2
 gamma_nom <- 0.9
 
 opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+
+n <- 200
+rho_0 <- 0
+rho_1 <- 0.3
+alpha_nom <- 0.05
+beta_nom <- 0.1
+gamma_nom <- 0.9
+eta <- 0.4
+sigma <- 1
+
+opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary = FALSE)
 
 }
