@@ -36,8 +36,6 @@ after an intermediate result. Defaults to 0.5.}
 (FALSE)?}
 
 \item{max_n}{Optional upper limit to use in search over sample sizes.}
-
-\item{n}{Optional sample size.}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,

@@ -5,7 +5,6 @@
 #' determined by the function `opt_pc`) satisfies upper constraints on three
 #' operating characteristics.
 #'
-#' @param n Optional sample size.
 #' @param rho_0 Null hypothesis.
 #' @param rho_1 Alternative hypothesis.
 #' @param alpha_nom Nominal upper constraint on alpha.
@@ -34,16 +33,23 @@
 TOut_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5, 
                          sigma = 1, binary = TRUE, max_n = NULL){
   if(is.null(max_n)){
-    # Get sample size for standard two outcome design taking a normal approx
-    # and making conservative assumption on variance (maximised at rho = 0.5)
-    n_two <- 0.25*(stats::qnorm(1 - alpha_nom) - stats::qnorm(beta_nom))^2/(rho_1 - rho_0)^2
-    # Set max_n at an (arbitrarily) large multiple of this
-    max_n <- floor(5*n_two)
+    if(binary){
+      # Get sample size for standard two outcome design taking a normal approx
+      # and making conservative assumption on variance (maximised at rho = 0.5)
+      n_two <- 0.25*(stats::qnorm(1 - alpha_nom) - stats::qnorm(beta_nom))^2/(rho_1 - rho_0)^2
+      # Set max_n at an (arbitrarily) large multiple of this
+      max_n <- floor(5*n_two)
+    } else {
+      n_two <- 1*(stats::qnorm(1 - alpha_nom) - stats::qnorm(beta_nom))^2/(rho_1 - rho_0)^2
+      # Set max_n at an (arbitrarily) large multiple of this
+      max_n <- floor(5*n_two)
+    }
   }
   results <- NULL
   for(n in 0:max_n){
     results <- rbind(results, opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, 
                                      gamma_nom, eta, sigma, binary))
   }
+  # TO Do: allow for cases when no feasible design is found
   return(results[!is.na(results[,1]),][1,])
 }

@@ -21,7 +21,7 @@ You can install the development version of TOut from
 devtools::install_github("DTWilson/TOut")
 ```
 
-## Example - binary outcome
+## Binary outcome
 
 ### Fixed sample size
 
@@ -91,3 +91,18 @@ TOut_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_no
 Here we find that our earlier choice of $n = 100$ was unnecessarily
 large and can be reduced down to $n = 83$, with progression criteria
 $x_0 = 47$ and $x_1 = 54$.
+
+## Continuous outcome
+
+We can apply the same approach to the case of a continuous outcome. For
+example, suppose that our hypotheses are $\rho_0 = 0, \rho_1 = 0.3$ and
+our outcome has a standard deviation of $\sigma = 1$. The optimal sample
+size and progression criteria are then:
+
+``` r
+TOut_design(rho_0 = 0, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5, sigma = 1, binary = FALSE)
+#> [1] 51.00000000  1.30238792  2.68669918  0.05000000  0.09999936  0.49826204
+```
+
+In the continuous case, the progression criteria $x_0$ and $x_1$ are
+given on the scale of the z-statistic.
