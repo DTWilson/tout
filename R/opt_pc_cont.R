@@ -25,13 +25,13 @@
 #' n <- 200
 #' rho_0 <- 0
 #' rho_1 <- 0.3
+#' sigma <- 1
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.1
 #' gamma_nom <- 0.9
 #' eta <- 0.4
-#' sigma <- 1
-#'
-#' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary = FALSE)
+#' 
+#' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta)
 #' 
 opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   
@@ -46,7 +46,8 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, 
   max_x_1 <- sqrt(n)*(rho_1 - rho_0)/sigma
   if(max_x_1 < min_x_1) return(rep(NA, 6))
   
-  # Find optimal choice of x_1 - that which gives beta ~ beta_nom
+  # Find optimal choice of x_1 - this will be the largest value such that
+  # beta ~ beta_nom
   # Use optimise() to find the best choice of x_1
   x_1 <- stats::optimize(opt_x_1_cont, lower = min_x_1, upper = max_x_1,
                          n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 

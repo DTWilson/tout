@@ -65,7 +65,7 @@ characteristics.
 ``` r
 library(TOut)
 
-opt_pc(n = 100, rho_0 = 0.5, rho_1 = 0.7,
+opt_pc_bin(n = 100, rho_0 = 0.5, rho_1 = 0.7,
                      alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.5)
 #> [1] 100.00000000  56.00000000  68.00000000   0.04838276   0.18450332
 #> [6]   0.27637906
@@ -84,7 +84,7 @@ TOut can also find the lowest sample size which can satisfy all
 operating characteristic constraints:
 
 ``` r
-TOut_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
 #> [1] 83.00000000 47.00000000 54.00000000  0.04787477  0.09992842  0.44729885
 ```
 
@@ -100,8 +100,9 @@ our outcome has a standard deviation of $\sigma = 1$. The optimal sample
 size and progression criteria are then:
 
 ``` r
-TOut_design(rho_0 = 0, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5, sigma = 1, binary = FALSE)
-#> [1] 51.00000000  1.30238792  2.68669918  0.05000000  0.09999936  0.49826204
+TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
+#> [1] 142.00000000   1.30209343   2.69138749   0.05000000   0.09999743
+#> [6]   0.49672543
 ```
 
 In the continuous case, the progression criteria $x_0$ and $x_1$ are

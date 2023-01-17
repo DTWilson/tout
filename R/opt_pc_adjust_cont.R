@@ -10,15 +10,15 @@
 #' @param n sample size.
 #' @param rho_0 null hypothesis.
 #' @param rho_1 alternative hypothesis.
+#' @param sigma standard deviation of outcome.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
-#' @param sigma standard deviation of outcome (in the continuous case).
 #' @param tau_min lower limit of adjustment effect.
 #' @param tau_max Upper limit if adjustment effect.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
-#' operating characteristics alpha, beta. Decision thresholds are on the outcome 
+#' operating characteristics alpha, beta. Decision thresholds are on the  
 #' z-statistic scale.
 #' @export
 #' @export
@@ -27,19 +27,24 @@
 #' n <- 160
 #' rho_0 <- 0
 #' rho_1 <- 0.3
+#' sigma <- 1
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.2
 #' sigma <- 1
 #' tau_min <- 0.05
 #' tau_max <- 0.1
 #'
-#' opt_pc_adjust_cont(n, rho_0, rho_1, alpha_nom, beta_nom, sigma, tau_min, tau_max)
-opt_pc_adjust_cont <- function(n, rho_0, rho_1, alpha_nom, beta_nom, sigma, tau_min, tau_max){
+#' opt_pc_adjust_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, tau_min, tau_max)
+#' 
+opt_pc_adjust_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, tau_min, tau_max){
   # Find x_1 such that alpha_1 = alpha_nom
   x_1 <- stats::qnorm(1 - alpha_nom)
   
-  # Find x_0 such that alpha_2 = alpha_nom - need to choose min of domain properly
-  x_0 <- stats::optimise(get_alpha_2_cont, lower = -10, upper = x_1,
+  # Find x_0 such that alpha_2 = alpha_nom
+  # Need a principled way of choosing the minimum for the search.
+  x_0_min <- -10
+  # Now search numerically:
+  x_0 <- stats::optimise(get_alpha_2_cont, lower = x_0_min, upper = x_1,
                   x_1=x_1, alpha_nom=alpha_nom, sigma=sigma, n=n, 
                   tau_min=tau_min, tau_max=tau_max)$minimum
   

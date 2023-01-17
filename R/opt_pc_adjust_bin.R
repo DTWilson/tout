@@ -1,14 +1,54 @@
+#' Find optimal progression criteria for a fixed sample size and binary
+#' outcome when an interval adjustment effect is known
+#'
+#' Given a fixed sample size and a null and alternative hypothesis, this function
+#' will determine upper and lower progression criteria such that alpha is controlled, 
+#' beta is minimised, and the width of the adjustment region is maximised.
+#' Note that alpha and beta are defined taking into account an effect of adjustment 
+#' which will be in the given range.
+#' 
+#' @param n sample size.
+#' @param rho_0 null hypothesis.
+#' @param rho_1 alternative hypothesis.
+#' @param alpha_nom nominal upper constraint on alpha.
+#' @param beta_nom nominal upper constraint on beta.
+#' @param tau_min lower limit of adjustment effect.
+#' @param tau_max Upper limit if adjustment effect.
+#'
+#' @return A numeric vector containing the sample size, lower decision threshold,
+#' and upper decision threshold (or NA when no valid designs exist), and 
+#' operating characteristics alpha, beta. Decision thresholds are on the outcome 
+#' scale.
+#' @export
+#' @export
+#'
+#' @examples
+#' n <- 70
+#' rho_0 <- 0.3
+#' rho_1 <- 0.5
+#' alpha_nom <- 0.05
+#' beta_nom <- 0.2
+#' tau_min <- 0.05
+#' tau_max <- 0.1
+#'
+#' opt_pc_adjust_bin(n, rho_0, rho_1, alpha_nom, beta_nom, tau_min, tau_max)
+#' 
 opt_pc_adjust_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, tau_min, tau_max){
   # Find x_1 such that alpha_1 = alpha_nom
   x_1 <- stats::qbinom(1 - alpha_nom, n, rho_0)
   
-  # Find x_0 such that alpha_2 = alpha_nom - need to choose min of domain properly
-  x_0 <- stats::optimise(get_alpha_2_cont, lower = -10, upper = x_1,
-                         x_1=x_1, alpha_nom=alpha_nom, sigma=sigma, n=n, 
-                         tau_min=tau_min, tau_max=tau_max)$minimum
+  x_0s <- 0:x_1
+  # For each possible choice of x_0, find corresponding alpha_2
+  alpha_2s <- sapply(x_0s, get_alpha_2_bin, 
+                     x_1=x_1, alpha_nom=alpha_nom, n=n, rho_0=rho_0,
+                     tau_min=tau_min, tau_max=tau_max)
+  
+  x_0 <- x_0s[which(alpha_2s < alpha_nom)][1]
   
   # Find beta_1, which will be maximised at tau_max distance from rho_1
-  beta <- stats::pnorm(x_0, mean = ((rho_1 - rho_0) - tau_max)*sqrt(n)/sigma)
+  beta <- stats::pbinom(x_0, n, rho_1 - tau_max)
+  
+  alpha <- max(1 - stats::pbinom(x_1, n, rho_0), alpha_2s[which(alpha_2s < alpha_nom)][1] )
   
   ocs <- c(alpha_nom, beta)
   
@@ -21,17 +61,12 @@ opt_pc_adjust_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, tau_min, tau
   return(c(design, ocs))
 }
 
-get_alpha_2_bin <- function(x_0, x_1, alpha_nom, sigma, n, tau_min, tau_max){
-  
-  # Get mid point of the adjustment interval
-  mid_point <- (x_0 + x_1)/2
-  
-  # alpha_2 will be maximised at this mid point, or as close to it as 
-  # allowed by the range of tau.
-  tau_ncp <- max(min(mid_point, -tau_min*sqrt(n)/sigma), -tau_max*sqrt(n)/sigma)
-  
-  alpha_2 <- stats::pnorm(x_1, mean = tau_ncp) - stats::pnorm(x_0, mean = tau_ncp)
-  
-  # Return squared difference to minimise
-  return((alpha_2 - alpha_nom)^2)
+get_alpha_2_bin <- function(x_0, x_1, alpha_nom, n, rho_0, tau_min, tau_max){
+  # Can probably get this in closed form
+  alpha_2 <- -stats::optimise(alpha_2_objective, lower = tau_min, upper = tau_max,
+           n=n, x_0=x_0, x_1=x_1, rho_0=rho_0)$objective
+}
+
+alpha_2_objective <- function(tau, n, x_0, x_1, rho_0){
+  alpha_2 <- -(stats::pbinom(x_1, n, rho_0 - tau) - stats::pbinom(x_0, n, rho_0 - tau))
 }

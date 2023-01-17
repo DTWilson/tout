@@ -28,18 +28,7 @@
 #' beta_nom <- 0.2
 #' gamma_nom <- 0.9
 #'
-#' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
-#' 
-#' n <- 200
-#' rho_0 <- 0
-#' rho_1 <- 0.3
-#' alpha_nom <- 0.05
-#' beta_nom <- 0.1
-#' gamma_nom <- 0.9
-#' eta <- 0.4
-#' sigma <- 1
-#'
-#' opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta, sigma, binary = FALSE)
+#' opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
 #' 
 opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
   
