@@ -18,8 +18,9 @@
 #' (FALSE)?
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
-#' and upper decision threshold; or NULL when no valid designs exist. Decision 
-#' thresholds are on the outcome (binary) or z-statistic (continuous) scale.
+#' and upper decision threshold (or NA when no valid designs exist), and 
+#' operating characteristics alpha, beta, gamma. Decision thresholds are on the 
+#' outcome (binary) or z-statistic (continuous) scale.
 #' @export
 #'
 #' @examples
