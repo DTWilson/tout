@@ -7,14 +7,14 @@
 #' Note that alpha and beta are defined taking into account an effect of adjustment 
 #' which will be in the given range.
 #' 
-#' @param n Sample size.
-#' @param rho_0 Null hypothesis.
-#' @param rho_1 Alternative hypothesis.
-#' @param alpha_nom Nominal upper constraint on alpha.
-#' @param beta_nom Nominal upper constraint on beta.
-#' @param sigma Standard deviation of outcome (in the continuous case).
-#' @param tau_min 
-#' @param tau_max 
+#' @param n sample size.
+#' @param rho_0 null hypothesis.
+#' @param rho_1 alternative hypothesis.
+#' @param alpha_nom nominal upper constraint on alpha.
+#' @param beta_nom nominal upper constraint on beta.
+#' @param sigma standard deviation of outcome (in the continuous case).
+#' @param tau_min lower limit of adjustment effect.
+#' @param tau_max Upper limit if adjustment effect.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
