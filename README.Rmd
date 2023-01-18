@@ -100,7 +100,11 @@ opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, b
 ```
 And similarly we can do this for a binary outcome:
 ```{r}
+<<<<<<< HEAD
 opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
+=======
+opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5,alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
+>>>>>>> a343d53a313311b2a40778cd3236200b939e497f
 ```
 We can find optimal sample sizes as before, but now handing the function an interval for the adjustment effect $\tau$:
 
