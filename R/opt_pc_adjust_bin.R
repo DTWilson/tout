@@ -37,18 +37,13 @@ opt_pc_adjust_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, tau_min, tau
   # Find x_1 such that alpha_1 = alpha_nom
   x_1 <- stats::qbinom(1 - alpha_nom, n, rho_0)
   
-  x_0s <- 0:x_1
-  # For each possible choice of x_0, find corresponding alpha_2
-  alpha_2s <- sapply(x_0s, get_alpha_2_bin, 
-                     x_1=x_1, alpha_nom=alpha_nom, n=n, rho_0=rho_0,
-                     tau_min=tau_min, tau_max=tau_max)
-  
-  x_0 <- x_0s[which(alpha_2s < alpha_nom)][1]
+  # Find x_0 such that alpha_2 = alpha_nom
+  x_0 <- stats::qbinom(1 - alpha_nom, n, rho_0 - tau_min)
   
   # Find beta_1, which will be maximised at tau_max distance from rho_1
   beta <- stats::pbinom(x_0, n, rho_1 - tau_max)
   
-  alpha <- max(1 - stats::pbinom(x_1, n, rho_0), alpha_2s[which(alpha_2s < alpha_nom)][1] )
+  alpha <- max(1 - stats::pbinom(x_1, n, rho_0), 1 - stats::pbinom(x_0, n, rho_0 - tau_min) )
   
   ocs <- c(alpha_nom, beta)
   
@@ -59,14 +54,4 @@ opt_pc_adjust_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, tau_min, tau
   }
   
   return(c(design, ocs))
-}
-
-get_alpha_2_bin <- function(x_0, x_1, alpha_nom, n, rho_0, tau_min, tau_max){
-  # Can probably get this in closed form
-  alpha_2 <- -stats::optimise(alpha_2_objective, lower = tau_min, upper = tau_max,
-           n=n, x_0=x_0, x_1=x_1, rho_0=rho_0)$objective
-}
-
-alpha_2_objective <- function(tau, n, x_0, x_1, rho_0){
-  alpha_2 <- -(stats::pbinom(x_1, n, rho_0 - tau) - stats::pbinom(x_0, n, rho_0 - tau))
 }
