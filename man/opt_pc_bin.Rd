@@ -7,26 +7,26 @@
 opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
 }
 \arguments{
-\item{n}{Sample size.}
+\item{n}{sample size.}
 
-\item{rho_0}{Null hypothesis.}
+\item{rho_0}{null hypothesis.}
 
-\item{rho_1}{Alternative hypothesis.}
+\item{rho_1}{alternative hypothesis.}
 
-\item{alpha_nom}{Nominal upper constraint on alpha.}
+\item{alpha_nom}{nominal upper constraint on alpha.}
 
-\item{beta_nom}{Nominal upper constraint on beta.}
+\item{beta_nom}{nominal upper constraint on beta.}
 
-\item{gamma_nom}{Nominal upper constraint on gamma.}
+\item{gamma_nom}{nominal upper constraint on gamma.}
 
-\item{eta}{Probability of an incorrect decision under the null or alternative
-after an intermediate result. Defaults to 0.5.}
+\item{eta}{probability of an incorrect decision under the null or alternative
+after an intermediate result (defaults to 0.5).}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
 and upper decision threshold (or NA when no valid designs exist), and
 operating characteristics alpha, beta, gamma. Decision thresholds are on the
-outcome (binary) or z-statistic (continuous) scale.
+outcome scale.
 }
 \description{
 Given a fixed sample size and a null and alternative hypothesis, this function

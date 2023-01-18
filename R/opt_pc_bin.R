@@ -5,19 +5,19 @@
 #' exactly, beta is controlled or minimised when control is not feasible, and gamma
 #' is minimised.
 #'
-#' @param n Sample size.
-#' @param rho_0 Null hypothesis.
-#' @param rho_1 Alternative hypothesis.
-#' @param alpha_nom Nominal upper constraint on alpha.
-#' @param beta_nom Nominal upper constraint on beta.
-#' @param gamma_nom Nominal upper constraint on gamma.
-#' @param eta Probability of an incorrect decision under the null or alternative
-#' after an intermediate result. Defaults to 0.5.
+#' @param n sample size.
+#' @param rho_0 null hypothesis.
+#' @param rho_1 alternative hypothesis.
+#' @param alpha_nom nominal upper constraint on alpha.
+#' @param beta_nom nominal upper constraint on beta.
+#' @param gamma_nom nominal upper constraint on gamma.
+#' @param eta probability of an incorrect decision under the null or alternative
+#' after an intermediate result (defaults to 0.5).
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
 #' operating characteristics alpha, beta, gamma. Decision thresholds are on the 
-#' outcome (binary) or z-statistic (continuous) scale.
+#' outcome scale.
 #' @export
 #'
 #' @examples

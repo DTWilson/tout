@@ -129,15 +129,12 @@ the probability of the former will be maximised at $\rho = \rho_0$ we
 can easily determine the minimum $x_1$ s.t. $\alpha_1 = \alpha^*$.
 Similarly, the probability of the latter will be maximised at
 $\rho = \rho_0 - \tau_{min}$ (assuming we have a specified interval for
-the adjustment effect, $\tau \in [\tau_{min}, \tau_{max}]$) and so we
-can independently determine the minimum $x_0$ s.t.
+the adjustment effect, $\tau \in [\tau_{min}, \tau_{max}]$).
+
+We can independently determine the minimum $x_0$ s.t.
 $\alpha_2 = \alpha^*$. These choices of $x_0, x_1$ will then minimise
 the type II error rate, which is now the probability
-<<<<<<< HEAD
 $\hat{\rho} \leq x_0 | \rho \geq \rho_1 - \tau$ (since this means
-=======
-$\hat{\rho} leq x_0 | \rho \geq \rho_1 - \tau$ (since this means
->>>>>>> a343d53a313311b2a40778cd3236200b939e497f
 stopping despite the parameter being capable of reaching $\rho_1$ if the
 adjustment is made). We can then find the minimum $n$ such that
 $\beta \leq \beta^*$.
@@ -164,11 +161,7 @@ opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, b
 And similarly we can do this for a binary outcome:
 
 ``` r
-<<<<<<< HEAD
 opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
-=======
-opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5,alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
->>>>>>> a343d53a313311b2a40778cd3236200b939e497f
 #> [1] 100.00000000  29.00000000  38.00000000   0.05000000   0.03816388
 ```
 
