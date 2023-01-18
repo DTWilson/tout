@@ -12,6 +12,7 @@ TOut_design_cont(
   beta_nom,
   gamma_nom,
   eta = 0.5,
+  tau = NULL,
   max_n = NULL
 )
 }
@@ -30,6 +31,9 @@ TOut_design_cont(
 
 \item{eta}{probability of an incorrect decision under the null or alternative
 after an intermediate result. Defaults to 0.5.}
+
+\item{tau}{two element vector denoting lower and upper limits of the
+effect of adjustment.}
 
 \item{max_n}{optional upper limit to use in search over sample sizes.}
 }
@@ -52,5 +56,9 @@ beta_nom <- 0.2
 gamma_nom <- 0.5
 
 TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom)
+
+tau <- c(0.08, 0.12)
+
+TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, tau = tau)
 
 }
