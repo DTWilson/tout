@@ -80,6 +80,35 @@ TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom =
 ```
 In the continuous case, the progression criteria $x_0$ and $x_1$ are given on the scale of the z-statistic. 
 
+## Making adjustments
+
+A common rationale for including an intermediate decision between $stop$ and $go$ is to allow for adjustments to be made to the intervention and/or the trial design in an effort to improve the parameter of interest by some amount $\tau$. This leads to a different framework, where we will now proceed to the main trial whenever $\hat{\rho} > x_0$ but will do so after making adjustments if $x_0 < \hat{\rho} \leq x_1$.
+
+In this scenario, a type I error will occur when $x_1 < \hat{\rho} | \rho \leq \rho_0$ (since we will proceed directly and run a trial under $\rho = \rho_0$), or when $x_0 < \hat{rho} | \rho \leq \rho_0 - \tau$ (since we will either adjust but from such a poor starting point that the adjusted rate is still less than $rho_0$, or we will do even worse and proceed without adjustment). Since the conditions are mutually exclusive, controlling the type I error rate means controlling the probability of these two events. Since the probability of the former will be maximised at $\rho = \rho_0$ we can easily determine the minimum $x_1$ s.t. $\alpha_1 = \alpha^*$. Similarly, the probability of the latter will be maximised at $\rho = \rho_0 - \tau_{min}$ (assuming we have a specified interval for the adjustment effect, $\tau \in [\tau_{min}, \tau_{max}]$) and so we can independently determine the minimum $x_0$ s.t. $\alpha_2 = \alpha^*$. These choices of $x_0, x_1$ will then minimise the type II error rate, which is now the probability $\hat{\rho} \leq x_0 | \rho \geq \rho_1 - \tau$ (since this means stopping despite the parameter being capable of reaching $\rho_1$ if the adjustment is made). We can then find the minimum $n$ such that $\beta \leq \beta^*$.
+
+Note that this all supports our previous thought that the upper threshold $x_1$ can be specified in a straightforward way without worrying about adjustment effects, but that $x_0$ is sensitive to the true value of $\tau$ and therefore can feel a little arbitrary.
+
+```{r}
+# No adjustment possible
+opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0, tau_max=0)
+
+# Adjustment known exactly:
+opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.1, tau_max=0.1)
+
+# Only interval of adjustment known:
+opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
+```
+And similarly we can do this for a binary outcome:
+```{r}
+opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
+```
+We can find optimal sample sizes as before, but now handing the function an interval for the adjustment effect $\tau$:
+
+```{r}
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.05, 0.15))
+
+TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.07, 0.1))
+```
 
 
 
