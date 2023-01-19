@@ -41,9 +41,7 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, 
   
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
   min_x_1 <- min_x_1_cont(alpha_nom, eta)
-  # Use the mean of the test statistic distribution under the alternative
-  # hypothesis as the upper limit of x_1
-  max_x_1 <- sqrt(n)*(rho_1 - rho_0)/sigma
+  max_x_1 <- max_x_1_cont(alpha_nom, eta, rho_0, rho_1, sigma, n)
   if(max_x_1 < min_x_1) return(rep(NA, 6))
   
   # Find optimal choice of x_1 - this will be the largest value such that
@@ -72,6 +70,21 @@ min_x_1_cont <- function(alpha_nom, eta){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   stats::qnorm((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), mean = 0, sd = 1)
+}
+
+max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
+  # For given n, find the minimum x_1 which can lead to a valid choice of
+  # x_0 (i.e. one which will give alpha <= alpha_nom).
+  z <- (alpha_nom - 1)/(eta - 1)
+  if(eta <= alpha_nom){
+    stop("The probability of an error following in intermediate outcome should
+         not be less than the nominal type I error rate.")
+  } else {
+    # Use a high upper quantile of the test statistic distribution under the alternative
+    # hypothesis as the upper limit of x_1 since this will always mean a
+    # type II error rate of at least eta*0.5
+    return(qnorm(0.99, mean = sqrt(n)*(rho_1 - rho_0)/sigma))
+  }
 }
 
 opt_x_0_cont <- function(x_1, alpha_nom, eta){
