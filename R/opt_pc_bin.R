@@ -52,10 +52,10 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.
   x_0 <- x_0s[which.min(to_min)]
   x_1 <- x_1s[which.min(to_min)]
   
-  ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1)
+  ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, eta)
   
   # Check if all constraints are (approximately) satisfied
-  if(all(ocs < (c(alpha_nom, beta_nom, gamma_nom) + 0.0001))){
+  if(all(ocs < c(alpha_nom, beta_nom, gamma_nom))){
     design <- c(n, x_0, x_1)
   } else {
     design <- c(NA, NA, NA)
@@ -65,9 +65,14 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom, eta = 0.
 }
 
 min_x_1_bin <- function(n, rho_0, alpha_nom, eta){
-  # For given n, find the minimum x_1 which can lead to a valid choice of
-  # x_0 (i.e. one which will give alpha <= alpha_nom).
-  stats::qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
+  if(eta <= alpha_nom){
+    stop("The probability of an error following in intermediate outcome should
+         not be less than the nominal type I error rate.")
+  } else {
+    # For given n, find the minimum x_1 which can lead to a valid choice of
+    # x_0 (i.e. one which will give alpha <= alpha_nom).
+    stats::qbinom((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), n, rho_0)
+  }
 }
 
 opt_x_0_bin <- function(x_1, n, rho_0, alpha_nom, eta){
