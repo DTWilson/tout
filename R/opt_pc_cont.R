@@ -75,7 +75,6 @@ min_x_1_cont <- function(alpha_nom, eta){
 max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
-  z <- (alpha_nom - 1)/(eta - 1)
   if(eta <= alpha_nom){
     stop("The probability of an error following in intermediate outcome should
          not be less than the nominal type I error rate.")
@@ -83,7 +82,7 @@ max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
     # Use a high upper quantile of the test statistic distribution under the alternative
     # hypothesis as the upper limit of x_1 since this will always mean a
     # type II error rate of at least eta*0.5
-    return(qnorm(0.99, mean = sqrt(n)*(rho_1 - rho_0)/sigma))
+    return(stats::qnorm(0.99, mean = sqrt(n)*(rho_1 - rho_0)/sigma))
   }
 }
 
