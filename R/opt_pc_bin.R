@@ -10,9 +10,9 @@
 #' @param rho_1 alternative hypothesis.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
-#' @param gamma_nom nominal upper constraint on gamma.
-#' @param eta probability of an incorrect decision under the null or alternative
-#' after an intermediate result (defaults to 0.5).
+#' @param tau vector with lower and upper bounds of adjustment effect.
+#' @param eta probability of an incorrect decision after an intermediate result. 
+#' Defaults to 0.5.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
@@ -26,9 +26,8 @@
 #' rho_1 <- 0.7
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.2
-#' gamma_nom <- 0.9
 #'
-#' opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, gamma_nom)
+#' opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom)
 #' 
 opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, 
                        tau = c(0,0), eta = 0.5){
@@ -37,7 +36,7 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
   tau_max <- tau[2]
   
   # Check that the arguments are specified correctly
-  check_arguments(n, alpha_nom, beta_nom, gamma_nom, eta)
+  check_arguments(n, alpha_nom, beta_nom, eta)
   check_arguments_bin(rho_0, rho_1)
   
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1

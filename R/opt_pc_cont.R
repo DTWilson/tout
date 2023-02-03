@@ -11,7 +11,6 @@
 #' @param sigma standard deviation of the outcome.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
-#' @param gamma_nom nominal upper constraint on gamma.
 #' @param tau vector with lower and upper bounds of adjustment effect.
 #' @param eta probability of an incorrect decision after an intermediate result. 
 #' Defaults to 0.5.
@@ -29,7 +28,6 @@
 #' sigma <- 1
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.1
-#' gamma_nom <- 0.9
 #' 
 #' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom)
 #' 
@@ -40,7 +38,7 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
   tau_max <- tau[2]
   
   # Check that the arguments are specified correctly
-  check_arguments(n, alpha_nom, beta_nom, gamma_nom, eta)
+  check_arguments(n, alpha_nom, beta_nom, eta)
   check_arguments_cont(sigma)
   
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1

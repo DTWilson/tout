@@ -10,7 +10,7 @@ beta_objective <- function(beta, beta_nom, x_0, x_1){
 
 
 # Check common arguments and throw errors if invalid.
-check_arguments <- function(n, alpha_nom, beta_nom, gamma_nom, eta){
+check_arguments <- function(n, alpha_nom, beta_nom, eta){
   if(n < 0){
     stop("Sample size n is negative.")
   }
@@ -19,9 +19,6 @@ check_arguments <- function(n, alpha_nom, beta_nom, gamma_nom, eta){
   }
   if(beta_nom < 0 | beta_nom > 1){
     stop("Constraint beta_nom is outside the [0, 1] interval.")
-  }
-  if(gamma_nom < 0 | gamma_nom > 1){
-    stop("Constraint gamma_nom is outside the [0, 1] interval.")
   }
   if(eta < 0 | eta > 1){
     stop("Probability eta is outside the [0, 1] interval")

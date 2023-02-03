@@ -10,9 +10,8 @@ TOut_design_cont(
   sigma,
   alpha_nom,
   beta_nom,
-  gamma_nom,
   eta = 0.5,
-  tau = NULL,
+  tau = c(0, 0),
   max_n = NULL
 )
 }
@@ -26,8 +25,6 @@ TOut_design_cont(
 \item{alpha_nom}{nominal upper constraint on alpha.}
 
 \item{beta_nom}{nominal upper constraint on beta.}
-
-\item{gamma_nom}{nominal upper constraint on gamma.}
 
 \item{eta}{probability of an incorrect decision under the null or alternative
 after an intermediate result. Defaults to 0.5.}
@@ -53,9 +50,8 @@ rho_1 <- 0.3
 sigma <- 1
 alpha_nom <- 0.05
 beta_nom <- 0.2
-gamma_nom <- 0.5
 
-TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom)
+TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom)
 
 tau <- c(0.08, 0.12)
 

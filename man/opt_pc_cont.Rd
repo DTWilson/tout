@@ -4,7 +4,16 @@
 \alias{opt_pc_cont}
 \title{Find optimal progression criteria for a fixed sample size and continuous outcome}
 \usage{
-opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
+opt_pc_cont(
+  n,
+  rho_0,
+  rho_1,
+  sigma,
+  alpha_nom,
+  beta_nom,
+  tau = c(0, 0),
+  eta = 0.5
+)
 }
 \arguments{
 \item{n}{sample size.}
@@ -19,10 +28,10 @@ opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta = 0.5)
 
 \item{beta_nom}{nominal upper constraint on beta.}
 
-\item{gamma_nom}{nominal upper constraint on gamma.}
+\item{tau}{vector with lower and upper bounds of adjustment effect.}
 
-\item{eta}{probability of an incorrect decision under the null or alternative
-after an intermediate result. Defaults to 0.5.}
+\item{eta}{probability of an incorrect decision after an intermediate result.
+Defaults to 0.5.}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
@@ -43,9 +52,7 @@ rho_1 <- 0.3
 sigma <- 1
 alpha_nom <- 0.05
 beta_nom <- 0.1
-gamma_nom <- 0.9
-eta <- 0.4
 
-opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta)
+opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom)
 
 }
