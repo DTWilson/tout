@@ -12,8 +12,9 @@
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
 #' @param gamma_nom nominal upper constraint on gamma.
-#' @param eta probability of an incorrect decision under the null or alternative
-#' after an intermediate result. Defaults to 0.5.
+#' @param tau vector with lower and upper bounds of adjustment effect.
+#' @param eta probability of an incorrect decision after an intermediate result. 
+#' Defaults to 0.5.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
@@ -29,18 +30,21 @@
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.1
 #' gamma_nom <- 0.9
-#' eta <- 0.4
 #' 
-#' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta)
+#' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom)
 #' 
-opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, eta = 0.5){
+opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
+                        tau = c(0,0), eta = 0.5){
+  
+  tau_min <- tau[1]
+  tau_max <- tau[2]
   
   # Check that the arguments are specified correctly
   check_arguments(n, alpha_nom, beta_nom, gamma_nom, eta)
   check_arguments_cont(sigma)
   
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
-  min_x_1 <- min_x_1_cont(alpha_nom, eta)
+  min_x_1 <- min_x_1_cont(n, sigma, alpha_nom, tau_min, eta)
   max_x_1 <- max_x_1_cont(alpha_nom, eta, rho_0, rho_1, sigma, n)
   if(max_x_1 < min_x_1) return(rep(NA, 6))
   
@@ -49,15 +53,19 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, 
   # Use optimise() to find the best choice of x_1
   x_1 <- stats::optimize(opt_x_1_cont, lower = min_x_1, upper = max_x_1,
                          n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 
-                         alpha_nom=alpha_nom, beta_nom=beta_nom, eta=eta)$minimum
+                         alpha_nom=alpha_nom, beta_nom=beta_nom, 
+                         tau_min=tau_min, tau_max=tau_max, eta=eta)$minimum
   
   # Determine the corresponding x_0 to give alpha = alpha_nom
-  x_0 <- opt_x_0_cont(x_1, alpha_nom, eta)
+  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta)
   
-  ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, eta)
+  ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta)
+  
+  ocs
+  x_1 - x_0
   
   # Check if all constraints are (approximately) satisfied
-  if(all(ocs < (c(alpha_nom, beta_nom, gamma_nom) + 0.0001))){
+  if(all(ocs[1:2] < (c(alpha_nom, beta_nom) + 0.0001))){
     design <- c(n, x_0, x_1)
   } else {
     design <- c(NA, NA, NA)
@@ -66,15 +74,21 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom, 
   return(c(design, ocs))
 }
 
-min_x_1_cont <- function(alpha_nom, eta){
+min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
-  stats::qnorm((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), mean = 0, sd = 1)
+  
+  # For the first element, under rho = rho_0:
+  min1 <- qnorm(1 - alpha_nom, mean = 0, sd = 1)
+  
+  # Get ncp for the sampling distribution under rho = rho_0 - tau_min
+  ncp <- sqrt(n)*(- tau_min)/sigma
+  min2 <- stats::qnorm((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), mean = ncp, sd = 1)
+  
+  return(max(min1, min2))
 }
 
 max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
-  # For given n, find the minimum x_1 which can lead to a valid choice of
-  # x_0 (i.e. one which will give alpha <= alpha_nom).
   if(eta <= alpha_nom){
     stop("The probability of an error following in intermediate outcome should
          not be less than the nominal type I error rate.")
@@ -86,17 +100,19 @@ max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
   }
 }
 
-opt_x_0_cont <- function(x_1, alpha_nom, eta){
-  # For given x_1 find the x_0 which best satisfies alpha_nom
-  z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pnorm(x_1, mean = 0, sd = 1)
-  x_0 <- stats::qnorm(z, mean = 0, sd = 1)
+opt_x_0_cont <- function(x_1, n, sigma, alpha_nom, tau_min, eta){
+  # For given x_1 find the x_0 which best alpha_nom
+  # Get ncp for the sampling distribution under rho = rho_0 - tau_min
+  ncp <- sqrt(n)*(- tau_min)/sigma
+  z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pnorm(x_1, mean = ncp, sd = 1)
+  x_0 <- stats::qnorm(z, mean = ncp, sd = 1)
   return(x_0)
 }
 
-opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, eta){
-  x_0 <- opt_x_0_cont(x_1, alpha_nom, eta)
+opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, tau_min, tau_max, eta){
+  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta)
   # Get corresponding error rates
-  beta <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, eta)[2]
+  beta <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta)[2]
   # Covert to objective function to be minimised
   to_min <- beta_objective(beta, beta_nom, x_0, x_1)
   return(to_min)
