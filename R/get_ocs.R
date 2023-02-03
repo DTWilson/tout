@@ -1,15 +1,17 @@
-get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, eta = 0.5){
+get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta = 0.5){
   
   # Calculate the error rates for each design - binary case
   
-  alpha <- 1 - stats::pbinom(x_1, n, rho_0) +
-    eta*(stats::pbinom(x_1, n, rho_0) - stats::pbinom(x_0, n, rho_0))
+  alpha <- max(1 - stats::pbinom(x_1, n, rho_0), 
+               1 - stats::pbinom(x_1, n, rho_0 - tau_min) +
+                 eta*(stats::pbinom(x_1, n, rho_0 - tau_min) - stats::pbinom(x_0, n, rho_0 - tau_min)))
   
-  beta <- stats::pbinom(x_0, n, rho_1) +
-    eta*(stats::pbinom(x_1, n, rho_1) - stats::pbinom(x_0, n, rho_1))
+  beta <- stats::pbinom(x_0, n, rho_1 - tau_max) +
+    eta*(stats::pbinom(x_1, n, rho_1 - tau_max) - stats::pbinom(x_0, n, rho_1 - tau_max))
   
-  gamma_U <- 1 - stats::pbinom(x_1, n, rho_0 + (rho_1 - rho_0)/2)
-  gamma_L <- stats::pbinom(x_0, n, rho_0 + (rho_1 - rho_0)/2)
+  mid <- 0.5*(rho_0 + rho_1 - tau_max)
+  gamma_U <- 1 - stats::pbinom(x_1, n, mid)
+  gamma_L <- stats::pbinom(x_0, n, mid)
   gamma <- gamma_L + gamma_U
   
   return(cbind(alpha, beta, gamma))
