@@ -15,16 +15,22 @@ get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, eta = 0.5){
   return(cbind(alpha, beta, gamma))
 }
 
-get_ocs_cont_z <- function(n, x_0, x_1, rho_0, rho_1, sigma, eta = 0.5){
-
-  alpha <- 1 - stats::pnorm(x_1, mean = 0, sd = 1) +
-    eta*(stats::pnorm(x_1, mean = 0, sd = 1) - stats::pnorm(x_0, mean = 0, sd = 1))
+get_ocs_cont_z <- function(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta = 0.5){
   
-  ncp_beta <- sqrt(n)*(rho_1 - rho_0)/sigma
-  beta <- stats::pnorm(x_0, mean = ncp_beta, sd = 1) +
+  ncp_alpha <- sqrt(n)*(-tau_min)/sigma
+  alpha <- max(1 - stats::pnorm(x_1, mean = 0, sd = 1),
+               1 - stats::pnorm(x_1, mean = ncp_alpha, sd = 1) + 
+                 eta*(stats::pnorm(x_1, mean = ncp_alpha, sd = 1) - stats::pnorm(x_0, mean = ncp_alpha, sd = 1)))
+
+  ncp_beta <- sqrt(n)*(rho_1 - tau_max - rho_0)/sigma
+  beta <- stats::pnorm(x_0, mean = ncp_beta, sd = 1) + 
     eta*(stats::pnorm(x_1, mean = ncp_beta, sd = 1) - stats::pnorm(x_0, mean = ncp_beta, sd = 1))
   
-  ncp_gamma <- 0.5*ncp_beta
+  # Our gamma OC now generalised to allow for adjustment - want to 
+  # minimise prob of hard decision when we are between null and most
+  # optimistic alt, where we then want to use other info to make
+  # decision.
+  ncp_gamma <- 0.5*sqrt(n)*(rho_1 - tau_max - rho_0)/sigma
   gamma_U <- 1 - stats::pnorm(x_1, mean = ncp_gamma, sd = 1)
   gamma_L <- stats::pnorm(x_0, mean = ncp_gamma, sd = 1)
   gamma <- gamma_L + gamma_U
