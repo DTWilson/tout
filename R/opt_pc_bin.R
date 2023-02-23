@@ -58,14 +58,50 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
   ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta)
   
   # Check if all constraints are (approximately) satisfied
+  valid <- FALSE
   if(all(ocs[1:2] < c(alpha_nom, beta_nom))){
-    design <- c(n, x_0, x_1)
-  } else {
-    design <- c(NA, NA, NA)
+    valid <- TRUE
   }
   
-  return(c(design, ocs))
+  structure(list(valid = valid, n = n, thresholds = c(x_0, x_1), 
+                 alpha = ocs[1], beta = ocs[2], gamma = ocs[3],
+                 hyps = c(rho_0, rho_1), tau = tau, eta = eta),
+            class = "tout_design_bin")
 }
+
+#' @importFrom ggplot2 aes
+#' @export
+plot.tout_design_bin <- function(x, y, ...){
+  # Vector of possible outcomes
+  ys <- 0:x$n
+  # Probabilities of these outcomes under the null and alternative hypotheses
+  probs_null <- dbinom(ys, size = x$n, prob = x$hyps[1])
+  probs_alt <- dbinom(ys, size = x$n, prob = x$hyps[2])
+  
+  # Data frame for plotting, flagging all direct and indirect errors
+  df <- data.frame(y = ys,
+                   p_n = probs_null,
+                   tI = c(rep("None", x$thresholds[1] + 1), 
+                          rep("Indirect type I", x$thresholds[2] - x$thresholds[1]), 
+                          rep("Direct type I", x$n - x$thresholds[2])),
+                   p_a = probs_alt,
+                   tII = c(rep("Direct type II", x$thresholds[1] + 1), 
+                          rep("Indirect type II", x$thresholds[2] - x$thresholds[1]), 
+                          rep("None", x$n - x$thresholds[2])))
+  
+  ggplot2::ggplot(df, aes(x = y)) + 
+    ggplot2::geom_bar(aes(y = p_n, fill = tI, colour = tI), stat = "identity", alpha = 0.4) + 
+    ggplot2::geom_bar(aes(y = probs_alt, fill = tII, colour = tII), stat = "identity", alpha = 0.4) +
+    ggplot2::scale_fill_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
+                      name = "Error") +
+    ggplot2::scale_colour_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
+                               name = "Error") +
+    ggplot2::geom_vline(xintercept = x$thresholds[1], linetype = 2) +
+    ggplot2::geom_vline(xintercept = x$thresholds[2], linetype = 2) +
+    ggplot2::ylab("Probability") + ggplot2::xlab("Outcome") + 
+    ggplot2::theme_minimal()
+}
+
 
 min_x_1_bin <- function(n, rho_0, alpha_nom, tau_min, eta){
   if(eta <= alpha_nom){
