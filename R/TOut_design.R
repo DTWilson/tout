@@ -31,7 +31,7 @@
 #' 
 #' TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 #' 
-TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, eta = 0.5, tau = c(0,0), max_n = NULL){
+TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
   check_tau(tau, eta)
   
@@ -42,13 +42,25 @@ TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, eta = 0.5, tau =
     # Set max_n at an (arbitrarily) large multiple of this
     max_n <- floor(5*n_two)
   }
-  results <- NULL
-  for(n in 0:max_n){
-    results <- rbind(results, opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom,
-                                           tau=tau, eta=eta))
+
+  # An exhaustive search here due to the non-monotonic relationship with n
+  n <- 0
+  valid <- FALSE
+  while(!valid & n <= max_n){
+    n <- n + 1
+    design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
+                          tau=tau, eta=eta)
+    if(design$valid & (design$gamma <= gamma_nom)) {
+      final_design <- design
+      valid <- TRUE
+    }
   }
-  # TO Do: allow for cases when no feasible design is found
-  return(results[!is.na(results[,1]),][1,])
+  
+  if(valid){
+    return(final_design)
+  } else {
+    cat("No valid design found. Consider increasing the maximum sample size (max_n).")
+  }
 }
 
 #' Find optimal sample size and progression criteria
@@ -86,22 +98,37 @@ TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, eta = 0.5, tau =
 #' 
 #' TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, tau = tau)
 #' 
-TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, eta = 0.5, tau = c(0,0), max_n = NULL){
+TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
   check_tau(tau, eta)
   
   if(is.null(max_n)){
     n_two <- 1*(stats::qnorm(1 - alpha_nom) - stats::qnorm(beta_nom))^2/(rho_1 - rho_0)^2
     # Set max_n at an (arbitrarily) large multiple of this
-    max_n <- floor(5*n_two)
+    max_n <- floor(50*n_two)
   }
-  results <- NULL
-  for(n in 0:max_n){
-    results <- rbind(results, opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
-                                            tau=tau, eta=eta))
+  
+  min_n <- 0
+  valid <- FALSE
+  while((max_n - min_n) > 1){
+    print(c(min_n, max_n))
+    n <- ceiling((min_n + max_n)/2)
+    design <- opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, 
+                          tau=tau, eta=eta)
+    if(design$valid & (design$gamma <= gamma_nom)) {
+      max_n <- n
+      final_design <- design
+      valid <- TRUE
+    } else {
+      min_n <- n
+    }
   }
-  # TO Do: allow for cases when no feasible design is found
-  return(results[!is.na(results[,1]),][1,])
+  
+  if(valid){
+    return(final_design)
+  } else {
+    cat("No valid design found. Consider increasing the maximum sample size (max_n).")
+  }
 }
 
 check_tau <- function(tau, eta){

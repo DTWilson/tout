@@ -9,6 +9,7 @@ TOut_design_bin(
   rho_1,
   alpha_nom,
   beta_nom,
+  gamma_nom = 1,
   eta = 0.5,
   tau = c(0, 0),
   max_n = NULL

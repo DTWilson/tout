@@ -59,7 +59,7 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
   
   # Check if all constraints are (approximately) satisfied
   valid <- FALSE
-  if(all(ocs[1:2] < c(alpha_nom, beta_nom))){
+  if(all(ocs[1:2] < (c(alpha_nom, beta_nom) + 0.001))){
     valid <- TRUE
   }
   
@@ -67,6 +67,25 @@ opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
                  alpha = ocs[1], beta = ocs[2], gamma = ocs[3],
                  hyps = c(rho_0, rho_1), tau = tau, eta = eta),
             class = "tout_design_bin")
+}
+
+#' @export
+print.tout_design_bin <- function(x, ... ){
+    cat("Three-Outcome design (binary outcome)\n")
+    cat("\n")
+    cat("Sample size:", x$n, "\n")
+    cat("Decision thresholds:", x$thresholds, "\n")
+    cat("\n")
+    cat("alpha =", x$alpha, "\nbeta =", x$beta, "\ngamma =", x$gamma, "\n")
+    cat("\n")
+    cat("Hypotheses:", x$hyps[1], "(null),", x$hyps[2], "(alternative)\n")
+    cat("Modification effect range:", x$tau, "\n")
+    cat("Error probability following an intermediate result:", x$eta, "\n")
+    
+    if(!x$valid){
+      cat("\nNote: design is invalid (see error rates). Consider increasing ")
+      cat("the maximum sample size (max_n).")
+    }
 }
 
 #' @importFrom ggplot2 aes

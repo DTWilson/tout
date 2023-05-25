@@ -7,9 +7,8 @@
 <!-- badges: end -->
 
 The goal of TOut is to optimise the design of **T**hree-**Out**come
-clinical trials by determining their sample size and their decision rule
-thresholds (also known as progression criteria in the field of pilot
-trials).
+clinical trials by determining their sample size and progression
+criteria.
 
 ## Installation
 
@@ -32,7 +31,7 @@ is a binary event for each participant, which will occur with
 probability $\rho$. We would like to avoid conducting the main trial if
 the adherence rate is less that 0.5, but would like to proceed if it is
 greater than 0.7. When adherence is between these two levels, we would
-ideally like to pause amd make our progression decision based on other
+like to pause and make our progression decision based on other
 observations made during the pilot trial. Our aim is to find optimal
 progression criteria $x_0, x_1$ such that
 
@@ -49,26 +48,36 @@ To formalise this problem we set up null and alternative hypotheses as
 $\rho_0 = 0.5, \rho_1 = 0.7$ respectively, and define some operating
 characteristics which we want to minimise. Specifically, we will use:
 
--   $\alpha$: the probability of proceeding to the main trial when
-    $\rho = \rho_0$;
--   $\beta$: the probability of not proceeding to the main trial when
-    $\rho = \rho_1$; and
--   $\gamma$: the probability of not obtaining a $pause$ decision when
-    $\rho = (\rho_0 + \rho_1)/2$.
+- $\alpha$: the probability of proceeding to the main trial when
+  $\rho = \rho_0$;
+- $\beta$: the probability of not proceeding to the main trial when
+  $\rho = \rho_1$; and
+- $\gamma$: the probability of not obtaining a $pause$ decision when
+  $\rho = (\rho_0 + \rho_1)/2$.
 
 The TOut package allows us to specify maximum levels of these three
 operating characteristics, and then finds a design which will satisfy
-these constraints. When there are several such designs, it will suggest
-the one which minimises the average of the three operating
-characteristics.
+these constraints. For example, if we fix $n = 100$ we can find the
+values of $x_0$ and $x_1$ which minimise $\gamma$ whilst ensuring
+$\alpha$ and $\beta$ are below their nominal levels:
 
 ``` r
 library(TOut)
 
 opt_pc_bin(n = 100, rho_0 = 0.5, rho_1 = 0.7,
-                     alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.5)
-#> [1] 100.00000000  56.00000000  68.00000000   0.04838276   0.18450332
-#> [6]   0.27637906
+                     alpha_nom = 0.05, beta_nom = 0.2)
+#> Three-Outcome design (binary outcome)
+#> 
+#> Sample size: 100 
+#> Decision thresholds: 56 68 
+#> 
+#> alpha = 0.04838276 
+#> beta = 0.1845033 
+#> gamma = 0.2763791 
+#> 
+#> Hypotheses: 0.5 (null), 0.7 (alternative)
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
 ```
 
 The function `opt_pc` returns a vector of the form
@@ -85,7 +94,18 @@ operating characteristic constraints:
 
 ``` r
 TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
-#> [1] 83.00000000 47.00000000 54.00000000  0.04787477  0.09992842  0.44729885
+#> Three-Outcome design (binary outcome)
+#> 
+#> Sample size: 83 
+#> Decision thresholds: 47 54 
+#> 
+#> alpha = 0.04787477 
+#> beta = 0.09992842 
+#> gamma = 0.4472989 
+#> 
+#> Hypotheses: 0.5 (null), 0.7 (alternative)
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
 ```
 
 Here we find that our earlier choice of $n = 100$ was unnecessarily
@@ -95,83 +115,269 @@ $x_0 = 47$ and $x_1 = 54$.
 ## Continuous outcome
 
 We can apply the same approach to the case of a continuous outcome. For
-example, suppose that our hypotheses are $\rho_0 = 0, \rho_1 = 0.3$ and
+example, with $\rho$ now denoting the expectation of the continuous
+outcome suppose that our hypotheses are $\rho_0 = 0, \rho_1 = 0.5$ and
 our outcome has a standard deviation of $\sigma = 1$. The optimal sample
 size and progression criteria are then:
 
 ``` r
-TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
-#> [1] 142.00000000   1.30209343   2.69138749   0.05000000   0.09999743
-#> [6]   0.49672543
+TOut_design_cont(rho_0 = 0, rho_1 = 0.5, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1)
+#> [1]    0 1712
+#> [1]   0 856
+#> [1]   0 428
+#> [1]   0 214
+#> [1]   0 107
+#> [1]  0 54
+#> [1] 27 54
+#> [1] 27 41
+#> [1] 34 41
+#> [1] 34 38
+#> [1] 34 36
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 35 
+#> Decision thresholds: 1.515367 1.809841 
+#> 
+#> alpha = 0.05 
+#> beta = 0.09999975 
+#> gamma = 0.884887 
+#> 
+#> Hypotheses: 0 (null), 0.5 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
 ```
 
 In the continuous case, the progression criteria $x_0$ and $x_1$ are
-given on the scale of the z-statistic.
+given on the scale of the z-statistic. If we want a higher probability
+of getting an intermediate result, we can tighten our constraint on
+$\gamma$ and see how much more sample size this will cost:
+
+``` r
+TOut_design_cont(rho_0 = 0, rho_1 = 0.5, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1, gamma_nom = 0.5)
+#> [1]    0 1712
+#> [1]   0 856
+#> [1]   0 428
+#> [1]   0 214
+#> [1]   0 107
+#> [1]  0 54
+#> [1] 27 54
+#> [1] 41 54
+#> [1] 48 54
+#> [1] 48 51
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 51 
+#> Decision thresholds: 1.302388 2.686702 
+#> 
+#> alpha = 0.05 
+#> beta = 0.09999972 
+#> gamma = 0.4982613 
+#> 
+#> Hypotheses: 0 (null), 0.5 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
+```
 
 ## Making adjustments
 
 A common rationale for including an intermediate decision between $stop$
 and $go$ is to allow for adjustments to be made to the intervention
 and/or the trial design in an effort to improve the parameter of
-interest by some amount $\tau$. This leads to a different framework,
-where we will now proceed to the main trial whenever $\hat{\rho} > x_0$
-but will do so after making adjustments if $x_0 < \hat{\rho} \leq x_1$.
+interest by some amount $\tau$. we can use our framework here by taking
+an intermediate result as leading to a choice between $stop$ and
+$amend then go$. We typically won’t know what $\tau$ is at the design
+stage, but might be able to specify an interval
+$\tau \in [\tau_{min}, \tau_{max}]$ which we think is plausible and over
+which we’d like to control error rates. We will only consider cases
+where $\tau_{min} \geq 0$.
 
-In this scenario, a type I error will occur when
-$x_1 < \hat{\rho} | \rho \leq \rho_0$ (since we will proceed directly
-and run a trial under $\rho = \rho_0$), or when
-$x_0 < \hat{rho} | \rho \leq \rho_0 - \tau$ (since we will either adjust
-but from such a poor starting point that the adjusted rate is still less
-than $rho_0$, or we will do even worse and proceed without adjustment).
-Since the conditions are mutually exclusive, controlling the type I
-error rate means controlling the probability of these two events. Since
-the probability of the former will be maximised at $\rho = \rho_0$ we
-can easily determine the minimum $x_1$ s.t. $\alpha_1 = \alpha^*$.
-Similarly, the probability of the latter will be maximised at
-$\rho = \rho_0 - \tau_{min}$ (assuming we have a specified interval for
-the adjustment effect, $\tau \in [\tau_{min}, \tau_{max}]$).
+In this more general case, the operating characteristic $\alpha$ is the
+maximum probability of proceeding to the main trial, either directly of
+following an $amend then go$ outcome, when the (possibly amended)
+parameter value is less than or equal to $\rho_0$. Formally,
 
-We can independently determine the minimum $x_0$ s.t.
-$\alpha_2 = \alpha^*$. These choices of $x_0, x_1$ will then minimise
-the type II error rate, which is now the probability
-$\hat{\rho} \leq x_0 | \rho \geq \rho_1 - \tau$ (since this means
-stopping despite the parameter being capable of reaching $\rho_1$ if the
-adjustment is made). We can then find the minimum $n$ such that
-$\beta \leq \beta^*$.
+$$
+\alpha = \max \left[ \max_{\rho \leq \rho_0} Pr(\hat{\rho} > x_1), \max_{\rho + \tau \leq \rho_0} \eta Pr(x_0 < \hat{\rho} \leq x_1) + Pr(x_1 < \hat{\rho}) \right].
+$$ The first term is clearly maximised at $\rho = \rho_0$. The second
+can be written as
 
-Note that this all supports our previous thought that the upper
-threshold $x_1$ can be specified in a straightforward way without
-worrying about adjustment effects, but that $x_0$ is sensitive to the
-true value of $\tau$ and therefore can feel a little arbitrary.
+$$
+\eta Pr(\hat{\rho} \leq x_1) - \eta Pr(\hat{\rho} \leq x_0) + 1 - Pr(\hat{\rho} \leq x_0) = 1 + (\eta - 1)Pr(\hat{\rho} \leq x_1) - \eta Pr(\hat{\rho} \leq x_0),
+$$ and so is maximised at $\rho = \rho_0 - \tau_{min}$.
+
+To control this OC at a nominal level $\alpha^*$, we first take $x_1$ as
+fixed and such that
+$Pr(\hat{\rho} > x_1 ~|~ \rho = \rho_0) \leq \alpha^*$. Then We set the
+second term equal to $\alpha^*$ and rearrange to get
+
+$$
+Pr(\hat{\rho} \leq x_0) = \frac{1}{\eta} + \frac{\eta - 1}{\eta}Pr(\hat{\rho} \leq x_1) - \frac{\alpha^*}{\eta}.
+$$ Using the inverse of $\hat{\rho}$’s distribution function, we can
+then find the $\x_0$ which gives us $\alpha = \alpha^*$ (or for the
+binary case, the $x_0$ which maximises $\alpha$ whilst respecting the
+constraint).
+
+Recall this choice of $x_0$ was conditional on a given $x_1$. To choose
+$x_1$, we search over candidate values and choose the largest value such
+that the corresponding $x_0 \leq x_1$, and $\beta \leq \beta^*$ (since
+larger $x_1$ means a larger intermediate zone and therefore a lower
+$\gamma$). The OC $\beta$ is
+
+$$
+\beta = \max \left[ \max_{\rho > \rho_1} Pr(\hat{\rho} \leq x_0), \max_{\rho + \tau > \rho_1} Pr(\hat{\rho} \leq x_0) + \eta Pr(x_0 < \hat{\rho} \leq x_1) \right].
+$$ The first term is maximised at $\rho = \rho_1$. The second term can
+be written as
+
+$$
+\eta Pr(\hat{\rho} \leq x_1) + (1 - \eta) Pr(\hat{\rho} \leq x_0),
+$$ which is maximised at $\rho = \rho_1 - \tau_{max}$. Since
+$\tau_{max} > 0$, the second term will never be less than the first and
+so things simplify to
+
+$$
+\beta = Pr(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}).
+$$
+
+Note that the above examples are just special cases where we set
+$\tau_{min} = \tau_{max} = 0$.
 
 ``` r
 # No adjustment possible
-opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0, tau_max=0)
-#> [1] 100.00000000   1.64485363   1.64485363   0.05000000   0.08768546
+opt_pc_cont(n=110, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0,0))
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 110 
+#> Decision thresholds: 1.295845 2.808898 
+#> 
+#> alpha = 0.05 
+#> beta = 0.1999871 
+#> gamma = 0.4990365 
+#> 
+#> Hypotheses: 0 (null), 0.3 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
 
 # Adjustment known exactly:
-opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.1, tau_max=0.1)
-#> [1] 100.00000000   0.64485363   1.64485363   0.05000000   0.08768546
+opt_pc_cont(n=110, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0.1, 0.1))
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 110 
+#> Decision thresholds: 0.2470354 1.760109 
+#> 
+#> alpha = 0.05 
+#> beta = 0.1999908 
+#> gamma = 0.4990326 
+#> 
+#> Hypotheses: 0 (null), 0.3 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0.1 0.1 
+#> Error probability following an intermediate result: 0.5
 
 # Only interval of adjustment known:
-opt_pc_adjust_cont(n=100, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
-#> [1] 100.0000000   0.8448536   1.6448536   0.0500000   0.1697518
+opt_pc_cont(n=128, rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0.08, 0.12))
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 128 
+#> Decision thresholds: 0.4076158 1.646594 
+#> 
+#> alpha = 0.05 
+#> beta = 0.1999936 
+#> gamma = 0.5770699 
+#> 
+#> Hypotheses: 0 (null), 0.3 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0.08 0.12 
+#> Error probability following an intermediate result: 0.5
 ```
 
-And similarly we can do this for a binary outcome:
+Note that the operating characteristics are the same when the adjustment
+effect is 0, and when it is known - just the decision thresholds change.
+Also note that we need to increase the sample size in the third case to
+ensure $\alpha$ and $\beta$ are controlled when the adjustment effect is
+not known.
+
+Similarly, we can do all this for a binary outcome:
 
 ``` r
-opt_pc_adjust_bin(n=100, rho_0 = 0.3, rho_1 = 0.5, alpha_nom = 0.05, beta_nom = 0.2,  tau_min=0.08, tau_max=0.12)
-#> [1] 100.00000000  29.00000000  38.00000000   0.05000000   0.03816388
+# No adjustment possible
+opt_pc_bin(n=110, rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0,0))
+#> Three-Outcome design (binary outcome)
+#> 
+#> Sample size: 110 
+#> Decision thresholds: 62 75 
+#> 
+#> alpha = 0.03810368 
+#> beta = 0.1872513 
+#> gamma = 0.2776724 
+#> 
+#> Hypotheses: 0.5 (null), 0.7 (alternative)
+#> Modification effect range: 0 0 
+#> Error probability following an intermediate result: 0.5
+
+# Adjustment known exactly:
+opt_pc_bin(n=110, rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0.1, 0.1))
+#> Three-Outcome design (binary outcome)
+#> 
+#> Sample size: 110 
+#> Decision thresholds: 51 64 
+#> 
+#> alpha = 0.03652218 
+#> beta = 0.1927931 
+#> gamma = 0.287125 
+#> 
+#> Hypotheses: 0.5 (null), 0.7 (alternative)
+#> Modification effect range: 0.1 0.1 
+#> Error probability following an intermediate result: 0.5
+
+# Only interval of adjustment known:
+opt_pc_bin(n=145, rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2,  tau = c(0.08, 0.12))
+#> Three-Outcome design (binary outcome)
+#> 
+#> Sample size: 145 
+#> Decision thresholds: 69 82 
+#> 
+#> alpha = 0.04819701 
+#> beta = 0.199825 
+#> gamma = 0.3574197 
+#> 
+#> Hypotheses: 0.5 (null), 0.7 (alternative)
+#> Modification effect range: 0.08 0.12 
+#> Error probability following an intermediate result: 0.5
 ```
 
 We can find optimal sample sizes as before, but now handing the function
 an interval for the adjustment effect $\tau$:
 
 ``` r
-TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.05, 0.15))
-#> [1] 220.00000000 111.00000000 122.00000000   0.05000000   0.09917233
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = c(0.05, 0.15))
+#> No valid design found. Consider increasing the maximum sample size (max_n).
 
-TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.07, 0.1))
-#> [1] 118.00000000   0.88445899   1.64485363   0.05000000   0.09885608
+TOut_design_cont(rho_0 = 0, rho_1 = 0.3, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2, tau = c(0.02, 0.17))
+#> [1]    0 3434
+#> [1]    0 1717
+#> [1]   0 859
+#> [1]   0 430
+#> [1] 215 430
+#> [1] 215 323
+#> [1] 269 323
+#> [1] 269 296
+#> [1] 283 296
+#> [1] 290 296
+#> [1] 293 296
+#> Three-Outcome design (continuous outcome)
+#> 
+#> Sample size: 296 
+#> Decision thresholds: 1.083884 1.644904 
+#> 
+#> alpha = 0.05 
+#> beta = 0.2007691 
+#> gamma = 0.7971188 
+#> 
+#> Hypotheses: 0 (null), 0.3 (alternative)
+#> Satndard deviation: 1 
+#> Modification effect range: 0.02 0.17 
+#> Error probability following an intermediate result: 0.5
 ```

@@ -1,0 +1,176 @@
+---
+title: "Three-Outcome clinical trial design (TOut) - research report"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Research_report}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TOut)
+library(ggplot2)
+```
+
+## Introduction
+
+This report describes the theory and implementation of methods to design and analyse clinical trials with a three-outcome structure. We will discuss this design in the context of pilot trials assessing the feasibility of a subsequent definitive trial, but the method is general and can equally be applied to trials assessing efficacy.
+
+## Theory
+
+We consider problems where a single-arm pilot trial with sample size $n$ will estimate a statistical parameter $\rho$ and use this to arrive at one of three outcomes. If the estimate lies below a lower threshold, $\hat{\rho} \leq x_0$, the decision is to _stop_. If it lies above an upper threshold, the decision is to _go_ ahead to the definitive trial with a main trial parameter $\rho_m = \rho$. If it lies between these, $x_0 < \hat{\rho} \leq x_1$, we _pause_ and use other information or other stakeholder input to make our decision, which will ultimately be to either _stop_ or _amend-then-go_, where by "amend" we mean make some changes to the intervention or trial design such that the parameter will change by some amount $\tau$, giving a main trial parameter $\rho_m = \rho + \tau$. We typically won't know what $\tau$ is at the design stage, but might be able to specify an interval $\tau \in [\tau_{min}, \tau_{max}]$ which we think is plausible and over which we'd like to control error rates. We will only consider cases where $\tau_{min} \geq 0$.
+
+$$
+Decision =
+\begin{cases}
+ stop    & \hat{\rho} \leq x_0 \\
+ pause   & x_0 < \hat{\rho} \leq x_1 \\
+ go      & x_1 < \hat{\rho}
+ \end{cases}       
+$$
+
+To determine optimal values of $n, x_0$ and $x_1$ we introduce the following operating characteristics (OCs):
+
+- $\alpha$: the probability of proceeding to the main trial when $\rho_m \leq \rho_0$;
+- $\beta$: the probability of not proceeding to the main trial when $\rho_m \geq \rho_1$; and
+- $\gamma$: the probability of not obtaining a _pause_ decision when $\rho = (\rho_0 + \rho_1)/2$.
+
+Since we can make a _go_ decision in two ways, $\alpha$ is the maximum probability of proceeding either directly or following an _amend-then-go_ outcome when $\rho_m \leq\rho_0$. For the latter, we assume there is a constant probability of mistakenly deciding to proceed when in fact $\rho + \tau \leq \rho_0$, and denote this by $\eta$. That is,
+
+$$
+\alpha = \max \left[ \max_{\rho \leq \rho_0} Pr(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta Pr(x_0 < \hat{\rho} \leq x_1) + Pr(x_1 < \hat{\rho}) \right].
+$$
+The first term is clearly maximised at $\rho = \rho_0$. The second can be written as
+
+$$
+\begin{align}
+\eta Pr(x_0 < \hat{\rho} \leq x_1) + Pr(x_1 < \hat{\rho}) &=
+\eta Pr(\hat{\rho} \leq x_1) - \eta Pr(\hat{\rho} \leq x_0) + 1 - Pr(\hat{\rho} \leq x_0)\\
+&= 1 + (\eta - 1)Pr(\hat{\rho} \leq x_1) - \eta Pr(\hat{\rho} \leq x_0),
+\end{align}
+$$
+
+and so is maximised at $\rho = \rho_0 - \tau_{min}$.
+
+To control this OC at a nominal level $\alpha^*$, we first take $n$ and $x_1$ as fixed and such that $Pr(\hat{\rho} > x_1 ~|~ \rho = \rho_0) \leq \alpha^*$. Then we set the second term equal to $\alpha^*$ and rearrange to get
+
+$$
+Pr(\hat{\rho} \leq x_0) = \frac{1}{\eta} + \frac{\eta - 1}{\eta}Pr(\hat{\rho} \leq x_1) - \frac{\alpha^*}{\eta}.
+$$
+
+Using the inverse of $\hat{\rho}$'s distribution function, we can then find the $\x_0$ which gives us $\alpha = \alpha^*$ (or for the binary case, the $x_0$ which maximises $\alpha$ whilst respecting the constraint).
+
+To choose $x_1$, we continue to fix $n$ and choose the largest value such that $x_0 \leq x_1$ (wuith $x_0$ determined using the above procedure) and $\beta \leq \beta^*$. Searching for the largest such $x_1$ will mean finding the largest possible intermediate outcome zone $|x_1 - x_0|$ and thus minimise the third OC $\gamma$. 
+
+An incorrect _stop_ decision may again occur two ways - directly, or following a _pause_ outcome. The OC $\beta$ can therefore be written as
+
+$$
+\beta = \max \left[ \max_{\rho > \rho_1} Pr(\hat{\rho} \leq x_0), \max_{\rho + \tau > \rho_1} Pr(\hat{\rho} \leq x_0) + \eta Pr(x_0 < \hat{\rho} \leq x_1) \right],
+$$
+
+Where we have assumed the same probability of an incorrect decision following a _pause_ outcome as with the $\alpha$ case. The first term is maximised at $\rho = \rho_1$. The second term can be written as
+
+$$
+\eta Pr(\hat{\rho} \leq x_1) + (1 - \eta) Pr(\hat{\rho} \leq x_0),
+$$
+which is maximised at $\rho = \rho_1 - \tau_{max}$. Since $\tau_{max} > 0$, the second term will never be less than the first and so we can simplify to
+
+$$
+\beta = Pr(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}).
+$$
+Finally, we can choose $n$ by finding the smallest value such that all constraints are satisfied, when corresponding $x_1$ and $x_0$ are chosen using the above procedure.
+
+Note that this general method can be applied in the special case where no adjustments are going to be made following a _pause_ decision by setting $\tau_{min} = \tau_{max} = 0$.
+
+## Evaluation
+
+For all our evaluations we will use an example problem where the outcome is binary and the hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7$ and we use constraints $\alpha \leq 0.05, \beta \leq 0.2$
+
+### Are three-outcome designs more efficient than two-outcome designs?
+
+One motivation for three-outcome pilot trials is the typically poor precision in pilot parameter estimates and an associated concern that hard _stop_ or _go_ decisions could be made incorrectly too easily. We can shed some light on this by comparing the efficiency of three- and two-outcomes designs in terms of the sample size they require. 
+
+The key parameter to vary here is $\eta$, the probability of making an incorrect decision when we have a pause outcome under the null or alternative hypothesis. When we set $\eta = 0.5$ the optimal three-outcome design reduces to a two-outcome design:
+
+```{r}
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = 0.5)
+```
+This makes sense - we don't want to have any chance of a _pause_ outcome because we can't make reliable decisions following it, and we haven't asked for a meanijngful constraint on the OC $\gamma$. If we reduce $\eta$, we will see some efficiencies:
+
+```{r}
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = 0.2)
+```
+So, we can reduce the sample size from 37 to 28 if we can assume $\eta = 0.2$. This might be quite optimistic; suppose we use $\eta = 0.4$:
+
+```{r}
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = 0.4)
+```
+We find that this is still not enough to move away from a two outcome design. Plotting the optimal sample size for a range of $\eta$ gives
+
+```{r}
+df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
+ns <- sapply(df$eta, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = z)$n)
+df$n <- ns
+
+ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
+  #geom_line(aes(y = dif), linetype=2) + 
+  xlab("Probability of incorrect decision following intermediate result") +
+  ylab("Sample size") +
+  theme_minimal()
+```
+
+From this we see the general trend, and can note that for a significant reduction in sample size we need to assume a very strong ability to make the correct progression decisions following a _pause_ outcome.
+
+### Can three-outcome designs facilitate other information feeding into progression decisions?
+
+Another motivation for three-outcome designs is that they can provide a formal space where other information or other stakeholders can contribute to the progression decision in the event of an intermediate or borderline result in the pilot. Assuming $\eta = 0.5$, we can help ensure _pause_ outcome will occur with some desired probability when $\rho$ is at the midpoint of the two hypotheses by constraining the OC $\gamma$. For example, 
+
+```{r}
+TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 0.1)
+```
+
+If we want only a 10% chance of direct _go_ or _stop_ decisions when $\rho = (\rho_0 + \rho_1)/2 = 0.6$, we find we need to increase the sample size from $n = 37$ up to $n = 170$. Looking over a range of $\gamma$ constraints gives:
+
+```{r}
+df <- data.frame(gamma = seq(0.1, 1, 0.001))
+ns <- sapply(df$gamma, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = z)$n)
+df$n <- ns
+
+ggplot(df, aes(gamma)) + geom_line(aes(y=n)) +
+  xlab("Maximum probability of incorrect conclusive decision") +
+  ylab("Sample size") +
+  theme_minimal()
+```
+
+### Can three-outcome designs faciliate making adjustments between the pilot and main trials?
+
+Finally, we want to consider how a three-outcome design works when we're planning on making adjustments. First, consider the case where the adjustment effect is known, i.e. when $\tau_{min} = \tau_{max} = \tau$. 
+
+```{r}
+df <- data.frame(tau = seq(0, 0.15, 0.001))
+ns <- sapply(df$tau, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = c(z, z), max_n = 500, eta = 0.5)$n)
+df$n <- ns
+
+ggplot(df, aes(tau)) + geom_line(aes(y=n)) +
+  xlab("Known effect of adjustment") +
+  ylab("Sample size") +
+  theme_minimal()
+```
+
+```{r}
+df <- data.frame(w = seq(0, 0.05, 0.0001))
+ns <- sapply(df$w, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = 0.075 + c(-z, z), max_n = 500, eta = 0.5)$n)
+df$n <- ns
+
+ggplot(df, aes(w)) + geom_line(aes(y=n)) +
+  xlab("Effect of adjustment interval width") +
+  ylab("Sample size") +
+  theme_minimal()
+```

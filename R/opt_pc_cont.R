@@ -59,17 +59,31 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
   
   ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta)
   
-  ocs
-  x_1 - x_0
-  
   # Check if all constraints are (approximately) satisfied
-  if(all(ocs[1:2] < (c(alpha_nom, beta_nom) + 0.0001))){
-    design <- c(n, x_0, x_1)
-  } else {
-    design <- c(NA, NA, NA)
+  valid <- FALSE
+  if(all(ocs[1:2] < (c(alpha_nom, beta_nom) + 0.001))){
+    valid <- TRUE
   }
   
-  return(c(design, ocs))
+  structure(list(valid = valid, n = n, thresholds = c(x_0, x_1), 
+                 alpha = ocs[1], beta = ocs[2], gamma = ocs[3],
+                 hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = eta),
+            class = "tout_design_cont")
+}
+
+#' @export
+print.tout_design_cont <- function(x, ...){
+  cat("Three-Outcome design (continuous outcome)\n")
+  cat("\n")
+  cat("Sample size:", x$n, "\n")
+  cat("Decision thresholds:", x$thresholds, "\n")
+  cat("\n")
+  cat("alpha =", x$alpha, "\nbeta =", x$beta, "\ngamma =", x$gamma, "\n")
+  cat("\n")
+  cat("Hypotheses:", x$hyps[1], "(null),", x$hyps[2], "(alternative)\n")
+  cat("Satndard deviation:", x$sigma, "\n")
+  cat("Modification effect range:", x$tau, "\n")
+  cat("Error probability following an intermediate result:", x$eta, "\n")
 }
 
 min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta){
