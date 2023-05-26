@@ -164,6 +164,8 @@ ggplot(df, aes(tau)) + geom_line(aes(y=n)) +
   theme_minimal()
 ```
 
+The intuition here is that when we have $\tau \neq 0$, the point at which we need to control type II errors shifts left but one of the type I error components stays put at $\rho_0$.
+
 ```{r}
 df <- data.frame(w = seq(0, 0.05, 0.0001))
 ns <- sapply(df$w, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = 0.075 + c(-z, z), max_n = 500, eta = 0.5)$n)
@@ -189,3 +191,41 @@ ggplot(df, aes(l, w)) + geom_tile(aes(fill = n)) +
   theme_minimal()
 ```
 
+```{r}
+df <- expand.grid(l = seq(0, 0.1, 0.001),
+                 w = seq(0, 0.05, 0.001))
+
+ns <- apply(df, 1, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = c(z[1], z[1] + z[2]), max_n = 500, eta = 0.2)$n)
+df$n <- ns
+
+ggplot(df, aes(l, w)) + geom_tile(aes(fill = n)) +
+  scale_fill_continuous(type = "viridis") +
+  xlab("Lower bound of adjustment effect") +
+  ylab("Width of adjustment effect interval") +
+  theme_minimal()
+```
+
+```{r}
+df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
+ns <- sapply(df$eta, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = z, tau = c(0.05, 0.15), max_n = 500)$n)
+df$n <- ns
+
+ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
+  #geom_line(aes(y = dif), linetype=2) + 
+  xlab("Probability of incorrect decision following intermediate result") +
+  ylab("Sample size") +
+  theme_minimal()
+```
+
+```{r}
+df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
+ns <- sapply(df$eta, function(z) TOut_design_cont(rho_0 = 0.5, rho_1 = 0.8, sigma = 1, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = z, tau = c(0.05, 0.15), max_n = 500)$n)
+df$n <- ns
+
+ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
+  #geom_line(aes(y = dif), linetype=2) + 
+  xlab("Probability of incorrect decision following intermediate result") +
+  ylab("Sample size") +
+  theme_minimal()
+```
+So, a lower $\eta$ can give more reasonable sample sizes. Unlike in the non-adjustment case, we might argue $\eta < 0.5$ is plausible because even if we can't learn anything about $\rho$ beyond its sufficient statistic $\hat{rho}$, we might have learnt about $\tau$ from the pilot (i.e. we have a good idea of what adjustment we can make and what effect it will have). But this can only take us so far, since we need to know about the adjusted parameter $\rho + \tau$ so there will always be some residual uncertainty. Thus, extreme case like the one above where $\eta$ is so low that the optimal design becomes $n=2$ with a almost guaranteed pause result (following which we almost always make the right decision) aren't realistic.

@@ -1,10 +1,10 @@
 Package: TOut
-Title: Three-Outcome Clinical Trials: Sample Size and Decision Rules
+Title: Three-Outcome Clinical Trials: optimal sample size and progression criteria
 Version: 0.0.0.9000
 Authors@R: 
     person("Duncan", "Wilson", , "d.t.wilson@leeds.ac.uk", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0001-7949-8718"))
-Description: Finds optimal decision rules (AKA progression criteria) and sample 
+Description: Finds the optimal decision rules (AKA progression criteria) and sample 
   size for clinical trials with three (red/amber/green) outcomes.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,3 +16,5 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
+Imports: 
+    ggplot2

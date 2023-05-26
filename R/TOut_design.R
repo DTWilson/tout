@@ -111,7 +111,6 @@ TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_no
   min_n <- 0
   valid <- FALSE
   while((max_n - min_n) > 1){
-    print(c(min_n, max_n))
     n <- ceiling((min_n + max_n)/2)
     design <- opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, 
                           tau=tau, eta=eta)
