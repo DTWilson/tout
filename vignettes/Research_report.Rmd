@@ -159,7 +159,7 @@ ns <- sapply(df$tau, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha
 df$n <- ns
 
 ggplot(df, aes(tau)) + geom_line(aes(y=n)) +
-  xlab("Known effect of adjustment") +
+  xlab("Effect of adjustment") +
   ylab("Sample size") +
   theme_minimal()
 ```
@@ -174,3 +174,18 @@ ggplot(df, aes(w)) + geom_line(aes(y=n)) +
   ylab("Sample size") +
   theme_minimal()
 ```
+
+```{r}
+df <- expand.grid(l = seq(0, 0.1, 0.001),
+                 w = seq(0, 0.05, 0.001))
+
+ns <- apply(df, 1, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = c(z[1], z[1] + z[2]), max_n = 500, eta = 0.5)$n)
+df$n <- ns
+
+ggplot(df, aes(l, w)) + geom_tile(aes(fill = n)) +
+  scale_fill_continuous(type = "viridis") +
+  xlab("Lower bound of adjustment effect") +
+  ylab("Width of adjustment effect interval") +
+  theme_minimal()
+```
+
