@@ -116,17 +116,56 @@ We find that this is still not enough to move away from a two outcome design. Pl
 
 ```{r}
 df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
-ns <- sapply(df$eta, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = z)$n)
-df$n <- ns
+
+get_results <- function(z) {
+  d <- TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = 1, eta = z)
+  return(c(d$n, d$thresholds))
+}
+
+rs <- t(sapply(df$eta, get_results))
+df$n <- rs[,1]; df$dif <- rs[,3] - rs[,2]
 
 ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
-  #geom_line(aes(y = dif), linetype=2) + 
+  geom_line(aes(y = dif), linetype=2) + 
   xlab("Probability of incorrect decision following intermediate result") +
   ylab("Sample size") +
   theme_minimal()
+
+ggsave("../paper/figures/eta_ns.pdf", height=4.5, width=14, units="cm")
+ggsave("../paper/figures/eta_ns.eps", height=4.5, width=14, units="cm", device = cairo_ps())
 ```
 
-From this we see the general trend, and can note that for a significant reduction in sample size we need to assume a very strong ability to make the correct progression decisions following a _pause_ outcome.
+From this we see the general trend, and can note that for a significant reduction in sample size we need to assume a very strong ability to make the correct progression decisions following a _pause_ outcome. To examine sensitivity to an incorrect assumption of $\eta$, we take each of these optimal designs and find their error rates when $\eta = 0.5$
+
+```{r}
+get_true_ocs <- function(z) {
+  get_ocs_bin(z[1], z[2], z[3], rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta = 0.5)[1:2]
+}
+
+ocs <- t(apply(rs, 1, get_true_ocs))
+df$a <- ocs[,1]; df$b <- ocs[,2]
+
+
+ggplot(df, aes(eta)) + 
+  geom_line(aes(y = a, linetype = "b")) +
+  geom_line(aes(y = b, linetype = "c")) + 
+  xlab("Probability of incorrect decision following intermediate result") +
+  ylab("Error rate") + 
+  scale_linetype_manual(name = "",
+                       values = 1:2,
+                       labels =c(expression(alpha), expression(beta))) +
+  theme_minimal()
+
+ggsave("../paper/figures/eta_true_ocs.pdf", height=9, width=14, units="cm")
+ggsave("../paper/figures/eta_true_ocs.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+For example, compare the sample size saving and error rate inflation resulting from assuming $\eta = 0.2$ when in fact $\eta = 0.5$:
+
+```{r}
+df[df$eta == 0.4991,]
+df[df$eta == 0.2001,]
+```
 
 ### Can three-outcome designs facilitate other information feeding into progression decisions?
 
@@ -148,6 +187,8 @@ ggplot(df, aes(gamma)) + geom_line(aes(y=n)) +
   ylab("Sample size") +
   theme_minimal()
 ```
+
+
 
 ### Can three-outcome designs faciliate making adjustments between the pilot and main trials?
 

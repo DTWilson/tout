@@ -1,3 +1,5 @@
+
+#' @export
 get_ocs_bin <- function(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta){
   
   # Calculate the error rates for each design - binary case
