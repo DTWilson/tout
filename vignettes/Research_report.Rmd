@@ -178,8 +178,8 @@ ggplot(df, aes(w)) + geom_line(aes(y=n)) +
 ```
 
 ```{r}
-df <- expand.grid(l = seq(0, 0.1, 0.001),
-                 w = seq(0, 0.05, 0.001))
+df <- expand.grid(l = seq(0, 0.1, 0.01),
+                 w = seq(0, 0.05, 0.01))
 
 ns <- apply(df, 1, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, tau = c(z[1], z[1] + z[2]), max_n = 500, eta = 0.5)$n)
 df$n <- ns
@@ -229,3 +229,89 @@ ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
   theme_minimal()
 ```
 So, a lower $\eta$ can give more reasonable sample sizes. Unlike in the non-adjustment case, we might argue $\eta < 0.5$ is plausible because even if we can't learn anything about $\rho$ beyond its sufficient statistic $\hat{rho}$, we might have learnt about $\tau$ from the pilot (i.e. we have a good idea of what adjustment we can make and what effect it will have). But this can only take us so far, since we need to know about the adjusted parameter $\rho + \tau$ so there will always be some residual uncertainty. Thus, extreme case like the one above where $\eta$ is so low that the optimal design becomes $n=2$ with a almost guaranteed pause result (following which we almost always make the right decision) aren't realistic.
+
+## Figures
+
+Sargent sampling distribution illustration:
+
+```{r}
+ggplot(data.frame(x = c(-10, 10)), aes(x)) +
+  # Null 
+  stat_function(fun = dnorm, geom = "line", aes(linetype="a")) +
+  stat_function(fun = dnorm, geom = "area", fill = "orange", alpha = 0.4, xlim = c(2, 7)) +
+  stat_function(fun = dnorm, geom = "area", fill = "red", alpha = 0.4, xlim = c(1, 2)) +
+  
+  # Alternative
+  stat_function(fun = dnorm, args = list(mean = 2.5), geom = "line", aes(linetype="b")) +
+  stat_function(fun = dnorm, args = list(mean = 2.5), 
+                geom = "area", fill = "darkgreen", alpha = 0.4, xlim = c(-3, 1)) +
+  stat_function(fun = dnorm, args = list(mean = 2.5), 
+                geom = "area", fill = "blue", alpha = 0.4, xlim = c(1, 2)) +
+  
+  geom_label(aes(x = 0.6, y = 0.22, label = "lambda"), parse = T, fill = "red", alpha = 0.4) +
+  geom_label(aes(x = 2.4, y = 0.17, label = "delta"), parse = T, fill = "blue", alpha = 0.4) +
+  geom_label(aes(x = 0.2, y = 0.1, label = "beta[a]"), parse = T, fill = "darkgreen", alpha = 0.4) +
+  geom_label(aes(x = 2.6, y = 0.06, label = "alpha[a]"), parse = T, fill = "orange", alpha = 0.4) +
+  
+  geom_text(aes(x=1, y=-0.04, label = "x[0]"), parse = T) +
+  geom_text(aes(x=2, y=-0.04, label = "x[1]"), parse = T) +
+  
+  scale_linetype_manual(values = c(1,2), 
+                        labels = c(expression(rho[0]), expression(rho[1])), name="") +
+  
+  xlim(-4, 6.5) + theme_void() + theme(legend.position="bottom")
+
+ggsave("../paper/figures/Sarg_ocs.pdf", height=4.5, width=14, units="cm")
+ggsave("../paper/figures/Sarg_ocs.eps", height=4.5, width=14, units="cm", device = cairo_ps())
+```
+
+Storer sampling distribution illustration:
+
+```{r}
+p1 <- ggplot(data.frame(x = c(-10, 10)), aes(x)) +
+  # Null 
+  stat_function(fun = dnorm, geom = "line", aes(linetype = "a")) +
+  stat_function(fun = dnorm, geom = "area", fill = "orange", alpha = 0.4, xlim = c(1, 7)) +
+  
+  # Alternative
+  stat_function(fun = dnorm, args = list(mean = 2.5), geom = "line", aes(linetype = "b")) +
+  stat_function(fun = dnorm, args = list(mean = 2.5), 
+                geom = "area", fill = "darkgreen", alpha = 0.4, xlim = c(-3, 2)) +
+  
+  geom_label(aes(x = 0.2, y = 0.12, label = "beta[b]"), parse = T, fill = "darkgreen", alpha = 0.4) +
+  geom_label(aes(x = 2.6, y = 0.08, label = "alpha[b]"), parse = T, fill = "orange", alpha = 0.4) +
+
+  geom_text(aes(x=1, y=-0.04, label = "x[0]"), parse = T) +
+  geom_text(aes(x=2, y=-0.04, label = "x[1]"), parse = T) +
+  
+  stat_function(fun = dnorm, geom = "line", aes(linetype = "c"), xlim = c(0,0)) +
+  
+  scale_linetype_manual(values = c(1, 2, 3), 
+                        labels = c(expression(rho[0]), expression(rho[1]),
+                                   expression(rho[m])), name="") +
+  
+  xlim(-4, 6.5) + theme_void() + theme(legend.position="bottom")
+```
+
+```{r}
+p2 <- ggplot(data.frame(x = c(-10, 10)), aes(x)) +
+  # Midpoint
+  stat_function(fun = dnorm, args = list(mean = 1.25), geom = "line", linetype=3) +
+  stat_function(fun = dnorm, args = list(mean = 1.25), 
+                geom = "area", fill = "red", alpha = 0.4, xlim = c(-3, 1)) +
+  stat_function(fun = dnorm, args = list(mean = 1.25), 
+                geom = "area", fill = "blue", alpha = 0.4, xlim = c(2, 7)) +
+  
+  geom_label(aes(x = -0.9, y = 0.12, label = "gamma[L]"), parse = T, fill = "red", alpha = 0.4) +
+  geom_label(aes(x = 3.4, y = 0.12, label = "gamma[U]"), parse = T, fill = "blue", alpha = 0.4) +
+  xlim(-4, 6.5) + theme_void()
+```
+
+```{r}
+library(patchwork)
+
+p2/p1
+
+ggsave("../paper/figures/Stor_ocs.pdf", height=8, width=14, units="cm")
+ggsave("../paper/figures/Stor_ocs.eps", height=8, width=14, units="cm", device = cairo_ps())
+```
