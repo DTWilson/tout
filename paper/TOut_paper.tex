@@ -319,8 +319,8 @@ The design of Sargent \emph{et al.} defines four operating characteristics relev
  &&& \\
 \multirow{6}{*}{\rotatebox[origin=c]{90}{Storer}} & $\alpha_b$ & $\PR[ \hat{\rho} > x_0 | \rho = \rho_0]$ & Probability of not obtaining an immediate \emph{stop} decision under the null hypothesis \\
  & $\beta_b$ & $\PR[ \hat{\rho} \leq x_1 | \rho = \rho_1]$ & Probability of not obtaining an immediate \emph{go} decision under the alternative hypothesis \\
- & $\gamma_L$ & $\PR[ \hat{\rho} \leq x_0 | \rho = \rho_m]$ & Probability of an immediate \emph{stop} decision when $\rho = \rho_m$ \\
- & $\gamma_U$ & $\PR[ x_1 < \hat{\rho} | \rho = \rho_m]$ &  Probability of an immediate \emph{go} decision when $\rho = \rho_m$ \\
+ & $\gamma_L$ & $\PR[ \hat{\rho} \leq x_0 | \rho = \rho']$ & Probability of an immediate \emph{stop} decision when $\rho = \rho'$ \\
+ & $\gamma_U$ & $\PR[ x_1 < \hat{\rho} | \rho = \rho']$ &  Probability of an immediate \emph{go} decision when $\rho = \rho'$ \\
 \bottomrule
 \end{tabularx}
 \label{tab:ocs}
@@ -333,7 +333,7 @@ The design of Sargent \emph{et al.} defines four operating characteristics relev
 \label{fig:Sarg_ocs}
 \end{figure}
 
-An alternative three-outcome design proposed by Storer \cite{Storer1992} takes the same basic approach, but with a different set of four operating characteristics. Here, the type I error rate $\alpha_b$ is taken to be the probability of exceeding the lower threshold, $x_0$, under the null; and similarly the type II error rate $\beta_b$ is now the probability of failing to exceed the upper threshold under the alternative. The remaining two operating characteristics are the probabilities of incorrectly obtaining a \emph{stop} or a \emph{go} decision when the true parameter is at some midpoint $\rho_m \in (\rho_0, \rho_1)$. These operating characteristics, denoted by $\gamma_L$ and $\gamma_U$ respectively, reflects the motivation of this design to \emph{encourage} an intermediate outcome when the true parameter value is between the null and alternative. The operating characteristics are summarised in Table \ref{tab:ocs} and illustrated in Figure \ref{fig:Stor_ocs}, where we follow the author's suggestion to set $\rho_m = (\rho_1 + \rho_0)/2$.
+An alternative three-outcome design proposed by Storer \cite{Storer1992} takes the same basic approach, but with a different set of four operating characteristics. Here, the type I error rate $\alpha_b$ is taken to be the probability of exceeding the lower threshold, $x_0$, under the null; and similarly the type II error rate $\beta_b$ is now the probability of failing to exceed the upper threshold under the alternative. The remaining two operating characteristics are the probabilities of incorrectly obtaining a \emph{stop} or a \emph{go} decision when the true parameter is at some midpoint $\rho' \in (\rho_0, \rho_1)$. These operating characteristics, denoted by $\gamma_L$ and $\gamma_U$ respectively, reflects the motivation of this design to \emph{encourage} an intermediate outcome when the true parameter value is between the null and alternative. The operating characteristics are summarised in Table \ref{tab:ocs} and illustrated in Figure \ref{fig:Stor_ocs}, where we follow the author's suggestion to set $\rho' = (\rho_1 + \rho_0)/2$.
 
 \begin{figure}
 \centering
@@ -359,7 +359,7 @@ These operating characteristics have been suggested previously in the context of
 
 A similar argument applies when considering Storer's method, where we can replace the operating characteristics $\alpha_b, \beta_b$ with $\alpha$ and $\beta$. As the operating characteristics $\gamma_L, \gamma_U$ are designed to encourage an intermediate outcome under $\rho_m$, rather than limit it as in the method of Sargent \emph{et al.}, we keep these in our reformulation. Thus, an optimal three-outcome design under the reformulated Storer method can be found by estimating the probability $\eta$, setting constraints on $\alpha, \beta, \gamma_L$ and $\gamma_U$, and finally searching for the values of  $n, x_0, x_1$ which minimise $n$ whilst satisfying the constraints. 
 
-For simplicity, we will assume that the cost of an incorrect \emph{stop} or \emph{go} decision under $\rho = \rho_m$ are the same, and replace the two error rates $\gamma_U, \gamma_L$ by the single error rate
+For simplicity, we will assume that the cost of an incorrect \emph{stop} or \emph{go} decision when $\rho = \rho'$ are the same, and replace the two error rates $\gamma_U, \gamma_L$ by the single error rate
 $$
 \gamma = \gamma_L + \gamma_U,
 $$
@@ -367,20 +367,20 @@ the probability of making an incorrect conclusive decision of either type. Note 
 
 \subsection{Allowing adjustments}\label{sec:adjustments}
 
-We now further generalise the three-outcome testing framework to allow for adjustments to be made following a \emph{pause} outcome. Denote the main trial parameter by $\rho_m$, so that $\rho_m = \rho$ if adjustment is not made and $\rho_m  = \rho + \tau$ if it is. We will assume that the adjustment effect $\tau$ is known up to an interval $\tau \in [\tau_{min}, \tau_{max}]$, and that $\tau_{min} \geq 0$. We then refine our definitions of the error rates $\alpha$ and $\beta$ as
+We now further generalise the three-outcome testing framework to allow for adjustments to be made following a \emph{pause} outcome. Denote the main trial parameter by $\rho_m$, so that $\rho_m = \rho$ if no adjustment is made and $\rho_m  = \rho + \tau$ if it is. We will assume that the adjustment effect $\tau$ is known up to an interval $\tau \in [\tau_{min}, \tau_{max}]$, and that $\tau_{min} \geq 0$. We then refine our definitions of the error rates $\alpha$ and $\beta$ as
 
 \begin{itemize}
 \item $\alpha$: the probability of proceeding to the main trial when $\rho_m \leq \rho_0$
 \item $\beta$: the probability of not proceeding to the main trial when $\rho_m \geq \rho_1$;
 \end{itemize}
 
-Because we can make a \emph{go} decision in two ways, $\alpha$ is now the maximum probability of proceeding either directly or following an \emph{pause} outcome (in which case the adjustment is made) when this will lead to $\rho_m \leq \rho_0$. As before, we assume there is a constant probability of mistakenly deciding to proceed when in fact $\rho + \tau \leq \rho_0$, and denote this by $\eta$. That is,
+Because we can make a \emph{go} decision in two ways, $\alpha$ is now the maximum probability of proceeding either directly or following an \emph{pause} outcome (in which case the adjustment is made) when this will lead to $\rho_m \leq \rho_0$. As before, we assume there is a constant probability of mistakenly deciding to proceed following a \emph{pause} outcome when in fact $\rho + \tau \leq \rho_0$, denoted  by $\eta$. That is,
 
 \begin{equation}\label{eqn:alpha}
-\alpha = \max \left[ \max_{\rho \leq \rho_0} Pr(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta Pr(x_0 < \hat{\rho} \leq x_1) + Pr(x_1 < \hat{\rho}) \right].
+\alpha = \max \left[ \max_{\rho \leq \rho_0} \PR(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta \PR(x_0 < \hat{\rho} \leq x_1) + \PR(x_1 < \hat{\rho}) \right].
 \end{equation}
 
-The first term is clearly maximised at $\rho = \rho_0$. The second term can be written as
+The first term is maximised at $\rho = \rho_0$. The second term can be written as
 $$
 \begin{aligned}
 \eta \PR(x_0 < \hat{\rho} \leq x_1) + \PR(x_1 < \hat{\rho}) &=
@@ -391,38 +391,44 @@ $$
 and so is maximised at $\rho = \rho_0 - \tau_{min}$.
 
 An incorrect \emph{stop} decision may again occur two ways - directly, or following a \emph{pause} outcome. The error rate $\beta$ can therefore be written as
-$$
+
+\begin{equation}\label{eqn:beta_a}
 \beta = \max \left[ \max_{\rho > \rho_1} \PR(\hat{\rho} \leq x_0), \max_{\rho + \tau > \rho_1} \PR(\hat{\rho} \leq x_0) + \eta \PR(x_0 < \hat{\rho} \leq x_1) \right],
-$$
+\end{equation}
+
 where we have assumed the same probability of an incorrect decision following a \emph{pause} outcome as with the $\alpha$ case. The first term is maximised at $\rho = \rho_1$, while the second term can be written as
 $$
 \eta \PR(\hat{\rho} \leq x_1) + (1 - \eta) \PR(\hat{\rho} \leq x_0),
 $$
-which is maximised at $\rho = \rho_1 - \tau_{max}$. Since $\tau_{max} > 0$, the second term will never be less than the first we can therefore simplify to
+which is maximised at $\rho = \rho_1 - \tau_{max}$. Since $\tau_{max} > 0$, then $\PR(\hat{\rho} \leq x_0 | \rho = \rho_1) \leq \PR(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1  - \tau_{max})$ and so Equation \ref{eqn:beta_a} can be simplified to
 
 \begin{equation}\label{eqn:beta}
 \beta = \PR(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta \PR(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}).
 \end{equation}
 
+Note that the general error rates of Equations \ref{eqn:alpha} and \ref{eqn:beta} are valid in the special case where no adjustments are going to be made following a \emph{pause} decision (i.e. when $\tau_{min} = \tau_{max} = 0$). As such, we have a general method for three-outcome designs regardless of the possibility of adjustment. 
+
 \subsection{Implementation}
 
 To determine appropriate values for $n, x_0$ and $x_1$ which will satisfy nominal error rate constraints $\alpha^*, \beta^*$ and $\gamma^*$, we first consider $n$ and $x_1$ to be fixed and such that $\PR(\hat{\rho} > x_1 ~|~ \rho = \rho_0) \leq \alpha^*$. Then we set the second term in Equation \ref{eqn:alpha} equal to $\alpha^*$ and rearrange to get
-$$
+
+\begin{equation}\label{eqn:get_x0}
 \PR(\hat{\rho} \leq x_0) = \frac{1}{\eta} + \frac{\eta - 1}{\eta}\PR(\hat{\rho} \leq x_1) - \frac{\alpha^*}{\eta}.
-$$
+\end{equation}
+
 Using the inverse of $\hat{\rho}$'s distribution function, we can then find the value of $x_0$ which gives us $\alpha = \alpha^*$ (or for the case of a binary outcome, the $x_0$ which maximises $\alpha$ whilst ensuring $\alpha \leq \alpha^*$).
 
-To choose $x_1$, we continue to fix $n$ and then choose the largest $x_1$ such that $x_0 \leq x_1$ (with $x_0$ determined using the above procedure) and $\beta \leq \beta^*$. This will correspond to finding the largest possible intermediate outcome zone $|x_1 - x_0|$, and thus minimise the third error rate $\gamma$. Finally, we can choose $n$ by finding the smallest value such that all constraints are satisfied when the corresponding $x_1$ and $x_0$ are chosen using the above procedure.
+To choose $x_1$ we continue to fix $n$ and then use a numerical search to find the largest $x_1$ such that $x_0 \leq x_1$ (with $x_0$ determined using Equation \ref{eqn:get_x0}) and $\beta \leq \beta^*$. Finally, we can choose $n$ by finding the smallest value such that the third constraint $\gamma \leq \gamma^*$ is satisfied when the corresponding $x_1$ and $x_0$ are chosen using the above procedure.
 
-Note that the general error rate of Equations \ref{eqn:alpha} and \ref{eqn:beta} are valid in the special case where no adjustments are going to be made following a \emph{pause} decision (i.e. when $\tau_{min} = \tau_{max} = 0$). As such, we have a general method for three-outcome designs regardless of the possibiloty of adjustment. The method is implemented in the \texttt{R} package \texttt{TOut} for the case of univariate progression criteria based on either binary or continuous endpoints in single arm, single stage trials. Full details and illustrations are provided in the supplementary material and package documentation.
+The method is implemented in the \texttt{R} package \texttt{TOut} for the case of univariate progression criteria based on a binary or continuous endpoint in single arm, single stage trials. Full details and illustrations are provided in the supplementary material and package documentation.
 
 \section{Evaluation}\label{sec:methods}
 
-As noted in Section \ref{sec:introduction}, adding a third outcome to pilot trial progression criteria has been motivated on grounds of i) statistical efficiency; ii) the need to incorporate other information or stakeholder into progression decisions; and iii) the ability to make modifications to the intervention or the trial design before commencing the main trial. In this section we examine to what extent the three-outcome design framework described in Section \ref{sec:review} can be used to meet these goals.
+As noted in Section \ref{sec:introduction}, adding a third outcome to pilot trial progression criteria has been motivated on grounds of i) statistical efficiency; ii) the need to incorporate other information or stakeholders into progression decisions; and iii) the need to make modifications to the intervention or the trial design before commencing the main trial. In this section we examine to what extent the three-outcome design framework described in Section \ref{sec:review} can be used to meet these goals.
 
 \subsection{Statistical efficiency}\label{sec:efficiency}
 
-Sargent \emph{et al.} show that three-outcome designs based on the operating characteristics given in Table \ref{tab:ocs} will have a lower sample size than corresponding two-outcome designs, providing $\lambda$ and/or $\delta$ are allowed to be greater than 0. For example, take $\rho_0 = 0.5$ and $\rho_1 = 0.7$. A two-outcome design will require $n = 53$ to ensure $\alpha \leq 0.05$ and $\beta \leq 0.1$. In contrast, by allowing $\lambda \leq 0.1$ and $\delta \leq 0.1$ in a three-outcome design, we can obtain $\alpha_a \leq 0.05$ and $\beta_a \leq 0.1$ with only $n = 42$, suggesting three-outcome designs are indeed more efficient \cite{Sargent2001, Hong2007}. However, this apparent advantage breaks down when using the reformulation given in Section \ref{sec:review}. To illustrate this, we found optimal sample sizes for this example problem over the range $0 \leq \eta \leq 0.5$ for the probability of making an incorrect progression decision following a \emph{pause} outcome, using the constraints $\alpha \leq 0.05, \beta \leq 0.1, \gamma \leq 1$. These are plotted in Figure \ref{fig:eta_ns}.
+Sargent \emph{et al.} show that three-outcome designs based on the operating characteristics given in Table \ref{tab:ocs} will have a lower sample size than corresponding two-outcome designs, providing $\lambda$ and/or $\delta$ are allowed to be greater than 0. For example, take $\rho_0 = 0.5$ and $\rho_1 = 0.7$. A two-outcome design will require $n = 53$ to ensure $\alpha \leq 0.05$ and $\beta \leq 0.1$. In contrast, by allowing $\lambda \leq 0.1$ and $\delta \leq 0.1$ in a three-outcome design, we can obtain $\alpha_a \leq 0.05$ and $\beta_a \leq 0.1$ with only $n = 42$, suggesting three-outcome designs are indeed more efficient \cite{Sargent2001, Hong2007}. However, this apparent advantage breaks down when using the reformulation given in Section \ref{sec:review}. To illustrate this we found optimal sample sizes for this example problem over the range $0 \leq \eta \leq 0.5$ (where $\eta$ denotes the probability of making an incorrect progression decision following a \emph{pause} outcome), using the constraints $\alpha \leq 0.05, \beta \leq 0.2, \gamma \leq 1$. We have not considered $\eta > 0.5$ as this represents a decision making ability worse than random, in which case the optimal design remains the usual two-outcome design. The optimal sample sizes are plotted in Figure \ref{fig:eta_ns}.
 
 \begin{figure}
 \centering
@@ -431,13 +437,11 @@ Sargent \emph{et al.} show that three-outcome designs based on the operating cha
 \label{fig:eta_ns}
 \end{figure}
 
-When $\eta = 0.5$, in which case we can only guess at the correct decision following a \emph{pause} outcome, the optimal sample size is $n = 52$. \footnote{We might have expected the three- and two-outcome designs to coincide at this point, and indeed this is the case if we employ a normal approximation for $\hat{\rho}$. When using exact binomial probabilities, as we have done here, the optimal three-outcome design has $x_0 = 31, x_1 = 32$, in comparison to the $x = 32$ of the two-outcome design. This suggests the true optimal $x$ for a two-outcome design lies in the interval $(31, 32)$} We have not considered $\eta > 0.5$ as this represents a decision making ability worse than random, in which case the optimal design remains the usual two-outcome design.
-
-Figure \ref{fig:eta_ns} shows that a low value of $\eta$ is required to achieve a meaningful reduction in sample size. For example, for a 20\% reduction from the $n = 53$ two-outcome design down to $n = 42$, we would require $\eta = 0.2$. That is, we must be confident that following a \emph{pause} outcome, but with a true $\rho = \rho_i (i = 0,1)$, we will make the correct progression decision with a probability of 0.8. In the context of our simple one-parameter example, the estimate $\hat{\rho}$ is a sufficient statistic for $\rho$ and so we cannot hope to obtain any other information relevant to this particular judgement. This would lead to $\eta = 0.5$, in which case the optimal three-outcome design will reduce to a two-outcome design.
+When $\eta = 0.5$, in which case we can only guess at the correct decision following a \emph{pause} outcome, the optimal sample size is $n = 52$. \footnote{We might have expected the three- and two-outcome designs to coincide at this point, and indeed this is the case if we employ a normal approximation for $\hat{\rho}$. When using exact binomial probabilities, as we have done here, the optimal three-outcome design has $x_0 = 31, x_1 = 32$, in comparison to the $x = 32$ of the two-outcome design. This suggests the true optimal $x$ for a two-outcome design lies in the interval $(31, 32)$} Figure \ref{fig:eta_ns} shows that a low value of $\eta$ is required to achieve a meaningful reduction in sample size. For example, for a 20\% reduction from the $n = 52$ two-outcome design down to $n = 41$, we would require $\eta = 0.2$. That is, we must be confident that following a \emph{pause} outcome, but with a true $\rho = \rho_i (i = 0,1)$, we will make the correct progression decision with a probability of 0.8. In the context of our simple one-parameter example, the estimate $\hat{\rho}$ is a sufficient statistic for $\rho$ and so we cannot obtain any other information relevant to this particular judgement. This would lead to $\eta = 0.5$, in which case the optimal three-outcome design will reduce to a two-outcome design.
 
 We may expect $\eta < 0.5$ if measures of another variable in the trial, correlated with the variable of interest, are going to inform the progression decision following an \emph{pause} outcome. For example, patient adherence and retention may be correlated. If an \emph{pause} outcome was observed when assessing adherence but retention was seen to be high, we might infer the true adherence rate to be larger than the estimate. The extent of this will depend, however, on the strength of the correlation, which may be hard to judge at the design stage. 
 
-To explore the implications of incorrectly assuming $\eta < 0.5$, we took each of the optimal designs found over the range $0 \leq \eta \leq 0.5$ and calculated their type I and II error rates under a true value of $\eta = 0.5$. These error rates are plotted in Figure \ref{fig:eta_true_ocs}. We find that error rates will be substantially inflated whenever $\eta$ was incorrectly assumed to be small enough to lead to a meaningful reduction in sample size. For example, if we incorrectly assume $\eta = 0.2$ when in fact $\eta = 0.5$ the `optimal' design will lead to actual type I and II error rates of 0.081 and 0.155, rather than the nominal 0.05 and 0.1.
+To explore the implications of incorrectly assuming $\eta < 0.5$, we took each of the optimal designs found over the range $0 \leq \eta \leq 0.5$ and calculated their type I and II error rates under a true value of $\eta = 0.5$. These error rates are plotted in Figure \ref{fig:eta_true_ocs}. We find that error rates will be substantially inflated whenever $\eta$ was incorrectly assumed to be small enough to lead to a meaningful reduction in sample size. For example, if we incorrectly assume $\eta = 0.2$ when in fact $\eta = 0.5$ the `optimal' design will lead to actual type I and II error rates of 0.094 and 0.188, rather than the nominal 0.05 and 0.1.
 
 \begin{figure}
 \centering
@@ -446,28 +450,22 @@ To explore the implications of incorrectly assuming $\eta < 0.5$, we took each o
 \label{fig:eta_true_ocs}
 \end{figure}
 
-% 0.20 42 24 27 0.04541903 0.09349647   3 0.08087869 0.1548251
-
 Given the challenges of estimating $\eta$ and the implications of doing it badly, we follow previous suggestions \cite{Sargent2001a, Dehbi2020} that a default assumption of $\eta = 0.5$ is appropriate and conclude that three-outcome progression criteria are not suitable for improving statistical efficiency in pilot trials.
-
-% NOTE - we might imagine that in practice, making a decision after an amber result will just mean using another threshold in the amber region, thus reducing everything down to a two-outcome test.
 
 \subsection{Incorporating other information}\label{sec:information}
 
 We have argued that, without strong assumptions, using other sources of information to make progression decisions via an intermediate result will not improve statistical efficiency. We may, nevertheless, want to use such a procedure to allow this other information to inform the progression decision, rather then being ignored completely. For example, in addition to requiring sufficient adherence we may also want to see good recruitment and retention in the pilot trial. In the event of a \emph{pause} outcome when assessing adherence, we could then decide to proceed to the main trial only if the estimated recruitment and retention rates are large enough. A \emph{pause} outcome could also provide an opportunity for discussion amongst the various stakeholders (such as the trial team, steering committee and funder) to arrive at a collective decision on progression.
 
-To facilitate this we can encourage the design to have an appropriate intermediate zone $| x_1 - x_0|$ by imposing constraints on the operating characteristic $\gamma = \gamma_L + \gamma_U$ defined in Table \ref{tab:ocs}, thus limiting the chance of making a conclusive \emph{stop} or \emph{go} decision when $\rho = \rho_m$. With $\rho_0 = 0.5, \rho_1 = 0.7, \alpha \leq 0.05$ and $\beta \leq 0.1$ as before, we set $\rho_m = (\rho_1 - \rho_0)/2 = 0.6$ and found optimal designs for a range of $\gamma^*$ while assuming throughout that $\eta = 0.5$. The sample sizes of these designs are plotted in Figure \ref{fig:gamma_ns}.
+To facilitate this we can encourage the design to have an appropriate intermediate zone $| x_1 - x_0|$ by constraining the operating characteristic $\gamma = \gamma_L + \gamma_U$ defined in Table \ref{tab:ocs}, thus limiting the chance of making a conclusive \emph{stop} or \emph{go} decision when $\rho = \rho'$. With $\rho_0 = 0.5, \rho_1 = 0.7, \alpha \leq 0.05$ and $\beta \leq 0.1$ as before, we set $\rho' = (\rho_1 - \rho_0)/2 = 0.6$ and found optimal designs for a range of $\gamma^*$ while assuming throughout that $\eta = 0.5$. The sample sizes of these designs are plotted in Figure \ref{fig:gamma_ns}.
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.8]{./figures/gamma_ns}
-\caption{Minimum required sample size for a three-outcome design as a function of $\gamma$ (solid line), along with the corresponding size of the intermediate zone $x_1 - x_0$ (dashed line).}
+\caption{Minimum required sample size for a three-outcome design as a function of $\gamma^*$ (solid line), along with the corresponding size of the intermediate zone $x_1 - x_0$ (dashed line).}
 \label{fig:gamma_ns}
 \end{figure}
 
-When we set $\gamma^* = 1$, no intermediate zone is required and so the optimal design is the usual two-outcome design. As we decrease the nominal level on this constraint we permit a smaller probability of obtaining a conclusive \emph{stop} or \emph{go} outcome when $\rho = \rho_m$. This leads to an increasing width of intermediate zone $|x_1 - x_0|$, alongside an increasing sample size. The required increase in sample size beyond the two-outcome design can be substantial. For example, to ensure a maximum 40\% chance of obtaining a conclusive result when $\rho = \rho_m$, we must increase the sample size from $n = 53$ to $n = 98$. 
-
-Providing the associated increase in sample size is considered worthwhile, we conclude that three-outcome designs could be used in pilot trials to ensure other information can be used to make progression decisions in the event of a borderline estimate of the parameter of interest.
+When we set $\gamma^* = 1$, no intermediate zone is required and so the optimal design is the usual two-outcome design. As we decrease the nominal level on this constraint we permit an ever smaller probability of obtaining a conclusive \emph{stop} or \emph{go} outcome when $\rho = \rho'$. This leads to an increasing width of intermediate zone $|x_1 - x_0|$, alongside an increasing sample size. The required increase in sample size beyond the two-outcome design can be substantial. For example, to ensure a maximum 40\% chance of obtaining a conclusive result when $\rho = \rho'$, we must increase the sample size from $n = 52$ to $n = 98$. Providing such increases in sample size are considered worthwhile, we conclude that three-outcome designs can be used in pilot trials to allow other information and stakeholders to feed into progression decisions.
 
 \subsection{Allowing for adjustments}
 
