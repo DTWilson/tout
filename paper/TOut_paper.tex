@@ -376,9 +376,9 @@ We now further generalise the three-outcome testing framework to allow for adjus
 
 Because we can make a \emph{go} decision in two ways, $\alpha$ is now the maximum probability of proceeding either directly or following an \emph{pause} outcome (in which case the adjustment is made) when this will lead to $\rho_m \leq \rho_0$. As before, we assume there is a constant probability of mistakenly deciding to proceed following a \emph{pause} outcome when in fact $\rho + \tau \leq \rho_0$, denoted  by $\eta$. That is,
 
-\begin{equation}\label{eqn:alpha}
+$$
 \alpha = \max \left[ \max_{\rho \leq \rho_0} \PR(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta \PR(x_0 < \hat{\rho} \leq x_1) + \PR(x_1 < \hat{\rho}) \right].
-\end{equation}
+$$
 
 The first term is maximised at $\rho = \rho_0$. The second term can be written as
 $$
@@ -388,7 +388,11 @@ $$
 &= 1 + (\eta - 1)\PR(\hat{\rho} \leq x_1) - \eta \PR(\hat{\rho} \leq x_0),
 \end{aligned}
 $$
-and so is maximised at $\rho = \rho_0 - \tau_{min}$.
+and so is maximised at $\rho = \rho_0 - \tau_{min}$, giving 
+
+\begin{equation}\label{eqn:alpha}
+\alpha = \max \left[ \PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0), \eta \PR(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_0 - \tau_{min}) + \PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0 - \tau_{min}) \right].
+\end{equation}
 
 An incorrect \emph{stop} decision may again occur two ways - directly, or following a \emph{pause} outcome. The error rate $\beta$ can therefore be written as
 
@@ -469,42 +473,37 @@ When we set $\gamma^* = 1$, no intermediate zone is required and so the optimal 
 
 \subsection{Allowing for adjustments}
 
-A final rationale for an intermediate outcome in pilot trials is to enable some modifications to be made prior to commencing the main trial. These could be adjustments to the trial design (e.g. to improve recruitment) or to the intervention itself (e.g. to improve adherence). The intermediate \emph{pause} decision now represents the decision to either \emph{stop} or to make these modifications and then \emph{go} to the main trial. Recall from Section \ref{sec:adjustments} that the effect of such an adjustment is denoted by $\tau$.
+A final rationale for an intermediate outcome in pilot trials is to enable some modifications to be made prior to commencing the main trial. These could be adjustments to the trial design (e.g. to improve recruitment) or to the intervention itself (e.g. to improve adherence). The intermediate \emph{pause} outcome now leads to the decision to either \emph{stop} or to make these modifications and then \emph{go} to the main trial. Recall from Section \ref{sec:adjustments} that the effect of such an adjustment is denoted by $\tau$.
 
 \subsubsection{Known adjustment effect}
 
-Assume that the effect of adjustment $\tau$ is known \emph{a priori}. Considering the same problem as before ($\rho_0 = 0.5, \rho_1 = 0.7, \alpha^* = 0.05, \beta^* = 0.1, eta = 0.5$) we found optimal designs for a range of known adjustment effects spanning $\tau \in [0, 0.5]$. The required sample size of these designs is illustrated in Figure \ref{fig:tau_ns}. 
+Assume that the effect of adjustment $\tau$ is known \emph{a priori} and that $\eta = 0.5$. Considering the same problem as before ($\rho_0 = 0.5, \rho_1 = 0.7, \alpha^* = 0.05, \beta^* = 0.1, eta = 0.5$) we found optimal designs for a range of known adjustment effects spanning $\tau \in [0, 0.125]$. The required sample size of these designs is illustrated in Figure \ref{fig:tau_ns}. 
 
 \begin{figure}
 \centering
 \includegraphics[scale=0.8]{./figures/tau_ns}
-\caption{Minimum required sample size (solid line) and width of the associated intermediate zone (dotted line) for a three outcome design as a function of the known adjustment effect $\tau$.}
+\caption{Minimum required sample size for a three outcome design as a function of the known adjustment effect $\tau$.}
 \label{fig:tau_ns}
 \end{figure}
 
-When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design, with $n = 53$ and $x_0 = x_1 = 32$. As $\tau$ increases the required sample size initially increases with it before decreasing again, while the size of the intermediate zone $x_1 - x_0$ steadily increases (relative to the sample size). At the extreme of $\tau = 0.5$ the optimal three-outcome design is $n= 11, x_0 = 0$ and $x_1 = 8$.
-
-To examine sensitivity to the assumption of a known adjustment effect, we evaluated the actual type I and II error rates for a range of true adjustment effects when the optimal three-outcome design based on an assumed $\tau = 0.1$ is used. These error rates are illustrated in Figure \ref{fig:tau_ocs}. We find that when $\tau < 0.1$, in which case our initial estimate of the effect of adjustment was too optimistic, the type I error rate of the trial rapidly increases. This increase is offset, to some extent, by a reduction in the type II error rate. Conversely, for $\tau > 0.1$, we find a rapid increase in the type II error rate. In this case, however, the type I error rate does not decrease substantially. 
-
-\begin{figure}
-\centering
-\includegraphics[scale=0.8]{./figures/tau_ocs}
-\caption{Type I (solid line) and II (dashed line) error rates for a range of true adjustment effects $\tau$, when designed assuming $\tau = 0.1$.}
-\label{fig:tau_ocs}
-\end{figure}
+When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design with $n = 52$. As $\tau$ increases the required sample size increases with it exponentially. We can see why this is when we look back at our error rate definitions in Equations \ref{eqn:alpha} and \ref{eqn:beta}, which show that $\alpha$ constrains the term $\PR(x_1 < \hat{\rho} ~|~ rho = \rho_0)$ while $\beta$ constrains the term $\PR(\hat{\rho} < x_0 ~|~ \rho = \rho_1 - \tau_{max})$. Note that this also implies we must have $\tau < \rho_1 - \rho_0$ in order to have both $\alpha < 0.5$ and $\beta < 0.5$.
 
 \subsubsection{Partially known adjustment effect}
 
-One way to relax the assumption of a known $\tau$ is to instead assume it lies within some interval $[\tau_{min}, \tau_{max}]$ and control error rates over that range. The impact of this is illustrated in Figure \ref{fig:tau_interval} which plots the optimal sample size for a range of lower limits $\tau_{min}$ and interval widths $\tau_{max} - \tau_{min}$.
+We now consider the case where the adjustment effect $\tau$ is known only up to an interval $\tau \in [\tau_{min}, \tau_{max}]$. We considered a range of values for $\tau_{min}$ from 0 up to 0.1 alongside a range of interval widths $\tau_{max} - \tau_{min}$ from 0 to 0.05. The resulting sample sizes are plotted in Figure \ref{fig:tau_part_ns}.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/tau_ocs}
-\caption{Type I (solid line) and II (dashed line) error rates for a range of true adjustment effects $\tau$, when designed assuming $\tau = 0.1$.}
-\label{fig:tau_ocs}
+\includegraphics[scale=0.8]{./figures/tau_part_ns}
+\caption{Minimum required sample size for a three outcome design as a function of the known adjustment effect $\tau$.}
+\label{fig:tau_part_ns}
 \end{figure}
 
-We see that moving from a known $\tau = 0$ to an interval of $\tau \in [0, 0.05]$ increases the required sample size from 37 to 69. Larger increases are required as the lower limit increases. For example,  moving from $\tau = 0.1$ to $\tau \in [0.1, 0.15]$ requires an increase from 93 to 358. 
+We see that increasing the interval width leads to an increased sample size, and the rate at which this happens increases with the lower interval limit $\tau_{min}$. For example, moving from $[\tau_{min}, \tau_{max}] = [0, 0]$ to [0, 0.05] leads to a change in sample size from $n = 52$ to $n = 93$; which moving from   $[\tau_{min}, \tau_{max}] = [0.1, 0.1]$ to $[0.1, 0.15]$ takes us from $n = 158$ to $n = 620$. Figure \ref{fig:tau_part_ns} suggests that the main driver of sample size is the upper limit $\tau_{max}$, but changing $\tau_{min}$ while keeping this fixed can still lead to considerable changes in $n$. From example, $[\tau_{min}, \tau_{max}] = [0.05, 0.05]$ requires $n = 71$ while $[\tau_{min}, \tau_{max}] = [0.01, 0.05]$ requires $n = 87$.
+
+\subsubsection{The case $\eta < 0.5$}
+
+In the preceding subsections we have assumed that $\eta = 0.5$ following the arguments made in Section \ref{sec:efficiency}. In the context of allowing adjustments, however, we might argue that $\eta < 0.5$ is plausible since although we may not be able to learn anything about $\rho$ beyond what is provided by $\hat{\rho}$, we might learn something about the adjustment effect $\tau$ during the pilot. If we can assume this will reduce $\eta$, this will reduce the required sample size in a manner similar to the no-adjustment case discussed in Section \ref{sec:efficiency} (see supplementary material for more details). We must bear in mind, though, that learning about $\tau$ can only take us so far. Even in the extreme case where we can learn $\tau$ exactly, the residual uncertainty about $\rho$ will place a lower limit on our ability to make the correct decision following a \emph{pause} outcome.
 
 We conclude that for three-outcome progression criteria to be useful in this context, the effect of the anticipated adjustment must be known (or at least estimated with little error) at the design stage if we are to avoid considerable inflation of error rates.\todo{Michelle - I have tried to moderate the conclusion here but if you're not happy we should discuss.}
 
