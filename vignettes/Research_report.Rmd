@@ -179,15 +179,31 @@ If we want only a 10% chance of direct _go_ or _stop_ decisions when $\rho = (\r
 
 ```{r}
 df <- data.frame(gamma = seq(0.1, 1, 0.001))
-ns <- sapply(df$gamma, function(z) TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = z)$n)
-df$n <- ns
+
+get_results_gamma <- function(z) {
+  d <- TOut_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma = z)
+  return(c(d$n, d$thresholds))
+}
+
+rs <- t(sapply(df$gamma, get_results_gamma))
+df$n <- rs[,1]; df$dif <- rs[,3] - rs[,2]
 
 ggplot(df, aes(gamma)) + geom_line(aes(y=n)) +
+  geom_line(aes(y = dif), linetype=2) + 
   xlab("Maximum probability of incorrect conclusive decision") +
   ylab("Sample size") +
   theme_minimal()
+
+#ggsave("../paper/figures/gamma_ns.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/gamma_ns.eps", height=9, width=14, units="cm", device = cairo_ps())
 ```
 
+For example, to move from $\gamma = 1$ to $\gamma = 0.4$ we need an increase in sample size of:
+
+```{r}
+df[df$gamma == 1,]
+df[df$gamma == 0.4,]
+```
 
 
 ### Can three-outcome designs faciliate making adjustments between the pilot and main trials?
