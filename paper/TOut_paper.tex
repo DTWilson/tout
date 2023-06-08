@@ -125,8 +125,16 @@
 ]{\inits{DTW}\fnm{Duncan T} \snm{Wilson}}
 \author[
    addressref={aff1},
-   email={john.RS.Smith@cambridge.co.uk}
-]{\inits{JRS}\fnm{John RS} \snm{Smith}}
+   email={E.Hudson1@leeds.ac.uk}
+]{\inits{EH}\fnm{Eleanor} \snm{Hudson}}
+\author[
+   addressref={aff1},
+   email={S.Brown@leeds.ac.uk}
+]{\inits{SB}\fnm{Sarah} \snm{Brown}}
+\author[
+   addressref={aff1},
+   email={M.Collinson@leeds.ac.uk}
+]{\inits{MC}\fnm{Michelle} \snm{Collinson}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -175,19 +183,19 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-The decision of if and how to progress to a definitive trial following a pilot study is often guided by quantitative progression criteria with three possible outcomes, but there is little methodological work examining how they, or the pilot sample size, should be determined. We review three-outcome designs originally proposed for phase II trials and consider if they can provide a formal statistical framework for pilot trials. We conclude that, from a statistical perspective, there are limited benefits from using quantitative three-outcome progression criteria in pilot trials.
 
 \parttitle{Background} %if any
-the context and purpose of the study.
+The decision of if and how to progress to a definitive trial following a pilot study is often guided by quantitative progression criteria with three possible outcomes. There is little methodological work examining how these progression criteria, or the pilot sample size, should be determined. 
 
 \parttitle{Methods} %if any
-how the study was performed and statistical tests used.
+We review three-outcome trial designs originally proposed in the phase II oncology setting, extend these to the case of external pilots, and examine their operating characteristics.
 
 \parttitle{Results} %if any
-the main findings.
+We find that three-outcome designs can be used in the pilot setting, including in cases where the third intermediate outcome leads to the adjustment of the intervention or trial design in an attempt to ensure the feasibility of the definitive trial. They can, however, require a considerably larger sample size than simpler two-outcome designs. An R package to optimise progression criteria and pilot sample size sample size is provided.
 
 \parttitle{Conclusions} %if any
-brief summary and potential implications.
+Using three-outcome progression criteria in external pilot trials can lead to poor operating characteristics. These may be overcome by increasing the pilot sample size providing the associated costs are deemed to be worthwhile.
+
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -199,7 +207,7 @@ brief summary and potential implications.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{keyword}
-\kwd{pilot}
+\kwd{pilot trial}
 \kwd{progression criteria}
 \kwd{sample size}
 \end{keyword}
@@ -253,13 +261,13 @@ It has become common for progression criteria to be based on a three-outcome `tr
 
 %This argument is paralled in the three outcome literaure, which argue that the designs can improve efficiency and either increase power, or reduce the required sample size.
 
-A second motivation stems from the fact that many aspects (quantitative and qualitative) being studied in a pilot trial are potentially relevant to the progression decision, and that this decision will be jointly made by several stakeholders (such as the trial team, the trial steering commitee, and the funder)\todo{Noting that it's not just opening up to other information, but also facilitating a joint decision making process}. A three-outcome system will allow immediate \emph{stop} or \emph{go} decisions to be made if the evidence is sufficiently strong with respect to a handful of key parameters, whilst allowing, in the event of a borderline result, the decision to be informed by other data based on the differing perspectives of all decision makers. It has been argued that this system better represents what happens in practice even when a two-outcome process is nominally being followed. In that case, although a borderline result will technically dictate a firm \emph{stop/go} decision, this may be overridden in light of other information \cite{Sargent2001}.\todo{Coming back to this in the discussion - question of whether three outcome designs should be routinely used over two-outcome, since they better reflect actual practice.}
+A second motivation stems from the fact that many aspects (quantitative and qualitative) being studied in a pilot trial are potentially relevant to the progression decision, and that this decision will be jointly made by several stakeholders (such as the trial team, the trial steering committee, and the funder)\todo{Noting that it's not just opening up to other information, but also facilitating a joint decision making process}. A three-outcome system will allow immediate \emph{stop} or \emph{go} decisions to be made if the evidence is sufficiently strong with respect to a handful of key parameters, whilst allowing, in the event of a borderline result, the decision to be informed by other data based on the differing perspectives of all decision makers. It has been argued that this system better represents what happens in practice even when a two-outcome process is nominally being followed. In that case, although a borderline result will technically dictate a firm \emph{stop/go} decision, this may be overridden in light of other information \cite{Sargent2001}.\todo{Coming back to this in the discussion - question of whether three outcome designs should be routinely used over two-outcome, since they better reflect actual practice.}
 
-A final reason for an intermediate outcome is to provide the flexibility needed to make some adjustment to the intervention or trial design in an attempt to improve the parameter in question and ensure the feasibility of the main trial\footnote{``\emph{In amber situations, there may be remediable issues that would otherwise prevent progression to the main trial but that, if identified early enough, can be addressed to the satisfaction of those reviewing progress in order for the trial to continue to a main trial.}''} \cite{Avery2017}. For example, after observing a mediocre follow-up rate in a pilot trial, we might consider moving from a postal follow-up strategy to one based on contacting the participants over the phone. A three-outcome approach could facilitate this by prescribing an `adjustment' decision to the intermediate outcome, whilst still allowing for immediate stopping or progression when obtaining `stop' or `go' outcomes. This approach is somewhat in line with guidance on the development and evaluation of complex interventions \cite{Craig2008}\todo{Need to update to latest guidance} which emphasises the iterative nature of the process and the likely need to adjust the original intervention or trial design before conducting the main trial.
+A final reason for an intermediate outcome is to provide the flexibility needed to make some adjustment to the intervention or trial design in an attempt to improve the parameter in question and ensure the feasibility of the main trial\footnote{``\emph{In amber situations, there may be remediable issues that would otherwise prevent progression to the main trial but that, if identified early enough, can be addressed to the satisfaction of those reviewing progress in order for the trial to continue to a main trial.}''} \cite{Avery2017}. For example, after observing a mediocre follow-up rate in a pilot trial, we might consider moving from a postal follow-up strategy to one based on contacting the participants over the phone. A three-outcome approach could facilitate this by prescribing an `adjustment' decision to the intermediate outcome, whilst still allowing for immediate stopping or progression when obtaining `stop' or `go' outcomes. 
 
 Despite the prevalence of quantitative three-outcome progression criteria\cite{Herbert2019}, there is little statistical guidance to help researchers decide how they should be specified. The related question of determining the pilot trial sample size is also undeveloped, with work in this area typically focusing on pilot trials where the primary objective is to estimate the primary outcome variance to inform the main trial sample size calculation. These methods are nevertheless used when this is not the main purpose of the pilot, often in the form of simple `rules-of-thumb' \cite{Browne1995, Teare2014, Whitehead2015}. Three-outcome designs have, however, been proposed for phase II trials of cancer treatments \cite{Kirby2016}. Some of these designs were motivated by the same factors given above, and so may provide a useful framework for the design and analysis of pilot trials with three-outcome progression criteria.
 
-In this paper we consider if, and how, three-outcome phase II designs can be used to determine optimal progression criteria and sample size in pilot trials. We begin by introducing a simple example in Section \ref{sec:example}. In Section \ref{sec:tests} we argue that quantitative progression criteria are mathematically equivalent to hypothesis tests, and are best viewed as such. We then review relevant three-outcome phase II trial designs and extend these to the pilot trial setting in Section \ref{sec:review}. In Section \ref{sec:methods} we examine the statistical properties of these pilot trial designs and consider whether or not they can help achieve any of the three motivating goals. Finally, we conclude with a discussion in Section \ref{sec:discussion}.
+In this paper we consider if, and how, three-outcome phase II designs can be used to determine optimal progression criteria and sample size in pilot trials. We begin by introducing a simple example in Section \ref{sec:example}. In Section \ref{sec:tests} we argue that quantitative progression criteria are mathematically equivalent to hypothesis tests, and are best viewed as such. We then review relevant three-outcome phase II trial designs and extend these to the pilot trial setting in Section \ref{sec:review}. In Section \ref{sec:evaluation} we examine the statistical properties of these pilot trial designs and consider whether or not they can help achieve any of the three motivating goals. Finally, we conclude with a discussion in Section \ref{sec:discussion}.
 
 \section{An example}\label{sec:example}
 
@@ -365,7 +373,9 @@ $$
 $$
 the probability of making an incorrect conclusive decision of either type. Note that the reformulated method of Sargent \emph{et al.} is a special case of this method when we set the trivial constraint $\gamma \leq 1$, and so we have a single unified framework for designing and analysing three-outcome studies.
 
-\subsection{Allowing adjustments}\label{sec:adjustments}
+\subsection{Allowing for adjustments}\label{sec:adjustments}
+
+\todo{This (4.1 and 4.2) is mostly new so could do with a review}
 
 We now further generalise the three-outcome testing framework to allow for adjustments to be made following a \emph{pause} outcome. Denote the main trial parameter by $\rho_m$, so that $\rho_m = \rho$ if no adjustment is made and $\rho_m  = \rho + \tau$ if it is. We will assume that the adjustment effect $\tau$ is known up to an interval $\tau \in [\tau_{min}, \tau_{max}]$, and that $\tau_{min} \geq 0$. We then refine our definitions of the error rates $\alpha$ and $\beta$ as
 
@@ -426,7 +436,7 @@ To choose $x_1$ we continue to fix $n$ and then use a numerical search to find t
 
 The method is implemented in the \texttt{R} package \texttt{TOut} for the case of univariate progression criteria based on a binary or continuous endpoint in single arm, single stage trials. Full details and illustrations are provided in the supplementary material and package documentation.
 
-\section{Evaluation}\label{sec:methods}
+\section{Evaluation}\label{sec:evaluation}
 
 As noted in Section \ref{sec:introduction}, adding a third outcome to pilot trial progression criteria has been motivated on grounds of i) statistical efficiency; ii) the need to incorporate other information or stakeholders into progression decisions; and iii) the need to make modifications to the intervention or the trial design before commencing the main trial. In this section we examine to what extent the three-outcome design framework described in Section \ref{sec:review} can be used to meet these goals.
 
@@ -473,11 +483,13 @@ When we set $\gamma^* = 1$, no intermediate zone is required and so the optimal 
 
 \subsection{Allowing for adjustments}
 
+\todo{This subsection is mostly new}
+
 A final rationale for an intermediate outcome in pilot trials is to enable some modifications to be made prior to commencing the main trial. These could be adjustments to the trial design (e.g. to improve recruitment) or to the intervention itself (e.g. to improve adherence). The intermediate \emph{pause} outcome now leads to the decision to either \emph{stop} or to make these modifications and then \emph{go} to the main trial. Recall from Section \ref{sec:adjustments} that the effect of such an adjustment is denoted by $\tau$.
 
 \subsubsection{Known adjustment effect}
 
-Assume that the effect of adjustment $\tau$ is known \emph{a priori} and that $\eta = 0.5$. Considering the same problem as before ($\rho_0 = 0.5, \rho_1 = 0.7, \alpha^* = 0.05, \beta^* = 0.1, eta = 0.5$) we found optimal designs for a range of known adjustment effects spanning $\tau \in [0, 0.125]$. The required sample size of these designs is illustrated in Figure \ref{fig:tau_ns}. 
+Assume that the effect of adjustment $\tau$ is known \emph{a priori}. Considering the same problem as before ($\rho_0 = 0.5, \rho_1 = 0.7, \alpha^* = 0.05, \beta^* = 0.1, \eta = 0.5$) we found optimal designs for a range of known adjustment effects spanning $\tau \in [0, 0.125]$. The required sample size of these designs is illustrated in Figure \ref{fig:tau_ns}. 
 
 \begin{figure}
 \centering
@@ -486,7 +498,7 @@ Assume that the effect of adjustment $\tau$ is known \emph{a priori} and that $\
 \label{fig:tau_ns}
 \end{figure}
 
-When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design with $n = 52$. As $\tau$ increases the required sample size increases with it exponentially. We can see why this is when we look back at our error rate definitions in Equations \ref{eqn:alpha} and \ref{eqn:beta}, which show that $\alpha$ constrains the term $\PR(x_1 < \hat{\rho} ~|~ rho = \rho_0)$ while $\beta$ constrains the term $\PR(\hat{\rho} < x_0 ~|~ \rho = \rho_1 - \tau_{max})$. Note that this also implies we must have $\tau < \rho_1 - \rho_0$ in order to have both $\alpha < 0.5$ and $\beta < 0.5$.
+When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design with $n = 52$. As $\tau$ increases the required sample size increases with it exponentially. For example, for $\tau = 0.125$ we require $n = 275$. This can be explained by looking back at our error rate definitions in Equations \ref{eqn:alpha} and \ref{eqn:beta}, which show that $\alpha$ constrains the term $\PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0)$ while $\beta$ constrains the term $\PR(\hat{\rho} < x_0 ~|~ \rho = \rho_1 - \tau_{max})$. Note this also implies we must have $\tau < \rho_1 - \rho_0$ in order to have both $\alpha < 0.5$ and $\beta < 0.5$.
 
 \subsubsection{Partially known adjustment effect}
 
@@ -495,22 +507,19 @@ We now consider the case where the adjustment effect $\tau$ is known only up to 
 \begin{figure}
 \centering
 \includegraphics[scale=0.8]{./figures/tau_part_ns}
-\caption{Minimum required sample size for a three outcome design as a function of the known adjustment effect $\tau$.}
+\caption{Minimum required sample size for a three outcome design as a function of the lower limit of the adjustment effect $\tau_{min}$ and the width of the effect interval, $\tau_{max} - \tau_{min}$.}
 \label{fig:tau_part_ns}
 \end{figure}
 
-We see that increasing the interval width leads to an increased sample size, and the rate at which this happens increases with the lower interval limit $\tau_{min}$. For example, moving from $[\tau_{min}, \tau_{max}] = [0, 0]$ to [0, 0.05] leads to a change in sample size from $n = 52$ to $n = 93$; which moving from   $[\tau_{min}, \tau_{max}] = [0.1, 0.1]$ to $[0.1, 0.15]$ takes us from $n = 158$ to $n = 620$. Figure \ref{fig:tau_part_ns} suggests that the main driver of sample size is the upper limit $\tau_{max}$, but changing $\tau_{min}$ while keeping this fixed can still lead to considerable changes in $n$. From example, $[\tau_{min}, \tau_{max}] = [0.05, 0.05]$ requires $n = 71$ while $[\tau_{min}, \tau_{max}] = [0.01, 0.05]$ requires $n = 87$.
+We see that increasing the interval width leads to an increased sample size, and the rate at which this happens increases with the lower interval limit $\tau_{min}$. For example, moving from $[\tau_{min}, \tau_{max}] = [0, 0]$ to [0, 0.05] leads to a change in sample size from $n = 52$ to $n = 93$; while moving from   $[\tau_{min}, \tau_{max}] = [0.1, 0.1]$ to $[0.1, 0.15]$ takes us from $n = 158$ to $n = 620$. Figure \ref{fig:tau_part_ns} suggests that the main driver of sample size is the upper limit $\tau_{max}$, but changing $\tau_{min}$ while keeping this fixed can still lead to considerable changes in $n$. From example, $[\tau_{min}, \tau_{max}] = [0.05, 0.05]$ requires $n = 71$ while $[\tau_{min}, \tau_{max}] = [0.01, 0.05]$ requires $n = 87$.
 
 \subsubsection{The case $\eta < 0.5$}
 
-In the preceding subsections we have assumed that $\eta = 0.5$ following the arguments made in Section \ref{sec:efficiency}. In the context of allowing adjustments, however, we might argue that $\eta < 0.5$ is plausible since although we may not be able to learn anything about $\rho$ beyond what is provided by $\hat{\rho}$, we might learn something about the adjustment effect $\tau$ during the pilot. If we can assume this will reduce $\eta$, this will reduce the required sample size in a manner similar to the no-adjustment case discussed in Section \ref{sec:efficiency} (see supplementary material for more details). We must bear in mind, though, that learning about $\tau$ can only take us so far. Even in the extreme case where we can learn $\tau$ exactly, the residual uncertainty about $\rho$ will place a lower limit on our ability to make the correct decision following a \emph{pause} outcome.
+In the preceding subsections we have assumed $\eta = 0.5$ following the arguments in Section \ref{sec:efficiency}. In the context of allowing adjustments we might argue that $\eta < 0.5$ is plausible because, although we may not be able to learn anything about $\rho$ beyond what is provided by $\hat{\rho}$, we might learn something about the adjustment effect $\tau$ during the pilot. If we can assume this will reduce $\eta$, this will lead to a corresponding reduction in sample size in a manner similar to the no-adjustment case discussed in Section \ref{sec:efficiency} (see supplementary material for more details). We must bear in mind, though, that learning about $\tau$ can only take us so far. Even in the extreme case where we can learn $\tau$ exactly, the residual uncertainty about $\rho$ will place a lower limit on our ability to make the correct decision following a \emph{pause} outcome.
 
-We conclude that for three-outcome progression criteria to be useful in this context, the effect of the anticipated adjustment must be known (or at least estimated with little error) at the design stage if we are to avoid considerable inflation of error rates.\todo{Michelle - I have tried to moderate the conclusion here but if you're not happy we should discuss.}
+We conclude that three-outcome progression criteria can be used to allow for adjustments, but note that this ability will come at the cost of an increased sample size. This increase can be especially large if the effect of adjustment may be substantial, or if there is considerable uncertainty about how large it is.\todo{Michelle - I have tried to moderate the conclusion here but if you're not happy we should discuss.}
 
 \section{Discussion}\label{sec:discussion}
-
-Assuming the adjustment effect $\tau$ is known \emph{a priori} will not always be tenable. On the contrary, a primary goal of many pilot trials is to identify \emph{unforeseen} problems and solutions to these. In this context, pre-specifying an upper threshold $x_1$ may make sense as this can help identify cases which are feasible enough, without modification, to proceed to the main trial. In contrast, the lower threshold $x_0$ appears somewhat arbitrary and may force inappropriate decisions. For example, if $x_0$ is set too high, we may be led to a \emph{stop} decision (i.e. $\hat{\rho} \leq x_0$) despite believing, based on what was seen in the pilot, that a certain modification would lead to an adjusted adherence rate greater than $\rho_1$.\todo{Michelle - for me, this is the key point on why pre-sepcified `adjust' rules shouldn't be recommended}
-\footnote{See the supplementary material for some theoretical justification of this intuition.}
 
 
 % Is it harder to choose hypotheses for feasibility parameters? And how should we dtermine OC constraints? Linking to power or subsequent sample size requirments may be one (partial) solution.
@@ -519,19 +528,23 @@ Assuming the adjustment effect $\tau$ is known \emph{a priori} will not always b
 
 % Could argue that three outcome designs always be used as they better reflect practice. But same argument will apply - the three outcome result should not be followed blindly, but interpreted as one piece of evidence.
 
-We have shown how the three-outcome progression criteria commonly used in pilot trials can be viewed as three-outcome hypothesis tests, and described how related clinical trial designs from the phase II setting can be used (with some reformulation) to optimise these criteria and the pilot sample size. This allowed for a formal comparison to be made between three- and two-outcome designs for pilot trials. We have shown that three-outcome designs do not improve efficiency in comparison to the two-outcome alternative, but that three-outcome designs can be used to allow for a more realistic decision making process involving multiple sources of information and multiple stakeholders in the event of a borderline result if the cost of a larger sample size in comparison with the two-outcome alternative is deemed worthwhile. We have also shown that considerably larger sample sizes sample sizes are needed to facilitate making adjustments to the intervention or trial design following the pilot, particularly when the effect of such an adjustment is not known precisely in advance. \todo{Moderated conclusions to be clearer that three-outcomes have some clear benefits which are offset by increased sample size required.}
+We have shown how the three-outcome progression criteria commonly used in pilot trials can be viewed as three-outcome hypothesis tests, and described how related clinical trial designs from the phase II setting can be used (with some reformulation) to optimise these criteria and the pilot sample size. This allowed for a formal comparison to be made between three- and two-outcome designs for pilot trials. We have shown that three-outcome designs do not improve efficiency in comparison to the two-outcome alternative, but that three-outcome designs can be used to allow for a more realistic decision making process involving multiple sources of information and multiple stakeholders in the event of a borderline result. We have also shown that three-outcome progression criteria can facilitate making adjustments to the intervention or trial design following the pilot, particularly when the effect of such an adjustment is not known precisely in advance. We found that there is a price to pay for these benefits, with three-outcome pilot trials needing a (sometimes considerably) larger sample size than two-outcome alternatives to obtain the same operating characteristics. \todo{Moderated conclusions to be clearer that three-outcomes have some clear benefits which are offset by increased sample size required.} 
 
-In order to apply the proposed method in practice, we need to specify null and alternative hypotheses and put constraints on the type I and II error rates. Specifying hypotheses for feasibility parameters like adherence rates might be challenging. Generally, there will be no default choice for the null (as opposed to when considering efficacy, when the null hypothesis is typically no difference to standard care), and the concept of Minimal Clinically Important Difference, which often guides the choice of target difference in efficacy, will not be applicable for feasibility. It may help to begin by determining the midpoint $\rho_m = (\rho_0 + \rho_1)/2$ which we would consider a borderline value and where we would ideally like to observe a \emph{pause} decision, determine the width of the interval $|\rho_1 - \rho_0|$, and then choose type I and II error constraints based on the relative impact of these errors when defined with respect to $\rho_0$ and $\rho_1$. Having determined these values, one can find optimal designs for a range of constraints on the third operating characteristic $\gamma$ (the probability of observing a   \emph{pause} decision when $\rho = \rho_m$) as shown in Figure\ref{fig:gamma_ns}.
+Throughout Section \ref{sec:evaluation} we have quantified the impact of using three-outcome progression criteria through the resulting required sample size while keeping operating characteristics constrained. An alternative would be to fix the pilot sample size and examine the impact on operating characteristics. For example, taking $\rho_0 = 0.5$ and $\rho_1 = 0.7$ and fixing $n = 50$, suppose we would like $\beta \leq 0.1$ and $\gamma \leq 0.5$ when anticipating an adjustment effect $\tau \in [0, 0.05]$. This leads to thresholds $x_0 = 23, x_1 = 29$ with $\alpha = 0.38$. While this is considerably higher than type I error rates typically used in definitive trials, it may be acceptable in the pilot setting.
 
-As an alternative means to improve efficiency in pilot trials, adaptive designs incorporating one or more interim analysis may be useful. These would allow the pilot trial to finish early if interim data gave a sufficiently strong indication of feasibility (or lack thereof). The terminal progression criteria in such an adaptive design could be made three-outcome to allow other information to be incorporated at that stage, and indeed this aligns with Sargent et al.'s \cite{Sargent2001} proposal which included both one and two stage versions of their design. 
+In order to apply the proposed method in practice we need to specify null and alternative hypotheses for the parameter of interest and put constraints on three error rates. Specifying hypotheses for feasibility parameters like adherence rates may be challenging when compared to the more typical setting of assessing efficacy. Generally speaking there will be no default choice for the null of a feasibility parameter, as opposed to the default efficacy null of no difference to standard care). Moreover, the concept of Minimal Clinically Important Difference, which often guides the choice of target difference in efficacy, will not apply to  feasibility. It may help to begin by determining the midpoint $\rho' = (\rho_0 + \rho_1)/2$ which we would consider a borderline value and where we would ideally like to obtain a \emph{pause} outcome, then determine the width of the interval $|\rho_1 - \rho_0|$, and finally set constraints on error rates $\alpha$ and $\beta$ based on the relative impact of these errors when defined with respect to $\rho_0$ and $\rho_1$. Having determined these values, one can find optimal designs for a range of constraints on the third operating characteristic $\gamma$ as shown in Figure \ref{fig:gamma_ns}. Alternatively, the choice of $\rho_0$ and $\rho_1$ could be driven by the corresponding impact on any subsequent trial as measured though, for example, its power \cite{Wilson2021a}.
 
-To determine if and how the intervention or trial design should be adjusted before the main trial, one could consider a multi-arm pilot trial where each arm implements a different proposed adjustment. This would then inform which adjustment, if any, should be implemented for the main trial. A multi-arm trial will require a larger sample size than a standard two-arm pilot, but this may be mitigated against somewhat by incorporating interim analyses in a Multi-Arm Multi-Stage (MAMS) design. Alternatively, a factorial pilot trial could be used to identify the optimal selection of adjustments to take forward. These solutions would help address the problem of not knowing the effect of some proposed adjustments, but would still require their nature to be known in advance. When a new and unanticipated adjustment is proposed following the pilot trial, undertaking a second pilot to establish that it works as expected may be the best course of action. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}.
+Our results have highlighted the difficulties of allowing adjustments to be made following a pilot trial when using pre-specified progression criteria, even when the effect of the adjustment is known (or partially known) in advance. This may be an unrealistic assumption, since a primary goal of many pilot trials is to identify \emph{unforeseen} problems and solutions to these. In this context, pre-specifying an upper threshold $x_1$ can make sense as this can help identify cases which are feasible enough, without modification, to proceed to the main trial. In contrast, the lower threshold $x_0$ appears somewhat arbitrary and may force inappropriate decisions. For example, if $x_0$ is set too high, we may be led to a \emph{stop} decision (i.e. $\hat{\rho} \leq x_0$) despite believing, based on what was seen in the pilot, that a certain modification would lead to an adjusted adherence rate greater than $\rho_1$. When a new and unanticipated adjustment is proposed following the pilot trial, undertaking a second pilot to establish that it works as expected may be the best course of action. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}, and is in line with guidance on the development and evaluation of complex interventions \cite{Skivington2021} which emphasises the iterative nature of the process.
 
-An alternative approach to meeting these objectives is to design and analyse the pilot trial under a Bayesian framework\cite{Hampson2017, Wilson2021}. This could improve efficiency by allowing external information or expert knowledge to be incorporated into decision making, and would enable a flexible approach to analysis that does not require adherence to pre-specified decision rules. Willan and Thabane \cite{Willan2020} do not consider the question of optimising pilot sample size, but show through an example how a Bayesian analysis of pilot data can help quantify uncertainty around feasibility parameters and use their posterior distributions to design the main trial. 
+%As an alternative means to improve efficiency in pilot trials, adaptive designs incorporating one or more interim analysis may be useful. These would allow the pilot trial to finish early if interim data gave a sufficiently strong indication of feasibility (or lack thereof). The terminal progression criteria in such an adaptive design could be made three-outcome to allow other information to be incorporated at that stage, and indeed this aligns with Sargent et al.'s \cite{Sargent2001} proposal which included both one and two stage versions of their design. 
+
+%To determine if and how the intervention or trial design should be adjusted before the main trial, one could consider a multi-arm pilot trial where each arm implements a different proposed adjustment. This would then inform which adjustment, if any, should be implemented for the main trial. A multi-arm trial will require a larger sample size than a standard two-arm pilot, but this may be mitigated against somewhat by incorporating interim analyses in a Multi-Arm Multi-Stage (MAMS) design. Alternatively, a factorial pilot trial could be used to identify the optimal selection of adjustments to take forward. These solutions would help address the problem of not knowing the effect of some proposed adjustments, but would still require their nature to be known in advance. When a new and unanticipated adjustment is proposed following the pilot trial, undertaking a second pilot to establish that it works as expected may be the best course of action. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}.
+
+The underlying statistical framework considered in this paper is frequentist, focused on pre-specified decision rules chosen based on their long-run operating characteristics. An alternative is to design and analyse the pilot trial under a Bayesian framework \cite{Hampson2017, Wilson2021}. This could improve efficiency by allowing external information or expert knowledge to be incorporated into decision making, and would enable a more flexible approach to analysis which could formally account for anticipated effects of adjustments based on what was seen in the pilot. Willan and Thabane \cite{Willan2020} do not consider the question of optimising pilot sample size, but show through an example how a Bayesian analysis of pilot data can help quantify uncertainty around feasibility parameters by producing posterior distributions which can be used to design the main trial. 
 
 %One conclusion of this work is that standard two-outcome hypothesis tests should be used to determine progression criteria and the pilot trial sample size. The standard approach to this requires a null and alternative hypothesis to be specified, alongside constraints on type I and II error rates which refelct the consequences of these errors. An alternative approach is to instead determine the parameter value at which we would be indifferent between making \emph{stop} and \emph{go} and set the progression criteria threshold to that same value, leading to a test with 50\% power at that point. The sample size can then be chosen to give a desired probability of progression at some other point in the parameter space such as the point null hypothesis \cite{Willan1994}. It seems plausible that this is how progression criteria are currently determined in practice.
 
-Our work has been motivated by external pilot trials assessing the feasibility but may be equally relevant to other settings, such as phase II drug trials, where the parameter of interest is some measure of efficacy. Making post trial adjustments to improve efficacy could then take the form of, for example, changing eligibility criteria in an attempt to focus on a subgroup of patients who stand to benefit most from the treatment. Although our findings should also extend apply equally to internal  pilot trials, the error rates of the final analysis of effectiveness may be affected by a formal internal pilot analysis of a correlated endpoint like adherence. Finally, we expect our conclusions to carry over from the univariate setting considered here to the more general multivariate setting, where several progression criteria are applied simultaneously, although it has been shown that such multivariate tests may be counter-intuitively inefficient \cite{Wilson2021a}.
+Our work has been motivated by external pilot trials assessing the feasibility of a subsequent study, but may be equally relevant to other settings such as phase II drug trials where the parameter of interest is some measure of efficacy. For example, the three-outcome framework could be used when making post trial adjustments to improve efficacy by changing eligibility criteria in an attempt to focus on a subgroup of patients. Although our findings should also broadly apply to internal pilot trials, care may be needed when the error rates of the final analysis may be affected by a formal internal pilot analysis of a correlated endpoint (for example, adherence). Finally, we expect our conclusions to carry over from the univariate setting considered here to the more general multivariate setting, where several progression criteria are applied simultaneously\cite{Lewis2021a}, although it has been shown that such multivariate tests can be counter-intuitively inefficient \cite{Wilson2021a}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -545,10 +558,11 @@ Our work has been motivated by external pilot trials assessing the feasibility b
   The authors declare that they have no competing interests.
 
 \section*{Author's contributions}
-    Text for this section \ldots
+
+DTW conceived the project, programmed the software application and drafted the manuscript. EH, SB and MC contributed to the design of the work and the interpretation of the results, and critically reviewed and revised the manuscript. All authors read and approved the final manuscript.
 
 \section*{Acknowledgements}
-  Text for this section \ldots
+  We would like to thank Marty Lewis for his helpful comments on an earlier draft of this manuscript.
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                  The Bibliography                       %%
@@ -613,17 +627,6 @@ Our work has been motivated by external pilot trials assessing the feasibility b
 
 %% Use of \listoftables is discouraged.
 %%
-\section*{Tables}
-\begin{table}[h!]
-\caption{Sample table title. This is where the description of the table should go.}
-      \begin{tabular}{cccc}
-        \hline
-           & B1  &B2   & B3\\ \hline
-        A1 & 0.1 & 0.2 & 0.3\\
-        A2 & ... & ..  & .\\
-        A3 & ..  & .   & .\\ \hline
-      \end{tabular}
-\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                               %%
@@ -631,7 +634,10 @@ Our work has been motivated by external pilot trials assessing the feasibility b
 %%                               %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\section*{Additional Files}
+\section*{Additional Files}
+
+Supplementary material, including all \texttt{R} code used to generate the results in this manuscript and the associated \texttt{R} package \texttt{TOut}, can be found at \texttt{https://github.com/DTWilson/TOut}.
+
 %  \subsection*{Additional file 1 --- Sample additional file title}
 %%    Additional file descriptions text (including details of how to
 %    view the file, if it is in a non-standard format or the file extension).  This might
