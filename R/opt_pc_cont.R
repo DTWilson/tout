@@ -32,18 +32,18 @@
 #' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom)
 #' 
 opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
-                        tau = c(0,0), eta = 0.5){
+                        tau = c(0,0), eta_0, eta_1){
   
   tau_min <- tau[1]
   tau_max <- tau[2]
   
   # Check that the arguments are specified correctly
-  check_arguments(n, alpha_nom, beta_nom, eta)
+  check_arguments(n, alpha_nom, beta_nom, eta_0)
   check_arguments_cont(sigma)
   
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
-  min_x_1 <- min_x_1_cont(n, sigma, alpha_nom, tau_min, eta)
-  max_x_1 <- max_x_1_cont(alpha_nom, eta, rho_0, rho_1, sigma, n)
+  min_x_1 <- min_x_1_cont(n, sigma, alpha_nom, tau_min, eta_0)
+  max_x_1 <- max_x_1_cont(alpha_nom, eta_0, rho_0, rho_1, sigma, n)
   if(max_x_1 < min_x_1) return(rep(NA, 6))
   
   # Find optimal choice of x_1 - this will be the largest value such that
@@ -52,12 +52,12 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
   x_1 <- stats::optimize(opt_x_1_cont, lower = min_x_1, upper = max_x_1,
                          n=n, rho_0=rho_0, rho_1=rho_1, sigma=sigma, 
                          alpha_nom=alpha_nom, beta_nom=beta_nom, 
-                         tau_min=tau_min, tau_max=tau_max, eta=eta)$minimum
+                         tau_min=tau_min, tau_max=tau_max, eta_0=eta_0, eta_1=eta_1)$minimum
   
   # Determine the corresponding x_0 to give alpha = alpha_nom
-  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta)
+  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta_0)
   
-  ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta)
+  ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta_0, eta_1)
   
   # Check if all constraints are (approximately) satisfied
   valid <- FALSE
@@ -67,7 +67,7 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
   
   structure(list(valid = valid, n = n, thresholds = c(x_0, x_1), 
                  alpha = ocs[1], beta = ocs[2], gamma = ocs[3],
-                 hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = eta),
+                 hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = c(eta_0, eta_1)),
             class = "tout_design_cont")
 }
 
@@ -86,7 +86,7 @@ print.tout_design_cont <- function(x, ...){
   cat("Error probability following an intermediate result:", x$eta, "\n")
 }
 
-min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta){
+min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta_0){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   
@@ -95,13 +95,13 @@ min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta){
   
   # Get ncp for the sampling distribution under rho = rho_0 - tau_min
   ncp <- sqrt(n)*(- tau_min)/sigma
-  min2 <- stats::qnorm((1 - 1/eta + alpha_nom/eta)/(1 - 1/eta), mean = ncp, sd = 1)
+  min2 <- stats::qnorm((1 - 1/eta_0 + alpha_nom/eta_0)/(1 - 1/eta_0), mean = ncp, sd = 1)
   
   return(max(min1, min2))
 }
 
-max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
-  if(eta <= alpha_nom){
+max_x_1_cont <- function(alpha_nom, eta_0, rho_0, rho_1, sigma, n){
+  if(eta_0 <= alpha_nom){
     stop("The probability of an error following in intermediate outcome should
          not be less than the nominal type I error rate.")
   } else {
@@ -112,19 +112,19 @@ max_x_1_cont <- function(alpha_nom, eta, rho_0, rho_1, sigma, n){
   }
 }
 
-opt_x_0_cont <- function(x_1, n, sigma, alpha_nom, tau_min, eta){
+opt_x_0_cont <- function(x_1, n, sigma, alpha_nom, tau_min, eta_0){
   # For given x_1 find the x_0 which best alpha_nom
   # Get ncp for the sampling distribution under rho = rho_0 - tau_min
   ncp <- sqrt(n)*(- tau_min)/sigma
-  z <- 1/eta - alpha_nom/eta + (1 - 1/eta)*stats::pnorm(x_1, mean = ncp, sd = 1)
+  z <- 1/eta_0 - alpha_nom/eta_0 + (1 - 1/eta_0)*stats::pnorm(x_1, mean = ncp, sd = 1)
   x_0 <- stats::qnorm(z, mean = ncp, sd = 1)
   return(x_0)
 }
 
-opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, tau_min, tau_max, eta){
-  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta)
+opt_x_1_cont <- function(x_1, n, rho_0, rho_1, sigma, alpha_nom, beta_nom, tau_min, tau_max, eta_0, eta_1){
+  x_0 <- opt_x_0_cont(x_1, n, sigma, alpha_nom, tau_min, eta_0)
   # Get corresponding error rates
-  beta <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta)[2]
+  beta <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta_0, eta_1)[2]
   # Covert to objective function to be minimised
   to_min <- beta_objective(beta, beta_nom, x_0, x_1)
   return(to_min)

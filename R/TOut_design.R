@@ -33,6 +33,16 @@
 #' 
 TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
+  if(length(eta) == 1){
+    eta_0 <- eta
+    eta_1 <- eta
+  } else if (length(eta) == 2) {
+    eta_0 <- eta[1]
+    eta_1 <- eta[2]    
+  } else {
+    stop("eta must be a vector of length 1 (implying eta_1 = eta_2) or 2.")
+  }
+  
   check_tau(tau, eta)
   
   if(is.null(max_n)){
@@ -49,7 +59,7 @@ TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
   while(!valid & n <= max_n){
     n <- n + 1
     design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
-                          tau=tau, eta=eta)
+                          tau = tau, eta_0 = eta_0, eta_1 = eta_1)
     if(design$valid & (design$gamma <= gamma_nom)) {
       final_design <- design
       valid <- TRUE
@@ -100,6 +110,16 @@ TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
 #' 
 TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
+  if(length(eta) == 1){
+    eta_0 <- eta
+    eta_1 <- eta
+  } else if (length(eta) == 2) {
+    eta_0 <- eta[1]
+    eta_1 <- eta[2]    
+  } else {
+    stop("eta must be a vector of length 1 (implying eta_1 = eta_2) or 2.")
+  }
+  
   check_tau(tau, eta)
   
   if(is.null(max_n)){
@@ -113,7 +133,7 @@ TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_no
   while((max_n - min_n) > 1){
     n <- ceiling((min_n + max_n)/2)
     design <- opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, 
-                          tau=tau, eta=eta)
+                          tau = tau, eta_0 = eta_0, eta_1 = eta_1)
     if(design$valid & (design$gamma <= gamma_nom)) {
       max_n <- n
       final_design <- design
