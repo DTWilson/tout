@@ -139,7 +139,7 @@ From this we see the general trend, and can note that for a significant reductio
 
 ```{r}
 get_true_ocs <- function(z) {
-  get_ocs_bin(z[1], z[2], z[3], rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta = 0.5)[1:2]
+  get_ocs_bin(z[1], z[2], z[3], rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta_0 = 0.5, eta_1 = 0.5)[1:2]
 }
 
 ocs <- t(apply(rs, 1, get_true_ocs))
