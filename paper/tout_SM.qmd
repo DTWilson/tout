@@ -1,19 +1,21 @@
 ---
 title: "tout - supplementary material"
 author: "Duncan T. Wilson"
-format: html
+format:
+  html:
+    theme: flatly
 ---
 
 ```{r setup}
-library(TOut)
+library(tout)
 library(ggplot2)
 library(patchwork)
 ```
 
-## Introduction {-}
+### Introduction {-}
 
-This document provides supplementary material to support the manuscript ``Three-outcome designs for external pilot trials
-with progression criteria'' by Wilson _et al_. In particular, it will show how the `tout' package can be used to re-create all of the results and plots of the manuscript.
+This document provides supplementary material to support the manuscript "Three-outcome designs for external pilot trials
+with progression criteria" by Wilson _et al_. In particular, it will show how the [tout](https://github.com/DTWilson/tout) package can be used to re-create all of the results and plots of the manuscript.
 
 You can install the development version of tout from [GitHub](https://github.com/) with:
 
@@ -22,9 +24,9 @@ You can install the development version of tout from [GitHub](https://github.com
 devtools::install_github("DTWilson/tout")
 ```
 
-For all our evaluations we will use an example problem where the outcome is binary with probability parameter $\rho$ and the null and alternative hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7respectively.
+For all our evaluations we will use an example problem where the outcome is binary with probability parameter $\rho$ and the null and alternative hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7$ respectively.
  
-## Section 5.1 (staistical efficiency) {-}
+### Section 5.1 (statistical efficiency) {-}
 
 The key parameter to vary here is $\eta$, the probability of making an incorrect decision when we have a pause outcome under the null or alternative hypothesis. When we set $\eta = 0.5$ the optimal three-outcome design reduces to a two-outcome design (at least approximately):
 
@@ -103,7 +105,7 @@ For example, compare the sample size saving and error rate inflation resulting f
 df[df$eta %in% c(0.4991, 0.2001),]
 ```
 
-## Section 5.2 (incorporating other information) {-}
+### Section 5.2 (incorporating other information) {-}
 
 Assuming $\eta = 0.5$, we can help ensure _pause_ outcome will occur with some desired probability when $\rho$ is at the midpoint of the two hypotheses by constraining the OC $\gamma$. For example, 
 
@@ -140,7 +142,7 @@ For example, to move from $\gamma = 1$ to $\gamma = 0.4$ we need an increase in 
 df[df$gamma %in% c(1, 0.4),]
 ```
 
-## Section 5.3 (allowing for adjustments) {-}
+### Section 5.3 (allowing for adjustments) {-}
 
 Finally, we consider how a three-outcome design works when we're planning on making adjustments. First, consider the case where the adjustment effect is known, i.e. when $\tau_{min} = \tau_{max} = \tau$. 
 
@@ -228,7 +230,7 @@ Here we fix the sample size at a typical pilot trial level and look at what kind
 tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.4, beta_nom = 0.1, gamma_nom = 0.5, tau = c(0, 0.05), max_n = 500)
 ```
 
-## Illustrative figures {-}
+### Illustrative figures {-}
 
 Sargent sampling distribution illustration:
 
