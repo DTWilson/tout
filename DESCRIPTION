@@ -1,4 +1,4 @@
-Package: TOut
+Package: tout
 Title: Three-Outcome Clinical Trials: optimal sample size and progression criteria
 Version: 0.0.0.9000
 Authors@R: 
