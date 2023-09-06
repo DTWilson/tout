@@ -87,7 +87,7 @@ $$
 $$
 Finally, we can choose $n$ by finding the smallest value such that all constraints are satisfied, when corresponding $x_1$ and $x_0$ are chosen using the above procedure.
 
-Note that this general method can be applied in the special case where no adjustments are going to be made following a _pause_ decision by setting $\tau_{min} = \tau_{max} = 0$.
+Note that this general method can be applied in the special case where no adjustments are going to be made following a _pause_ decision by setting $\tau_{min} = \tau_{max} = 0$. 
 
 ## Evaluation
 
