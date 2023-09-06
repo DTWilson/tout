@@ -4,7 +4,13 @@ author: "Duncan T. Wilson"
 format: html
 ---
 
-## Introduction
+```{r setup}
+library(TOut)
+library(ggplot2)
+library(patchwork)
+```
+
+## Introduction {-}
 
 This document provides supplementary material to support the manuscript ``Three-outcome designs for external pilot trials
 with progression criteria'' by Wilson _et al_. In particular, it will show how the `tout' package can be used to re-create all of the results and plots of the manuscript.
@@ -16,9 +22,213 @@ You can install the development version of tout from [GitHub](https://github.com
 devtools::install_github("DTWilson/tout")
 ```
 
+For all our evaluations we will use an example problem where the outcome is binary with probability parameter $\rho$ and the null and alternative hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7respectively.
+ 
+## Section 5.1 (staistical efficiency) {-}
+
+The key parameter to vary here is $\eta$, the probability of making an incorrect decision when we have a pause outcome under the null or alternative hypothesis. When we set $\eta = 0.5$ the optimal three-outcome design reduces to a two-outcome design (at least approximately):
+
+```{r}
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 1, eta = 0.5)
+```
+
+This makes sense - we don't want to have any chance of a _pause_ outcome because we can't make reliable decisions following it, and we haven't asked for a meaningful constraint on the OC $\gamma$. If we reduce $\eta$, we will see some efficiencies:
+
+```{r}
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 1, eta = 0.2)
+```
+So, we can reduce the sample size from 52 to 41 if we can assume $\eta = 0.2$. This might be quite optimistic; suppose we use $\eta = 0.4$:
+
+```{r}
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 1, eta = 0.4)
+```
+We find that this is barely enough to move away from a two outcome design. Plotting the optimal sample size for a range of $\eta$ gives
+
+```{r}
+# Create a set of etas to evaluate
+df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
+
+get_results <- function(eta) {
+  # For any given eta, find the optimal design and output the sample size and thresholds
+  d <- tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 1, eta = eta)
+  return(c(d$n, d$thresholds))
+}
+
+# Apply our function to our etas
+rs <- t(sapply(df$eta, get_results))
+df$n <- rs[,1]; df$dif <- rs[,3] - rs[,2]
+
+# Plot the results
+ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
+  geom_line(aes(y = dif), linetype=2) + 
+  xlab(expression(paste("Probability of incorrect decision following a pause outcome, ", eta))) +
+  ylab("Sample size") +
+  theme_minimal()
+
+#ggsave("../paper/figures/eta_ns.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/eta_ns.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+From this we see the general trend, and can note that for a significant reduction in sample size we need to assume a very strong ability to make the correct progression decisions following a _pause_ outcome. To examine sensitivity to an incorrect assumption of $\eta$, we take each of these optimal designs and find their error rates when $\eta = 0.5$
+
+```{r}
+get_true_ocs <- function(z) {
+  # z = vector (samples size, lower threshold, upper threshold)
+  # Return the operating characteristics for any given design z when eta = 0.5
+  get_ocs_bin(z[1], z[2], z[3], rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta_0 = 0.5, eta_1 = 0.5)[1:2]
+}
+
+# Apply the function to the designs generated in the previous analysis
+ocs <- t(apply(rs, 1, get_true_ocs))
+df$a <- ocs[,1]; df$b <- ocs[,2]
+
+# Plot the results
+ggplot(df, aes(eta)) + 
+  geom_line(aes(y = a, linetype = "b")) +
+  geom_line(aes(y = b, linetype = "c")) + 
+  xlab(expression(paste("Assumed probability of incorrect decision following a pause outcome, ", eta))) +
+  ylab("Error rate") + 
+  scale_linetype_manual(name = "",
+                       values = 1:2,
+                       labels =c(expression(alpha), expression(beta))) +
+  theme_minimal()
+
+#ggsave("../paper/figures/eta_true_ocs.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/eta_true_ocs.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+For example, compare the sample size saving and error rate inflation resulting from assuming $\eta = 0.2$ when in fact $\eta = 0.5$:
+
+```{r}
+df[df$eta %in% c(0.4991, 0.2001),]
+```
+
+## Section 5.2 (incorporating other information) {-}
+
+Assuming $\eta = 0.5$, we can help ensure _pause_ outcome will occur with some desired probability when $\rho$ is at the midpoint of the two hypotheses by constraining the OC $\gamma$. For example, 
+
+```{r}
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 0.1)
+```
+
+If we want only a 10% chance of direct _go_ or _stop_ decisions when $\rho = (\rho_0 + \rho_1)/2 = 0.6$, we find we need to increase the sample size from $n = 52$ up to $n = 187$. Looking over a range of $\gamma$ constraints gives:
+
+```{r}
+df <- data.frame(gamma = seq(0.1, 1, 0.001))
+
+get_results_gamma <- function(z) {
+  d <- tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = z)
+  return(c(d$n, d$thresholds))
+}
+
+rs <- t(sapply(df$gamma, get_results_gamma))
+df$n <- rs[,1]; df$dif <- rs[,3] - rs[,2]
+
+ggplot(df, aes(gamma)) + geom_line(aes(y=n)) +
+  geom_line(aes(y = dif), linetype=2) + 
+  xlab(expression(paste("Maximum probability of incorrect conclusive decision, ", gamma, "*"))) +
+  ylab("Sample size") +
+  theme_minimal()
+
+#ggsave("../paper/figures/gamma_ns.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/gamma_ns.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+For example, to move from $\gamma = 1$ to $\gamma = 0.4$ we need an increase in sample size of:
+
+```{r}
+df[df$gamma %in% c(1, 0.4),]
+```
+
+## Section 5.3 (allowing for adjustments) {-}
+
+Finally, we consider how a three-outcome design works when we're planning on making adjustments. First, consider the case where the adjustment effect is known, i.e. when $\tau_{min} = \tau_{max} = \tau$. 
+
+```{r}
+# Look at a range of known adjustment effects
+df <- data.frame(tau = seq(0, 0.125, 0.0005))
+
+# For each tau, find the optimal design's sample size
+ns <- sapply(df$tau, function(z) tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(z, z), max_n = 500, eta = 0.5)$n)
+
+df$n <- ns
+
+# Plot the results
+ggplot(df, aes(tau)) + geom_line(aes(y=n)) +
+  xlab(expression(paste("Known effect of adjustment, ", tau))) +
+  ylab("Sample size") +
+  theme_minimal()
+
+#ggsave("../paper/figures/tau_ns.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/tau_ns.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+We see that the larger the known adjustment effect, the more we need to inflate the sample size. To see the effect on sample size of allowing for a rage for the adjutsment effect $\tau$, we find the optimal $n$ for a range of lower bounds $\tau_{min}$ and interval widths $\tau_{max} - \tau_{min}$:
+
+```{r}
+# Create a grid based on adjustment effect interval lower bounds (l) and widths (w)
+df <- expand.grid(l = seq(0, 0.1, 0.005),
+                 w = seq(0, 0.05, 0.005))
+
+ns <- apply(df, 1, function(z) tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(z[1], z[1] + z[2]), max_n = 700, eta = 0.5)$n)
+df$n <- ns
+
+ggplot(df, aes(l, w)) + geom_tile(aes(fill = n)) +
+  scale_fill_continuous(type = "viridis") +
+  xlab(expression(paste("Lower bound of adjustment effect, ", tau[min]))) +
+  ylab(expression(paste("Width of adjustment effect interval, ", tau[max] - tau[min]))) +
+  theme_minimal()
+
+#ggsave("../paper/figures/tau_part_ns.pdf", height=9, width=14, units="cm")
+#ggsave("../paper/figures/tau_part_ns.eps", height=9, width=14, units="cm", device = cairo_ps())
+```
+
+We find that increasing $\tau_{max}$ while fixing $\tau_{min}$ further increases the sample size required. At the extremes, we find:
+
+```{r}
+df[df$l == 0 & df$w == 0,]
+df[df$l == 0 & df$w == 0.05,]
+df[df$l == 0.1 & df$w == 0,]
+df[df$l == 0.1 & df$w == 0.05,]
+```
+
+The figure suggests that sample size is being driven primarily by $\tau_{max}$, but there is still some substantial variation due to $\tau_{min}$. For example:
+
+```{r}
+# Change lower bound from 0.1 to 0 while upper bound remains 0.15
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.1, 0.15), max_n = 8000, eta = 0.5)$n
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.0, 0.15), max_n = 8000, eta = 0.5)$n
+
+# Change lower bound from 0.05 to 0.01 while upper bound remains 0.05
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.05, 0.05), max_n = 8000, eta = 0.5)$n
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, tau = c(0.01, 0.05), max_n = 8000, eta = 0.5)$n
+```
+Finally, we can examine the effect of $\eta$ when allowing adjustments by varying $\eta$ whilst fixing $\tau_{min} = 0.05$ and $\tau_{max} = 0.1$:
+
+```{r}
+df <- data.frame(eta = seq(0.0501, 0.5, 0.001))
+
+ns <- sapply(df$eta, function(z) tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.1, gamma = 1, eta = z, tau = c(0.05, 0.1), max_n = 500)$n)
+df$n <- ns
+
+ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
+  xlab(expression(paste("Probability of incorrect decision following a pause outcome, ", eta))) +
+  ylab("Sample size") +
+  theme_minimal()
+```
+
+We see that a lower $\eta$ can give more reasonable sample sizes. Unlike in the non-adjustment case, we might argue $\eta < 0.5$ is plausible because even if we can't learn anything about $\rho$ beyond its sufficient statistic $\hat{rho}$, we might have learnt about $\tau$ from the pilot (i.e. we have a good idea of what adjustment we can make and what effect it will have). But this can only take us so far, since we need to know about the adjusted parameter $\rho + \tau$ so there will always be some residual uncertainty. Thus, extreme cases like the one above where $\eta$ is so low that the optimal design becomes $n=2$ with a almost guaranteed pause result (following which we almost always make the right decision) aren't realistic.
 
 
-## Illustrative figures
+### Section 6 (relaxing error rate constraints while fixing $n$)
+
+Here we fix the sample size at a typical pilot trial level and look at what kind of error rates we can obtain through a three-outcome design. As an example, consider our problem with $\tau \in [0, 0.1]$ and with $\beta^* = 0.1, \gamma^* = 0.5$. Fixing the sample size to $n = 50$ we find that
+
+```{r}
+tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.4, beta_nom = 0.1, gamma_nom = 0.5, tau = c(0, 0.05), max_n = 500)
+```
+
+## Illustrative figures {-}
 
 Sargent sampling distribution illustration:
 
@@ -96,8 +306,6 @@ p2 <- ggplot(data.frame(x = c(-10, 10)), aes(x)) +
 ```
 
 ```{r}
-library(patchwork)
-
 p2/p1
 
 #ggsave("../paper/figures/Stor_ocs.pdf", height=8, width=14, units="cm")
