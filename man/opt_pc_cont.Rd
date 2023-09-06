@@ -12,7 +12,8 @@ opt_pc_cont(
   alpha_nom,
   beta_nom,
   tau = c(0, 0),
-  eta = 0.5
+  eta_0,
+  eta_1
 )
 }
 \arguments{

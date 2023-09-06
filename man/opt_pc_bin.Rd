@@ -4,7 +4,7 @@
 \alias{opt_pc_bin}
 \title{Find optimal progression criteria for a fixed sample size and binary outcome}
 \usage{
-opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, tau = c(0, 0), eta = 0.5)
+opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, tau = c(0, 0), eta_0, eta_1)
 }
 \arguments{
 \item{n}{sample size.}

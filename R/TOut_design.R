@@ -31,7 +31,7 @@
 #' 
 #' TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 #' 
-TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
+tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
   if(length(eta) == 1){
     eta_0 <- eta
@@ -108,7 +108,7 @@ TOut_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
 #' 
 #' TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, tau = tau)
 #' 
-TOut_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
+tout_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
   if(length(eta) == 1){
     eta_0 <- eta
