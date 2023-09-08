@@ -1,5 +1,5 @@
 ---
-title: "tout - supplementary material"
+title: "Three-outcome designs for external pilot trials with progression criteria - supplementary material"
 author: "Duncan T. Wilson"
 format:
   html:
@@ -9,7 +9,6 @@ format:
 ```{r setup}
 library(tout)
 library(ggplot2)
-library(patchwork)
 ```
 
 ### Introduction {-}
@@ -219,16 +218,43 @@ ggplot(df, aes(eta)) + geom_line(aes(y=n)) +
   theme_minimal()
 ```
 
-We see that a lower $\eta$ can give more reasonable sample sizes. Unlike in the non-adjustment case, we might argue $\eta < 0.5$ is plausible because even if we can't learn anything about $\rho$ beyond its sufficient statistic $\hat{rho}$, we might have learnt about $\tau$ from the pilot (i.e. we have a good idea of what adjustment we can make and what effect it will have). But this can only take us so far, since we need to know about the adjusted parameter $\rho + \tau$ so there will always be some residual uncertainty. Thus, extreme cases like the one above where $\eta$ is so low that the optimal design becomes $n=2$ with a almost guaranteed pause result (following which we almost always make the right decision) aren't realistic.
+We see that a lower $\eta$ can give more reasonable sample sizes. Unlike in the non-adjustment case, we might argue $\eta < 0.5$ is plausible because even if we can't learn anything about $\rho$ beyond its sufficient statistic $\hat{\rho}$, we might have learnt about $\tau$ from the pilot (i.e. we have a good idea of what adjustment we can make and what effect it will have). But this can only take us so far, since we need to know about the adjusted parameter $\rho + \tau$ so there will always be some residual uncertainty. Thus, extreme cases like the one above where $\eta$ is so low that the optimal design becomes $n=2$ with a almost guaranteed pause result (following which we almost always make the right decision) aren't realistic.
 
 
 ### Section 6 (relaxing error rate constraints while fixing $n$)
 
-Here we fix the sample size at a typical pilot trial level and look at what kind of error rates we can obtain through a three-outcome design. As an example, consider our problem with $\tau \in [0, 0.1]$ and with $\beta^* = 0.1, \gamma^* = 0.5$. Fixing the sample size to $n = 50$ we find that
+We have focused on how the required sample size changes with the various parameters in our problem while keeping error rates fixed. Here, we instead fix the sample size and look at changes in error rates. For example, suppose we fix $n = 30$ and $\eta = 0.5$. We calculate the error rates for every possible choice of progression criteria $x_0, x_1$:
 
 ```{r}
-tout_design_bin(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.4, beta_nom = 0.1, gamma_nom = 0.5, tau = c(0, 0.05), max_n = 500)
+get_ocs_bin(30, 19, 19, rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta_0 = 0.5, eta_1 = 0.5)
+
+df <- expand.grid(x_0 = 0:30,
+                  x_1 = 0:30)
+
+df <- df[df$x_1 >= df$x_0,]
+
+df <- cbind(n=30, df)
+
+get_true_ocs <- function(z) {
+  # z = vector (samples size, lower threshold, upper threshold)
+  # Return the operating characteristics for any given design z when eta = 0.5
+  get_ocs_bin(z[1], z[2], z[3], rho_0 = 0.5, rho_1 = 0.7, tau_min = 0, tau_max = 0, eta_0 = 0.5, eta_1 = 0.5)
+}
+
+ocs <- t(apply(df, 1, get_true_ocs))
+df <- cbind(df, ocs)
+names(df)[4:6] <- c("alpha", "beta", "gamma")
+
+ggplot(df, aes(alpha, beta)) + geom_point(aes(colour = gamma)) +
+  geom_point(data = df[df$x_0 == 19 & df$x_1 == 19,], shape = 2, size = 5, colour = "blue") +
+  geom_point(data = df[df$x_0 == 17 & df$x_1 == 17,], shape = 2, size = 5, colour = "green") +
+  geom_point(data = df[df$x_0 == 15 & df$x_1 == 20,], shape = 2, size = 5, colour = "red") +
+  scale_colour_continuous(type = "viridis", name = expression(gamma)) +
+  xlab(expression(alpha)) + ylab(expression(beta)) +
+  theme_minimal()
 ```
+
+This again shows that moving from a two-outcome to three-outcome design does not improve efficiency, but rather that it necessitates a reduction in $\alpha$ and/or $\beta$ in order to reduce $\gamma$. For example, $x_0 = x_1 = 19$ gives error rates of $\alpha = 0.05, \beta = 0.27, \gamma = 1$. The most efficient way to reduce $\beta$ is to keep the two-outcome design but change the threshold, e.g. to $x_0 = x_1 = 17$ which gives $\alpha = 0.18, \beta = 0.08, \gamma = 1$. Moving to a three-outcome design should only be done to reduce $\gamma$; for example, thresholds of $x_0 = 15, x_1 = 20$ will give $\alpha = 0.22, \beta = 0.21, \gamma = 0.35$.
 
 ### Illustrative figures {-}
 
@@ -291,6 +317,8 @@ p1 <- ggplot(data.frame(x = c(-10, 10)), aes(x)) +
                                    expression(rho[m])), name="") +
   
   xlim(-4, 6.5) + theme_void() + theme(legend.position="bottom")
+
+p1
 ```
 
 ```{r}
@@ -305,10 +333,13 @@ p2 <- ggplot(data.frame(x = c(-10, 10)), aes(x)) +
   geom_label(aes(x = -0.9, y = 0.12, label = "gamma[L]"), parse = T, fill = "red", alpha = 0.4) +
   geom_label(aes(x = 3.4, y = 0.12, label = "gamma[U]"), parse = T, fill = "blue", alpha = 0.4) +
   xlim(-4, 6.5) + theme_void()
+
+p2
 ```
 
 ```{r}
-p2/p1
+#library(patchwork)
+#p2/p1
 
 #ggsave("../paper/figures/Stor_ocs.pdf", height=8, width=14, units="cm")
 #ggsave("../paper/figures/Stor_ocs.eps", height=8, width=14, units="cm", device = cairo_ps())
