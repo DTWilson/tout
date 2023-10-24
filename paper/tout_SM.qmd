@@ -1,9 +1,11 @@
 ---
 title: "Three-outcome designs for external pilot trials with progression criteria - supplementary material"
 author: "Duncan T. Wilson"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 format:
   html:
-    theme: flatly
+    toc: true
+    theme: united
 ---
 
 ```{r setup}
