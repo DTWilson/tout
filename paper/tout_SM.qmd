@@ -4,6 +4,7 @@ author: "Duncan T. Wilson"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 format:
   html:
+    embed-resources: true
     toc: true
     theme: united
 ---

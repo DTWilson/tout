@@ -1,29 +1,7 @@
-%% BioMed_Central_Tex_Template_v1.06
-%%                                      %
-%  bmc_article.tex            ver: 1.06 %
-%                                       %
-
-%%IMPORTANT: do not delete the first line of this template
-%%It must be present to enable the BMC Submission system to
-%%recognise this template!!
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                     %%
-%%  LaTeX template for BioMed Central  %%
-%%     journal article submissions     %%
-%%                                     %%
-%%          <8 June 2012>              %%
-%%                                     %%
-%%                                     %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                                                 %%
-%% For instructions on how to fill out this Tex template           %%
-%% document please refer to Readme.html and the instructions for   %%
-%% authors page on the biomed central website                      %%
-%% http://www.biomedcentral.com/info/authors/                      %%
+%Version 3 December 2023
+% See section 11 of the User Manual for version history
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                                                 %%
 %% Please do not use \input{...} to include other tex files.       %%
 %% Submit your LaTeX manuscript as one .tex document.              %%
@@ -31,242 +9,153 @@
 %% All additional figures and files should be attached             %%
 %% separately and not embedded in the \TeX\ document itself.       %%
 %%                                                                 %%
-%% BioMed Central currently use the MikTex distribution of         %%
-%% TeX for Windows) of TeX and LaTeX.  This is available from      %%
-%% http://www.miktex.org                                           %%
-%%                                                                 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%% additional documentclass options:
-%  [doublespacing]
-%  [linenumbers]   - put the line numbers on margins
+%%\documentclass[referee,sn-basic]{sn-jnl}% referee option is meant for double line spacing
 
-%%% loading packages, author definitions
+%%=======================================================%%
+%% to print line numbers in the margin use lineno option %%
+%%=======================================================%%
 
-%\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
-\documentclass{bmcart}
+%%\documentclass[lineno,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
 
-\setlength{\marginparwidth}{3.5cm} % to give space for margin notes - remove on submission
+%%======================================================%%
+%% to compile with pdflatex/xelatex use pdflatex option %%
+%%======================================================%%
 
-%%% Load packages
-\usepackage{amsthm,amsmath}
-%\RequirePackage{natbib}
-%\RequirePackage[authoryear]{natbib}% uncomment this for author-year bibliography
-%\RequirePackage{hyperref}
-\usepackage[utf8]{inputenc} %unicode support
-%\usepackage[applemac]{inputenc} %applemac support if unicode package fails
-%\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
-\usepackage{todonotes}
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+
+
+%%Note: the following reference styles support Namedate and Numbered referencing. By default the style follows the most common style. To switch between the options you can add or remove Numbered in the optional parenthesis. 
+%%The option is available for: sn-basic.bst, sn-vancouver.bst, sn-chicago.bst%  
+ 
+%%\documentclass[pdflatex,sn-nature]{sn-jnl}% Style for submissions to Nature Portfolio journals
+%%\documentclass[pdflatex,sn-basic]{sn-jnl}% Basic Springer Nature Reference Style/Chemistry Reference Style
+%%\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style 
+%%\documentclass[pdflatex,sn-mathphys-ay]{sn-jnl}% Math and Physical Sciences Author Year Reference Style
+%%\documentclass[pdflatex,sn-aps]{sn-jnl}% American Physical Society (APS) Reference Style
+\documentclass[referee, lineno, pdflatex,sn-vancouver,Numbered]{sn-jnl}% Vancouver Reference Style
+%%\documentclass[pdflatex,sn-apa]{sn-jnl}% APA Reference Style 
+%%\documentclass[pdflatex,sn-chicago]{sn-jnl}% Chicago-based Humanities Reference Style
+
+%%%% Standard Packages
+%%<additional latex packages if required can be included here>
+
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%
+\usepackage[title]{appendix}%
+\usepackage{xcolor}%
+\usepackage{textcomp}%
+\usepackage{manyfoot}%
+\usepackage{booktabs}%
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
 \usepackage{tabularx}
-\usepackage{booktabs}
-\usepackage{multirow}
+%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                             %%
-%%  If you wish to display your graphics for   %%
-%%  your own use using includegraphic or       %%
-%%  includegraphics, then comment out the      %%
-%%  following two lines of code.               %%
-%%  NB: These line *must* be included when     %%
-%%  submitting to BMC.                         %%
-%%  All figure files must be submitted as      %%
-%%  separate graphics through the BMC          %%
-%%  submission process, not included in the    %%
-%%  submitted article.                         %%
-%%                                             %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%=============================================================================%%%%
+%%%%  Remarks: This template is provided to aid authors with the preparation
+%%%%  of original research articles intended for submission to journals published 
+%%%%  by Springer Nature. The guidance has been prepared in partnership with 
+%%%%  production teams to conform to Springer Nature technical requirements. 
+%%%%  Editorial and presentation requirements differ among journal portfolios and 
+%%%%  research disciplines. You may find sections in this template are irrelevant 
+%%%%  to your work and are empowered to omit any such section if allowed by the 
+%%%%  journal you intend to submit to. The submission guidelines and policies 
+%%%%  of the journal take precedence. A detailed User Manual is available in the 
+%%%%  template package for technical guidance.
+%%%%%=============================================================================%%%%
 
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+%%\newtheorem{theorem}{Theorem}[section]% meant for sectionwise numbers
+%% optional argument [theorem] produces theorem numbering sequence instead of independent numbers for Proposition
+\newtheorem{proposition}[theorem]{Proposition}% 
+%%\newtheorem{proposition}{Proposition}% to get separate numbers for theorem and proposition etc.
 
-%\def\includegraphic{}
-%\def\includegraphics{}
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
 
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
 
+\raggedbottom
+%%\unnumbered% uncomment this for unnumbered level heads
 
-%%% Put your definitions there:
-\startlocaldefs
-\newcommand{\PR}{{\mathsf P}}
-\endlocaldefs
-
-
-%%% Begin ...
 \begin{document}
 
-%%% Start of article front matter
-\begin{frontmatter}
+\title[]{Three-outcome designs for external pilot trials with progression criteria}
 
-\begin{fmbox}
-\dochead{Research}
+%%=============================================================%%
+%% GivenName	-> \fnm{Joergen W.}
+%% Particle	-> \spfx{van der} -> surname prefix
+%% FamilyName	-> \sur{Ploeg}
+%% Suffix	-> \sfx{IV}
+%% \author*[1,2]{\fnm{Joergen W.} \spfx{van der} \sur{Ploeg} 
+%%  \sfx{IV}}\email{iauthor@gmail.com}
+%%=============================================================%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% Enter the title of your article here     %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author*[1]{\fnm{Duncan T} \sur{Wilson}}\email{D.T.Wilson@leeds.ac.uk}
 
-\title{Three-outcome designs for external pilot trials with progression criteria}
+\author[1]{\fnm{Eleanor} \sur{Hudson}}\email{E.Hudson1@leeds.ac.uk}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% Enter the authors here                   %%
-%%                                          %%
-%% Specify information, if available,       %%
-%% in the form:                             %%
-%%   <key>={<id1>,<id2>}                    %%
-%%   <key>=                                 %%
-%% Comment or delete the keys which are     %%
-%% not used. Repeat \author command as much %%
-%% as required.                             %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\author[1]{\fnm{Sarah} \sur{Brown}}\email{S.Brown@leeds.ac.uk}
 
-\author[
-   addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
-   email={d.t.wilson@leeds.ac.uk}   % email address
-]{\inits{DTW}\fnm{Duncan T} \snm{Wilson}}
-\author[
-   addressref={aff1},
-   email={E.Hudson1@leeds.ac.uk}
-]{\inits{EH}\fnm{Eleanor} \snm{Hudson}}
-\author[
-   addressref={aff1},
-   email={S.Brown@leeds.ac.uk}
-]{\inits{SB}\fnm{Sarah} \snm{Brown}}
-\author[
-   addressref={aff1},
-   email={M.Collinson@leeds.ac.uk}
-]{\inits{MC}\fnm{Michelle} \snm{Collinson}}
+\affil*[1]{\orgname{Clinical Trials Research Unit, Leeds Institute of Clinical Trials Research, University of Leeds}, \city{Leeds}, \postcode{LS2 9JT}, \country{UK}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% Enter the authors' addresses here        %%
-%%                                          %%
-%% Repeat \address commands as much as      %%
-%% required.                                %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%==================================%%
+%% Sample for unstructured abstract %%
+%%==================================%%
 
-\address[id=aff1]{%                           % unique id
-  \orgname{Clinical Trials Research Unit, Leeds Institute of Clinical Trials Research, University of Leeds}, % university, etc
-  %\street{Waterloo Road},                     %
-  \postcode{LS2 9JT}                                % post or zip code
-  \city{Leeds},                              % city
-  \cny{UK}                                    % country
-}
+\abstract{\textbf{Background:} Whether or not to progress from a pilot study to a definitive trial is often guided by pre-specified quantitative progression criteria with three possible outcomes. Although the choice of these progression criteria will help to determine the statistical properties of the pilot trial, there is a lack of research examining how they, or the pilot sample size, should be determined. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% Enter short notes here                   %%
-%%                                          %%
-%% Short notes will be after addresses      %%
-%% on first page.                           %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textbf{Methods:} We review three-outcome trial designs originally proposed in the phase II oncology setting and extend these to the case of external pilots, proposing a unified framework based on univariate hypothesis tests and the control of frequentist error rates. We apply this framework to an example and compare against a simple two-outcome alternative.
 
-%\begin{artnotes}
-%\note{Sample of title note}     % note to the article
-%\note[id=n1]{Equal contributor} % note, connected to author
-%\end{artnotes}
+\textbf{Results:} We find that three-outcome designs can be used in the pilot setting, although they are not generally more efficient than simpler two-outcome alternatives. We show that three-outcome designs can help allow for other sources of information or other stakeholders to feed into progression decisions in the event of a borderline result, but this will come at the cost of a larger pilot sample size than the two-outcome case. We also show that three-outcome designs can be used to allow adjustments to be made to the intervention or trial design before commencing the definitive trial, providing the effect of the adjustment can be accurately predicted at the pilot design stage. An R package to optimise progression criteria and pilot sample size is provided.
 
-\end{fmbox}% comment this for two column layout
+\textbf{Conclusions:} The proposed three-outcome framework provides a way to optimise pilot trial progression criteria and sample size in a way that leads to desired operating characteristics. It can be applied whether or not an adjustment following the pilot trial is anticipated, but will generally lead to larger sample size requirements than simpler two-outcome alternatives.}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% The Abstract begins here                 %%
-%%                                          %%
-%% Please refer to the Instructions for     %%
-%% authors on http://www.biomedcentral.com  %%
-%% and include the section headings         %%
-%% accordingly for your article type.       %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%================================%%
+%% Sample for structured abstract %%
+%%================================%%
 
-\begin{abstractbox}
+% \abstract{\textbf{Purpose:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Methods:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Results:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.
+% 
+% \textbf{Conclusion:} The abstract serves both as a general introduction to the topic and as a brief, non-technical summary of the main results and their implications. The abstract must not include subheadings (unless expressly permitted in the journal's Instructions to Authors), equations or citations. As a guide the abstract should not exceed 200 words. Most journals do not set a hard limit however authors are advised to check the author instructions for the journal they are submitting to.}
 
-\begin{abstract} % abstract
+\keywords{pilot trial, progression criteria, sample size}
 
-\parttitle{Background} %if any
-Whether or not to progress from a pilot study to a definitive trial is often guided by pre-specified quantitative progression criteria with three possible outcomes. Although the choice of these progression criteria will help to determine the statistical properties of the pilot trial, there is a lack of research examining how they, or the pilot sample size, should be determined. 
+%%\pacs[JEL Classification]{D8, H51}
 
-\parttitle{Methods} %if any
-We review three-outcome trial designs originally proposed in the phase II oncology setting and extend these to the case of external pilots, proposing a unified framework based on univariate hypothesis tests and the control of frequentist error rates. We apply this framework to an example and compare against a simple two-outcome alternative.
+%%\pacs[MSC Classification]{35A01, 65L10, 65L12, 65L20, 65L70}
 
-\parttitle{Results} %if any
-We find that three-outcome designs can be used in the pilot setting, although they are not generally more efficient than simpler two-outcome alternatives. We show that three-outcome designs can help allow for other sources of information or other stakeholders to feed into progression decisions in the event of a borderline result, but this will come at the cost of a larger pilot sample size than the two-outcome case. We also show that three-outcome designs can be used to allow adjustments to be made to the intervention or trial design before commencing the definitive trial, providing the effect of the adjustment can be accurately predicted at the pilot design stage. An R package to optimise progression criteria and pilot sample size is provided.
-
-\parttitle{Conclusions} %if any
-The proposed three-outcome framework provides a way to optimise pilot trial progression criteria and sample size in a way that leads to desired operating characteristics. It can be applied whether or not an adjustment following the pilot trial is anticipated, but will generally lead to larger sample size requirements than simpler two-outcome alternatives.
-\end{abstract}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% The keywords begin here                  %%
-%%                                          %%
-%% Put each keyword in separate \kwd{}.     %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{keyword}
-\kwd{pilot trial}
-\kwd{progression criteria}
-\kwd{sample size}
-\end{keyword}
-
-% MSC classifications codes, if any
-%\begin{keyword}[class=AMS]
-%\kwd[Primary ]{}
-%\kwd{}
-%\kwd[; secondary ]{}
-%\end{keyword}
-
-\end{abstractbox}
-%
-%\end{fmbox}% uncomment this for twcolumn layout
-
-\end{frontmatter}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% The Main Body begins here                %%
-%%                                          %%
-%% Please refer to the instructions for     %%
-%% authors on:                              %%
-%% http://www.biomedcentral.com/info/authors%%
-%% and include the section headings         %%
-%% accordingly for your article type.       %%
-%%                                          %%
-%% See the Results and Discussion section   %%
-%% for details on how to create sub-sections%%
-%%                                          %%
-%% use \cite{...} to cite references        %%
-%%  \cite{koon} and                         %%
-%%  \cite{oreg,khar,zvai,xjon,schn,pond}    %%
-%%  \nocite{smith,marg,hunn,advi,koha,mouse}%%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%% start of article main body
-% <put your article body there>
-
-%%%%%%%%%%%%%%%%
-%% Background %%
-%%
+\maketitle
 \section{Introduction}\label{sec:introduction}
 
-When there is some uncertainty about the feasibility of a planned randomised clinical trial (RCT), an external pilot trial can be conducted in advance. External pilots take the form of a smaller version of the main trial \cite{Eldridge2016}, and can be used to estimate various parameters of interest when deciding if (and how) to progress to the main study. Investing in a pilot trial can identify potential issues at an early stage, making a successful main trial more likely and reducing overall research waste \cite{Morgan2018}.
+When there is some uncertainty about the feasibility of a planned randomised clinical trial (RCT), an external pilot trial can be conducted in advance \cite{Thabane2010, Arain2010}. External pilots take the form of a smaller version of the main trial \cite{Eldridge2016}, and can be used to estimate various parameters of interest when deciding if (and how) to progress to the main study. Investing in a pilot trial can identify potential issues at an early stage, making a successful main trial more likely and reducing overall research waste \cite{Morgan2018}.
 
 Progression decisions are often guided by so-called \emph{progression criteria} \cite{Eldridge2016a}. A single two-outcome progression criterion specifies a decision rule which maps the pilot data to a \emph{stop} or \emph{go} outcome. Specifically, the pilot data are used to calculate a statistic, typically an estimate of a parameter of interest, and this statistic is compared against a threshold value. If the statistic exceeds the threshold, the suggested decision is to \emph{go} forward to the main trial; otherwise, to \emph{stop} on the grounds of infeasibility. When progression criteria are specified for several parameters, these can be combined by proceeding to the main trial only if all of the estimates exceed their respective thresholds. It has been recommended that, in addition to being reported in the pilot study manuscript, progression criteria are pre-specified at the protocol stage in agreement with the study funder \cite{NIHR2017, Mbuagbaw2019}.
 
-It has become common for progression criteria to be based on a three-outcome `traffic light' system \cite{Avery2017}. These criteria stipulate two threshold values for a given parameter of interest. If the estimate falls below the lower of these, the decision is to stop (red); if the estimate falls above the higher threshold, the decision is to proceed immediately to the main trial (green); and if the estimate falls between the two thresholds, an intermediate decision is reached (amber). The specific purpose and interpretation of this intermediate decision can vary, and will depend on the motivation for using the three-outcome system. Three such motivations can be found in the methodological literature. Firstly, it has been argued that making strict stop/go decisions based on a single threshold  may lead to an unacceptably high chance of making the wrong decision as a result of sampling variability %\footnote{``\emph{\ldots estimates of rates in pilot trials may be subject to considerable uncertainty, so that it is best to be cautious about setting definitive thresholds that could be missed simply due to chance variation. In fact it is becoming increasingly common for investigators to use a traffic light system for criteria used to judge feasibility\ldots}''} 
-\cite{Eldridge2016a}. By allowing for an intermediate result in between \emph{stop} and \emph{go}, the probability of incorrect decisions may be reduced.
+It has become common for progression criteria to be based on a three-outcome `traffic light' system \cite{Avery2017}. These criteria stipulate two threshold values for a given parameter of interest. If the estimate falls below the lower of these, the decision is to stop (red); if the estimate falls above the higher threshold, the decision is to proceed immediately to the main trial (green); and if the estimate falls between the two thresholds, an intermediate decision is reached (amber). The specific purpose and interpretation of this intermediate decision can vary, and will depend on the motivation for using the three-outcome system. Three such motivations can be found in the methodological literature. 
 
-%This argument is paralled in the three outcome literaure, which argue that the designs can improve efficiency and either increase power, or reduce the required sample size.
-
-A second motivation stems from the fact that many aspects (quantitative and qualitative) being studied in a pilot trial are potentially relevant to the progression decision, and that this decision will be jointly made by several stakeholders (such as the trial team, the trial steering committee, and the funder)\todo{Noting that it's not just opening up to other information, but also facilitating a joint decision making process}. A three-outcome system will allow immediate \emph{stop} or \emph{go} decisions to be made if the evidence is sufficiently strong with respect to a handful of key parameters, whilst allowing, in the event of a borderline result, the decision to be informed by other data based on the differing perspectives of all decision makers. It has been argued that this system better represents what happens in practice even when a two-outcome process is nominally being followed. In that case, although a borderline result will technically dictate a firm \emph{stop/go} decision, this may be overridden in light of other information \cite{Sargent2001}.\todo{Coming back to this in the discussion - question of whether three outcome designs should be routinely used over two-outcome, since they better reflect actual practice.}
+Firstly, it has been argued that making strict stop/go decisions based on a single threshold  may lead to an unacceptably high chance of making the wrong decision as a result of sampling variability %\footnote{``\emph{\ldots estimates of rates in pilot trials may be subject to considerable uncertainty, so that it is best to be cautious about setting definitive thresholds that could be missed simply due to chance variation. In fact it is becoming increasingly common for investigators to use a traffic light system for criteria used to judge feasibility\ldots}''} 
+\cite{Eldridge2016a}. By allowing for an intermediate result in between \emph{stop} and \emph{go}, the probability of incorrect decisions may be reduced. A second motivation stems from the fact that many aspects (quantitative and qualitative) being studied in a pilot trial are potentially relevant to the progression decision, and that this decision will be jointly made by several stakeholders (such as the trial team, the trial steering committee, the funder, and patients). A three-outcome system will allow immediate \emph{stop} or \emph{go} decisions to be made if the evidence is sufficiently strong with respect to a handful of key parameters, whilst allowing, in the event of a borderline result, the decision to be informed by other data based on the differing perspectives of all decision makers. It has been argued that this system better represents what happens in practice even when a two-outcome process is nominally being followed. In that case, although a borderline result will technically dictate a firm \emph{stop/go} decision, this may be overridden in light of other information \cite{Sargent2001}.
 
 A final reason for an intermediate outcome is to provide the flexibility needed to make some adjustment to the intervention or trial design in an attempt to improve the parameter in question and ensure the feasibility of the main trial%\footnote{``\emph{In amber situations, there may be remediable issues that would otherwise prevent progression to the main trial but that, if identified early enough, can be addressed to the satisfaction of those reviewing progress in order for the trial to continue to a main trial.}''} \cite{Avery2017}
 . For example, after observing a mediocre follow-up rate in a pilot trial, we might consider moving from a postal follow-up strategy to one based on contacting the participants over the phone. A three-outcome approach could facilitate this by prescribing an `adjustment' decision to the intermediate outcome, whilst still allowing for immediate stopping or progression when obtaining `stop' or `go' outcomes. 
 
-Despite the prevalence of quantitative three-outcome progression criteria\cite{Herbert2019}, there is little statistical guidance to help researchers decide how they should be specified. The related question of determining the pilot trial sample size is also undeveloped, with work in this area typically focusing on pilot trials where the primary objective is to estimate the primary outcome variance to inform the main trial sample size calculation. These methods are nevertheless used when this is not the main purpose of the pilot, often in the form of simple `rules-of-thumb' \cite{Browne1995, Teare2014, Whitehead2015}. Three-outcome designs have, however, been proposed for phase II trials of cancer treatments \cite{Kirby2016}. Some of these designs were motivated by the same factors given above, and so may provide a useful framework for the design and analysis of pilot trials with three-outcome progression criteria.
+Despite the prevalence of quantitative three-outcome progression criteria \cite{Herbert2019}, there is little statistical guidance to help researchers decide how they should be specified. The related question of determining the pilot trial sample size is also undeveloped, with work in this area typically focusing on pilot trials where the primary objective is to estimate the primary outcome variance to inform the main trial sample size calculation. These methods are nevertheless used when this is not the main purpose of the pilot, often in the form of simple `rules-of-thumb' \cite{Browne1995, Teare2014, Whitehead2015}. Three-outcome designs have, however, been proposed in the setting of phase II trials of cancer treatments \cite{Kirby2016}. Some of these designs were motivated by the same factors given above, and so may provide a useful framework for the design and analysis of pilot trials with three-outcome progression criteria.
 
 In this paper we consider if, and how, three-outcome phase II designs can be used to determine optimal progression criteria and sample size in pilot trials. We begin by introducing a simple example in Section \ref{sec:example}. In Section \ref{sec:tests} we argue that quantitative progression criteria are mathematically equivalent to hypothesis tests, and are best viewed as such. We then review relevant three-outcome phase II trial designs and extend these to the pilot trial setting in Section \ref{sec:review}. In Section \ref{sec:evaluation} we examine the statistical properties of these pilot trial designs and consider whether or not they can help achieve any of the three motivating goals. Finally, we conclude with a discussion in Section \ref{sec:discussion}.
 
@@ -296,24 +185,26 @@ The specific meaning of the intermediate \emph{pause} result will vary depending
 
 \section{Progression criteria as hypothesis tests}\label{sec:tests}
 
-In order to apply the two-outcome progression criteria of Equation \ref{eqn:two_outcome}, we must choose the sample size $n$ and the threshold $x$. One way to do so is though constructing a hypothesis test using the approach of A'Hern \cite{AHern2001}, as follows. First, we identify a parameter value $\rho_0$ such that if $\rho \leq \rho_0$ we would like to limit the probability of incorrectly making a `go' decision (a type I error) to at most $\alpha^*$. Similarly, we identify $\rho_1$ such that if $\rho \geq \rho_1$ we would like to limit the probability of incorrectly making a `stop' decision (a type II error) to at most $\beta^*$. For example, we could choose adherence rates of $\rho_0 = 0.5$ and $\rho_1 = 0.7$ to represent poor and promising values respectively, and then use the standard choices of $\alpha^* = 0.05, \beta^* = 0.1$ for our nominal error rates. We then choose values of $n$ and $x$ which minimise $n$ whilst satisfying the type I and II error rate constraints
+In order to apply the two-outcome progression criteria of Equation \ref{eqn:two_outcome}, we must choose the sample size $n$ and the threshold $x$. One way to do so is though constructing a hypothesis test using the approach of A'Hern \cite{AHern2001}, as follows. First, we identify a parameter value $\rho_0$ such that if $\rho \leq \rho_0$ we would like to limit the probability of incorrectly making a \emph{go} decision (a type I error) to at most $\alpha^*$. Similarly, we identify $\rho_1$ such that if $\rho \geq \rho_1$ we would like to limit the probability of incorrectly making a \emph{stop} decision (a type II error) to at most $\beta^*$. For example, we could choose adherence rates of $\rho_0 = 0.5$ and $\rho_1 = 0.7$ to represent poor and promising values respectively, and then use the standard choices of $\alpha^* = 0.05, \beta^* = 0.1$ for our nominal error rates. We then choose values of $n$ and $x$ which minimise $n$ whilst satisfying the type I and II error rate constraints
+
 \begin{align}
-\alpha &= \max_{\rho \leq \rho_0} \PR[ \hat{\rho} > x ~ | ~ \rho] \\
-&= \PR[ \hat{\rho} > x ~ | ~ \rho = \rho_0] \leq \alpha^* \\
-\beta &= \max_{\rho \geq \rho_1} \PR[ \hat{\rho} \leq x ~ | ~ \rho] \\
-&= \PR[ \hat{\rho} \leq x ~ | ~ \rho = \rho_1] \leq \beta^*,
+\alpha &= \max_{\rho \leq \rho_0} \Pr[ \hat{\rho} > x ~ | ~ \rho]  \nonumber \\
+&= \Pr[ \hat{\rho} > x ~ | ~ \rho = \rho_0] \leq \alpha^* \\
+\beta &= \max_{\rho \geq \rho_1} \Pr[ \hat{\rho} \leq x ~ | ~ \rho]  \nonumber \\
+&= \Pr[ \hat{\rho} \leq x ~ | ~ \rho = \rho_1] \leq \beta^*,
 \end{align}
-where we have used the monotonicity of power as a function of $\rho$ to note that the type I and II error rates will be maximised when $\rho = \rho_0$ and $\rho = \rho_1$ respectively.\todo{We have defined a one-sided type I error here without drawing attention to it - seems OK to me as it's a natural view when thinking about progression decisions. I think wait and see if a reviewer wants this to be justified / discussed.}
 
-Alternatively, we can work backwards and take any given choice for $n$ and $x$ and calculate the resulting error rates for some hypotheses $\rho_0, \rho_1$. In particular, whenever a pilot trial progression criteria is specified in the form of Equation \ref{eqn:two_outcome}, it is mathematically equivalent to a hypothesis test. For example, consider a pilot trial with $n = 15$ participants in the intervention arm and a \emph{stop/go} progression criteria with threshold $x = 9/15$. If we suppose that the null and alternative hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7$, this design will give type I and II error rates of $\alpha = 0.28$ and $1 - \beta = 0.72$. If we instead constrain the error rates to, for example, $\alpha^* = 0.05$ and $\beta^* = 0.1$, the smallest possible sample size is $n = 53$ and the corresponding progression threshold is $x = 32/48$. 
+where we have used the monotonicity of power as a function of $\rho$ to note that the type I and II error rates will be maximised when $\rho = \rho_0$ and $\rho = \rho_1$ respectively.
 
-The equivalence of two-outcome progression criteria and hypothesis tests suggests the latter can provide a statistical framework for determining the former \cite{Lewis2021a}. This will allow us to express what parameter values would lead to errors of each type\todo{Return in discussion to the difficulty in doing this compared with determining an efficacy null hypothesis}, and then subsequently to control the probability of these errors by choosing a sufficient sample size.
+Alternatively, we can work backwards and take any given choice for $n$ and $x$ and calculate the resulting error rates for some hypotheses $\rho_0, \rho_1$. In particular, whenever a pilot trial progression criteria is specified in the form of Equation \ref{eqn:two_outcome}, it is mathematically equivalent to a hypothesis test. For example, consider a pilot trial with $n = 15$ participants in the intervention arm and a \emph{stop/go} progression criteria with threshold $x = 9/15$. If we suppose that the null and alternative hypotheses are $\rho_0 = 0.5, \rho_1 = 0.7$, this design will give type I and II error rates of $\alpha = 0.28$ and $1 - \beta = 0.72$. If we instead constrain the error rates to, for example, $\alpha^* = 0.05$ and $\beta^* = 0.1$, the smallest possible sample size satisfying these constraints is $n = 53$ with a corresponding progression threshold is $x = 32/48$. 
+
+The equivalence of two-outcome progression criteria and hypothesis tests suggests the latter can provide a statistical framework for determining the former \cite{Lewis2021a}. This will allow us to use hypotheses to express what parameter values would lead to errors of each type, and then subsequently to control the probability of these errors by choosing a sufficient sample size and associated progression threshold.
 
 \section{Extending three-outcome phase II trial designs}\label{sec:review}
 
 Just as standard hypothesis testing can be used as a framework for two-outcome progression criteria, three-outcome extensions of it can be used for the three-outcome progression criteria of Equation \ref{eqn:three_outcome}. We will consider two such extensions proposed for phase II trials by Sargent \emph{et al.} \cite{Sargent2001} and by Storer \cite{Storer1992}.
 
-The design of Sargent \emph{et al.} defines four operating characteristics relevant to the three-outcome setting. Firstly, a measure akin to the type I error rate, denoted $\alpha_a$, is defined as the probability under the null hypothesis $\rho = \rho_0$ that the parameter estimate will exceed the upper threshold $x_1$ and thereby lead to a \emph{go} decision. Similarly, a type II error rate $\beta_a$ is given as the probability, under the alternative hypothesis $\rho = \rho_1$, of the parameter estimate falling below the lower threshold $x_0$ and leading to a \emph{stop} decision. Two further operating characteristics relating to the intermediate outcome are then defined: the probability of obtaining a \emph{pause} decision under then null hypothesis, denoted $\lambda$, and again under the alternative hypothesis, denoted $\gamma$. These operating characteristics are summarised in Table \ref{tab:ocs} and illustrated in Figure \ref{fig:Sarg_ocs}. The authors propose to set constraints on these four operating characteristics and choose $n, x_0,$ and $x_1$ to minimise $n$ whilst satisfying these constraints. They argue that their designs will lead to a lower sample size requirement than standard two-outcome alternatives.
+The design of Sargent \emph{et al.} defines four operating characteristics relevant to the three-outcome setting. Firstly, a measure akin to the type I error rate, denoted $\alpha_a$, is defined as the probability under the null hypothesis $\rho = \rho_0$ that the parameter estimate will exceed the upper threshold $x_1$ and thereby lead to an incorrect \emph{go} decision. Similarly, a type II error rate $\beta_a$ is given as the probability, under the alternative hypothesis $\rho = \rho_1$, of the parameter estimate falling below the lower threshold $x_0$ and leading to an incorrect \emph{stop} decision. Two further operating characteristics relating to the intermediate outcome are then defined: the probability of obtaining a \emph{pause} decision under the null hypothesis, denoted $\lambda$, and again under the alternative hypothesis, denoted $\delta$. These operating characteristics are summarised in Table \ref{tab:ocs} and illustrated in Figure \ref{fig:Sarg_ocs}. The authors propose to set constraints on these four operating characteristics and choose $n, x_0,$ and $x_1$ to minimise $n$ whilst satisfying these constraints. They argue that their designs will lead to a lower sample size requirement than standard two-outcome alternatives by reducing the probabilities of type I and II errors ($\alpha_a$ and $\beta_a$) through increasing the probabilities of \emph{pause} decisions ($\lambda$ and  $\gamma$).
 
 \begin{table}
 \caption{Operating characteristics for Sargent \emph{et al.} and Storer's three-outcome designs \cite{Sargent2001, Storer1992}.}
@@ -321,15 +212,15 @@ The design of Sargent \emph{et al.} defines four operating characteristics relev
 \toprule
  & Symbol & Equation & Description \\
 \midrule
-\multirow{6}{*}{\rotatebox[origin=c]{90}{Sargent}} & $\alpha_a$ & $\PR[ \hat{\rho} > x_1 | \rho = \rho_0]$ & Probability of an immediate \emph{go} decision under the null hypothesis \\
- & $\beta_a$ & $\PR[ \hat{\rho} \leq x_0 | \rho = \rho_1]$ & Probability of an immediate \emph{stop} decision under the alternative hypothesis \\
- & $\lambda$ & $\PR[ x_0 < \hat{\rho} \leq x_1 | \rho = \rho_0]$ & Probability of a \emph{pause} decision under the null hypothesis \\
- & $\delta$ & $\PR[ x_0 < \hat{\rho} \leq x_1 | \rho = \rho_1]$ &  Probability of a \emph{pause} decision under the alternative hypothesis \\
+\multirow{6}{*}{\rotatebox[origin=c]{90}{Sargent}} & $\alpha_a$ & $\Pr[ \hat{\rho} > x_1 | \rho = \rho_0]$ & Probability of an immediate \emph{go} decision under the null hypothesis \\
+ & $\beta_a$ & $\Pr[ \hat{\rho} \leq x_0 | \rho = \rho_1]$ & Probability of an immediate \emph{stop} decision under the alternative hypothesis \\
+ & $\lambda$ & $\Pr[ x_0 < \hat{\rho} \leq x_1 | \rho = \rho_0]$ & Probability of a \emph{pause} decision under the null hypothesis \\
+ & $\delta$ & $\Pr[ x_0 < \hat{\rho} \leq x_1 | \rho = \rho_1]$ &  Probability of a \emph{pause} decision under the alternative hypothesis \\
  &&& \\
-\multirow{6}{*}{\rotatebox[origin=c]{90}{Storer}} & $\alpha_b$ & $\PR[ \hat{\rho} > x_0 | \rho = \rho_0]$ & Probability of not obtaining an immediate \emph{stop} decision under the null hypothesis \\
- & $\beta_b$ & $\PR[ \hat{\rho} \leq x_1 | \rho = \rho_1]$ & Probability of not obtaining an immediate \emph{go} decision under the alternative hypothesis \\
- & $\gamma_L$ & $\PR[ \hat{\rho} \leq x_0 | \rho = \rho_m]$ & Probability of an immediate \emph{stop} decision when $\rho = \rho_m$ \\
- & $\gamma_U$ & $\PR[ x_1 < \hat{\rho} | \rho = \rho_m]$ &  Probability of an immediate \emph{go} decision when $\rho = \rho_m$ \\
+\multirow{6}{*}{\rotatebox[origin=c]{90}{Storer}} & $\alpha_b$ & $\Pr[ \hat{\rho} > x_0 | \rho = \rho_0]$ & Probability of not obtaining an immediate \emph{stop} decision under the null hypothesis \\
+ & $\beta_b$ & $\Pr[ \hat{\rho} \leq x_1 | \rho = \rho_1]$ & Probability of not obtaining an immediate \emph{go} decision under the alternative hypothesis \\
+ & $\gamma_L$ & $\Pr[ \hat{\rho} \leq x_0 | \rho = \rho_m]$ & Probability of an immediate \emph{stop} decision when $\rho = \rho_m$ \\
+ & $\gamma_U$ & $\Pr[ x_1 < \hat{\rho} | \rho = \rho_m]$ &  Probability of an immediate \emph{go} decision when $\rho = \rho_m$ \\
 \bottomrule
 \end{tabularx}
 \label{tab:ocs}
@@ -337,7 +228,7 @@ The design of Sargent \emph{et al.} defines four operating characteristics relev
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/Sarg_ocs}
+\includegraphics[scale=0.8]{Sarg_ocs}
 \caption{Graphical illustration of the operating characteristics for Sargent \emph{et al.}'s three-outcome design \cite{Sargent2001}. The curves represents the sampling distribution of the estimate under the null hypothesis $\rho = \rho_0$ (solid line) and the alternative hypothesis $\rho = \rho_1$ (dashed line).}
 \label{fig:Sarg_ocs}
 \end{figure}
@@ -346,16 +237,16 @@ An alternative three-outcome design proposed by Storer \cite{Storer1992} takes t
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/Stor_ocs}
+\includegraphics[scale=0.8]{Stor_ocs}
 \caption{Graphical illustration of the operating characteristics for Storer's three-outcome design\cite{Storer1992}. The curves represents the sampling distribution of the estimate under the null hypothesis $\rho = \rho_0$ (solid line), the alternative hypothesis $\rho = \rho_1$ (dashed line), and a mid point $\rho = \rho_m = (\rho_1 + \rho_0)/2$ (dotted line).}
 \label{fig:Stor_ocs}
 \end{figure}
 
 Considering the proposal of Sargent \emph{et al.}, we note that the measure $\alpha_a$ does not fully capture the probability of making a type I error %\footnote{Sargent \emph{et al.}  state that ``We  can interpret $\alpha$ in the usual  manner,  i.e., the  maximum probability of making an erroneous decision by rejecting the null hypothesis when in fact it is true'', although then go on to say ``However, the error rates $\alpha$ and $\beta$ in a three-outcome design cannot be viewed in the same way as in the traditional two-outcome design."} 
-since a decision to progress to the main trial can be arrived at in two ways: directly, by obtaining $\hat{\rho} > x_1$; or indirectly, by first obtaining a \emph{pause} outcome $x_0 < \hat{\rho} < x_1$ and then deciding to proceed. To capture these situations, we first define the probabilities of making incorrect decisions following a \emph{pause} outcome under the null and alternative hypotheses:
+since a decision to progress to the main trial can be arrived at in two ways: directly, by obtaining $\hat{\rho} > x_1$; or indirectly, by first obtaining a \emph{pause} outcome $x_0 < \hat{\rho} < x_1$ and then deciding to proceed. To capture these situations, we define the probabilities of making incorrect decisions following a \emph{pause} outcome under the null and alternative hypotheses:
 \begin{align}
-\eta_0 &= \PR[\text{decide to \emph{go}} ~|~ \rho = \rho_0, x_0 < \hat{\rho} \leq x_1] \\
-\eta_1 &= \PR[\text{decide to \emph{stop}} ~|~ \rho = \rho_1, x_0 < \hat{\rho} \leq x_1].
+\eta_0 &= \Pr[\text{decide to \emph{go}} ~|~ \rho = \rho_0, x_0 < \hat{\rho} \leq x_1] \\
+\eta_1 &= \Pr[\text{decide to \emph{stop}} ~|~ \rho = \rho_1, x_0 < \hat{\rho} \leq x_1].
 \end{align}
 For example, $\eta_0$ is the probability of making a \emph{go} decision following a \emph{pause} outcome and when the true parameter value is $\rho_0$. The probability of making a \emph{go} decision when $\rho = \rho_0$, then, is not $\alpha_a$ but
 \begin{equation}\label{eqn:new_a}
@@ -366,19 +257,17 @@ Similarly, the type II error rate is
 \beta = \beta_a + \eta_1 \delta.
 \end{equation}
 
-These operating characteristics have been suggested previously in the context of multi-armed screening trials \cite{Sargent2001a, Dehbi2020}. For simplicity we will assume that $\eta_0 = \eta_1 = \eta$; that is, the probability of eventually making the wrong decision following an intermediate result is the same when $\rho = \rho_0$ as when $\rho = \rho_1$. Under this reformulation an optimal three-outcome design can be found by first estimating the probability $\eta$, setting constraints on the type I and II error rates $\alpha, \beta$, and finally searching for the values of  $n, x_0, x_1$ which minimise $n$ whilst satisfying the constraints. Note that we no longer need to set constraints on the operating characteristics $\delta$ and $\lambda$, as the probability of obtaining an intermediate decision under the null and alternative hypothesis will be automatically limited by the constraints on the $\alpha$ and $\beta$ (as defined in equations \ref{eqn:new_a} and \ref{eqn:new_b}) respectively.\todo{Is this clear or does it need more explanation / discussion?}
+These operating characteristics have been suggested previously in the context of multi-armed screening trials \cite{Sargent2001a, Dehbi2020}. For simplicity we will assume that $\eta_0 = \eta_1 = \eta$; that is, the probability of eventually making the wrong decision following an intermediate result is the same when $\rho = \rho_0$ as when $\rho = \rho_1$. Under this reformulation an optimal three-outcome design can be found by first estimating the probability $\eta$, setting constraints on the type I and II error rates $\alpha, \beta$, and finally searching for the values of  $n, x_0, x_1$ which minimise $n$ whilst satisfying the constraints. Note that we no longer need to set constraints on the operating characteristics $\lambda$ and $\delta$, as these probabilities of obtaining an intermediate decision under the null and alternative hypothesis will be automatically limited by the constraints on $\alpha$ and $\beta$ (as defined in equations \ref{eqn:new_a} and \ref{eqn:new_b}) respectively.
 
 A similar argument applies when considering Storer's method, where we can replace the operating characteristics $\alpha_b, \beta_b$ with $\alpha$ and $\beta$. As the operating characteristics $\gamma_L, \gamma_U$ are designed to encourage an intermediate outcome under $\rho_m$, rather than limit it as in the method of Sargent \emph{et al.}, we keep these in our reformulation. Thus, an optimal three-outcome design under the reformulated Storer method can be found by estimating the probability $\eta$, setting constraints on $\alpha, \beta, \gamma_L$ and $\gamma_U$, and finally searching for the values of  $n, x_0, x_1$ which minimise $n$ whilst satisfying the constraints. 
 
-For simplicity, we will assume that the cost of an incorrect \emph{stop} or \emph{go} decision when $\rho = \rho'$ are the same, and replace the two error rates $\gamma_U, \gamma_L$ by the single error rate
-$$
+For simplicity, we will assume that the cost of an incorrect \emph{stop} or \emph{go} decision when $\rho = \rho_m$ are the same, and replace the two error rates $\gamma_U, \gamma_L$ by the single error rate
+\begin{equation*}
 \gamma = \gamma_L + \gamma_U,
-$$
-the probability of making an incorrect conclusive decision of either type. Note that the reformulated method of Sargent \emph{et al.} is a special case of this method when we set the trivial constraint $\gamma \leq 1$, and so we have a single unified framework for designing and analysing three-outcome studies.
+\end{equation*}
+the probability of making an incorrect conclusive decision of either type. Note that the reformulated method of Sargent \emph{et al.} is a special case of this method when we set the trivial constraint $\gamma \leq 1$, and so we have a single unified framework for designing and analysing three-outcome pilot studies which don't allow for adjustments to the intervention or trial design prior to the definitive trial.
 
-\subsection{Allowing for adjustments}\label{sec:adjustments}
-
-\todo{This (4.1 and 4.2) is mostly new so could do with a review}
+\subsection{Allowing for adjustments following a \emph{pause} outcome}\label{sec:adjustments}
 
 We now further generalise the three-outcome testing framework to allow for adjustments to be made following a \emph{pause} outcome. Denote the effect of this adjustment by $\tau$, such that the parameter in the main trial will equal $\rho' = \rho$ if no adjustment is made and $\rho' = \rho + \tau$ if it is. We will assume that the adjustment effect is known up to an interval $\tau \in [\tau_{min}, \tau_{max}]$, and that $\tau_{min} \geq 0$. We then refine our definitions of the error rates $\alpha$ and $\beta$ as
 
@@ -388,53 +277,49 @@ We now further generalise the three-outcome testing framework to allow for adjus
 \end{itemize}
 
 Because we can make a \emph{go} decision in two ways, $\alpha$ is now the maximum probability of proceeding either directly or following a \emph{pause} outcome (in which case the adjustment is made) when this will lead to $\rho' \leq \rho_0$. As before, we assume there is a constant probability of mistakenly deciding to proceed following a \emph{pause} outcome when in fact $\rho + \tau \leq \rho_0$, denoted  by $\eta$. That is,
-
-$$
-\alpha = \max \left[ \max_{\rho \leq \rho_0} \PR(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta \PR(x_0 < \hat{\rho} \leq x_1) + \PR(x_1 < \hat{\rho}) \right].
-$$
+\begin{equation*}
+\alpha = \max \left[ \max_{\rho \leq \rho_0} \Pr(x_1 < \hat{\rho}), \max_{\rho + \tau \leq \rho_0} \eta \Pr(x_0 < \hat{\rho} \leq x_1) + \Pr(x_1 < \hat{\rho}) \right].
+\end{equation*}
 
 The first term is maximised at $\rho = \rho_0$. The second term can be written as
-$$
-\begin{aligned}
-\eta \PR(x_0 < \hat{\rho} \leq x_1) + \PR(x_1 < \hat{\rho}) &=
-\eta \PR(\hat{\rho} \leq x_1) - \eta \PR(\hat{\rho} \leq x_0) + 1 - \PR(\hat{\rho} \leq x_1)\\
-&= 1 + (\eta - 1)\PR(\hat{\rho} \leq x_1) - \eta \PR(\hat{\rho} \leq x_0),
-\end{aligned}
-$$
+\begin{align*}
+\eta \Pr(x_0 < \hat{\rho} \leq x_1) + \Pr(x_1 < \hat{\rho}) &=
+\eta \Pr(\hat{\rho} \leq x_1) - \eta \Pr(\hat{\rho} \leq x_0) + 1 - \Pr(\hat{\rho} \leq x_1)\\
+&= 1 + (\eta - 1)\Pr(\hat{\rho} \leq x_1) - \eta \Pr(\hat{\rho} \leq x_0),
+\end{align*}
 and so is maximised at $\rho = \rho_0 - \tau_{min}$, giving 
-\begin{equation}\label{eqn:alpha}
-\alpha = \max \left[ \PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0), \eta \PR(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_0 - \tau_{min}) + \PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0 - \tau_{min}) \right].
-\end{equation}
+\begin{align}\label{eqn:alpha}
+\alpha =& \max \big[ \Pr(x_1 < \hat{\rho} ~|~ \rho = \rho_0), ~\eta \Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_0 - \tau_{min}) \nonumber \\
+&+ \Pr(x_1 < \hat{\rho} ~|~ \rho = \rho_0 - \tau_{min}) \big].
+\end{align}
 
 An incorrect \emph{stop} decision may again occur two ways - directly, or following a \emph{pause} outcome. The error rate $\beta$ can therefore be written as
 \begin{equation}\label{eqn:beta_a}
-\beta = \max \left[ \max_{\rho > \rho_1} \PR(\hat{\rho} \leq x_0), \max_{\rho + \tau > \rho_1} \PR(\hat{\rho} \leq x_0) + \eta \PR(x_0 < \hat{\rho} \leq x_1) \right],
+\beta = \max \left[ \max_{\rho > \rho_1} \Pr(\hat{\rho} \leq x_0), \max_{\rho + \tau > \rho_1} \Pr(\hat{\rho} \leq x_0) + \eta \Pr(x_0 < \hat{\rho} \leq x_1) \right].
 \end{equation}
-
-where we have assumed the same probability of an incorrect decision following a \emph{pause} outcome as with the $\alpha$ case. The first term is maximised at $\rho = \rho_1$, while the second term can be written as
-$$
-\eta \PR(\hat{\rho} \leq x_1) + (1 - \eta) \PR(\hat{\rho} \leq x_0),
-$$
-which is maximised at $\rho = \rho_1 - \tau_{max}$. Since $\tau_{max} > 0$, then $\PR(\hat{\rho} \leq x_0 | \rho = \rho_1) \leq \PR(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1  - \tau_{max})$ and so Equation \ref{eqn:beta_a} can be simplified to
+The first term is maximised at $\rho = \rho_1$, while the second term can be written as
+\begin{equation*}
+\eta \Pr(\hat{\rho} \leq x_1) + (1 - \eta) \Pr(\hat{\rho} \leq x_0),
+\end{equation*}
+which is maximised at $\rho = \rho_1 - \tau_{max}$. Since $\tau_{max} > 0$, then $\Pr(\hat{\rho} \leq x_0 | \rho = \rho_1) \leq \Pr(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1  - \tau_{max})$ and so Equation \ref{eqn:beta_a} can be simplified to
 \begin{equation}\label{eqn:beta}
-\beta = \PR(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta \PR(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}).
+\beta = \Pr(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta \Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}).
 \end{equation}
 
 Note that the general error rates of Equations \ref{eqn:alpha} and \ref{eqn:beta} are valid in the special case where no adjustments are going to be made following a \emph{pause} decision (i.e. when $\tau_{min} = \tau_{max} = 0$). As such, we have a general formulation of error rates in three-outcome designs regardless of the possibility of adjustment. 
 
 \subsection{Implementation}
 
-To determine appropriate values for $n, x_0$ and $x_1$ which will satisfy nominal error rate constraints $\alpha^*, \beta^*$ and $\gamma^*$, we first consider $n$ and $x_1$ to be fixed and such that $\PR(\hat{\rho} > x_1 ~|~ \rho = \rho_0) \leq \alpha^*$. Then we set the second term in Equation \ref{eqn:alpha} equal to $\alpha^*$ and rearrange to get
+To determine appropriate values for $n, x_0$ and $x_1$ which will satisfy nominal error rate constraints $\alpha^*, \beta^*$ and $\gamma^*$, we first consider $n$ and $x_1$ to be fixed and such that $\Pr(\hat{\rho} > x_1 ~|~ \rho = \rho_0) \leq \alpha^*$. Then we set the second term in Equation \ref{eqn:alpha} equal to $\alpha^*$ and rearrange to get
 
 \begin{equation}\label{eqn:get_x0}
-\PR(\hat{\rho} \leq x_0) = \frac{1}{\eta} + \frac{\eta - 1}{\eta}\PR(\hat{\rho} \leq x_1) - \frac{\alpha^*}{\eta}.
+\Pr(\hat{\rho} \leq x_0) = \frac{1}{\eta} + \frac{\eta - 1}{\eta}\Pr(\hat{\rho} \leq x_1) - \frac{\alpha^*}{\eta}.
 \end{equation}
-
 Using the inverse of $\hat{\rho}$'s distribution function, we can then find the value of $x_0$ which gives us $\alpha = \alpha^*$ (or for the case of a binary outcome, the $x_0$ which maximises $\alpha$ whilst ensuring $\alpha \leq \alpha^*$).
 
 To choose $x_1$ we continue to fix $n$ and then use a numerical search to find the largest $x_1$ such that $x_0 \leq x_1$ (with $x_0$ determined using Equation \ref{eqn:get_x0}) and $\beta \leq \beta^*$. Finally, we can choose $n$ by finding the smallest value such that the third constraint $\gamma \leq \gamma^*$ is satisfied when the corresponding $x_1$ and $x_0$ are chosen using the above procedure.
 
-The \texttt{R} package \texttt{TOut} uses this approach to determine optimal three-outcome designs for the case of univariate progression criteria based on a binary or continuous endpoint in single arm, single stage trials. Full details and illustrations are provided in the supplementary material and package documentation.
+The \texttt{R} package \texttt{tout} uses this approach to determine optimal three-outcome designs for the case of univariate progression criteria based on a binary or continuous endpoint in single arm, single stage trials. Full details and illustrations are provided in the supplementary material and package documentation.
 
 \section{Evaluation}\label{sec:evaluation}
 
@@ -442,11 +327,11 @@ As noted in Section \ref{sec:introduction}, adding a third outcome to pilot tria
 
 \subsection{Statistical efficiency}\label{sec:efficiency}
 
-Sargent \emph{et al.} show that three-outcome designs based on the operating characteristics given in Table \ref{tab:ocs} will have a lower sample size than corresponding two-outcome designs, providing $\lambda$ and/or $\delta$ are allowed to be greater than 0. For example, take $\rho_0 = 0.5$ and $\rho_1 = 0.7$. A two-outcome design will require $n = 53$ to ensure $\alpha \leq 0.05$ and $\beta \leq 0.1$. In contrast, by allowing $\lambda \leq 0.1$ and $\delta \leq 0.1$ in a three-outcome design, we can obtain $\alpha_a \leq 0.05$ and $\beta_a \leq 0.1$ with only $n = 42$, suggesting three-outcome designs are indeed more efficient \cite{Sargent2001, Hong2007}. However, this apparent advantage breaks down when using the reformulation given in Section \ref{sec:review}. To illustrate this we found optimal sample sizes for this example problem over the range $0 \leq \eta \leq 0.5$ (where $\eta$ denotes the probability of making an incorrect progression decision following a \emph{pause} outcome), using the constraints $\alpha \leq 0.05, \beta \leq 0.2, \gamma \leq 1$. We have not considered $\eta > 0.5$ as this represents a decision making ability worse than random, in which case the optimal design remains the usual two-outcome design. The optimal sample sizes are plotted in Figure \ref{fig:eta_ns}.
+Sargent \emph{et al.} show that three-outcome designs based on the operating characteristics given in Table \ref{tab:ocs} will have a lower sample size than corresponding two-outcome designs whilst constraining the error rates $\alpha_a, \beta_a$ to the same levels, providing $\lambda$ and/or $\delta$ are allowed to be greater than 0. For example, take $\rho_0 = 0.5$ and $\rho_1 = 0.7$. A two-outcome design will require $n = 53$ to ensure $\alpha_a \leq 0.05$ and $\beta_a \leq 0.1$. In contrast, by allowing $\lambda \leq 0.1$ and $\delta \leq 0.1$ in a three-outcome design, we can obtain $\alpha_a \leq 0.05$ and $\beta_a \leq 0.1$ with only $n = 42$, suggesting three-outcome designs are indeed more efficient \cite{Sargent2001, Hong2007}. However, this apparent advantage breaks down when using the reformulation given in Section \ref{sec:review}. To illustrate this we found optimal sample sizes for this example problem over the range $0 \leq \eta \leq 0.5$ (where $\eta$ denotes the probability of making an incorrect progression decision following a \emph{pause} outcome), using the constraints $\alpha \leq 0.05, \beta \leq 0.2, \gamma \leq 1$. We have not considered $\eta > 0.5$ as this represents a decision making ability worse than random, in which case the optimal design remains the usual two-outcome design. The optimal sample sizes are plotted in Figure \ref{fig:eta_ns}.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/eta_ns}
+\includegraphics[scale=0.8]{eta_ns}
 \caption{Minimum required sample size for a three-outcome design as a function of $\eta$ (solid line), along with the corresponding size of the intermediate zone $x_1 - x_0$ (dashed line).}
 \label{fig:eta_ns}
 \end{figure}
@@ -454,13 +339,13 @@ Sargent \emph{et al.} show that three-outcome designs based on the operating cha
 When $\eta = 0.5$, in which case we can only guess at the correct decision following a \emph{pause} outcome, the optimal sample size is $n = 52$. %\footnote{We might have expected the three- and two-outcome designs to coincide at this point, and indeed this is the case if we employ a normal approximation for $\hat{\rho}$. When using exact binomial probabilities, as we have done here, the optimal three-outcome design has $x_0 = 31, x_1 = 32$, in comparison to the $x = 32$ of the two-outcome design. This suggests the true optimal $x$ for a two-outcome design lies in the interval $(31, 32)$} 
 Figure \ref{fig:eta_ns} shows that a low value of $\eta$ is required to achieve a meaningful reduction in sample size. For example, for a 20\% reduction from the $n = 52$ two-outcome design down to $n = 41$, we would require $\eta = 0.2$. That is, we must be confident that following a \emph{pause} outcome, but with a true $\rho = \rho_i (i = 0,1)$, we will make the correct progression decision with a probability of 0.8. In the context of our simple one-parameter example, the estimate $\hat{\rho}$ is a sufficient statistic for $\rho$ and so we cannot obtain any other information relevant to this particular judgement. This would lead to $\eta = 0.5$, in which case the optimal three-outcome design will reduce to a two-outcome design.
 
-We may expect $\eta < 0.5$ if measures of another outcome in the trial, correlated with the outcome of interest, are going to inform the progression decision following an \emph{pause} outcome. For example, patient adherence and retention may be correlated. If an \emph{pause} outcome was observed when assessing adherence but retention was seen to be high, we might infer the true adherence rate to be larger than the estimate. The extent of this will depend, however, on the strength of the correlation, which may be hard to judge at the design stage. 
+We may expect $\eta < 0.5$ if measures of another outcome in the trial, correlated with the outcome of interest, are going to inform the progression decision following a \emph{pause} outcome. For example, patient adherence and retention may be correlated. If a \emph{pause} outcome was observed when assessing adherence but retention was seen to be high, we might infer the true adherence rate to be larger than the estimate. The extent of this will depend, however, on the strength of the correlation, which may be hard to judge at the design stage. 
 
 To explore the implications of incorrectly assuming $\eta < 0.5$, we took each of the optimal designs found over the range $0 \leq \eta \leq 0.5$ and calculated their type I and II error rates under a true value of $\eta = 0.5$. These error rates are plotted in Figure \ref{fig:eta_true_ocs}. We find that error rates will be substantially inflated whenever $\eta$ was incorrectly assumed to be small enough to lead to a meaningful reduction in sample size. For example, if we incorrectly assume $\eta = 0.2$ when in fact $\eta = 0.5$ the `optimal' design will lead to actual type I and II error rates of 0.094 and 0.188, rather than the nominal 0.05 and 0.1.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/eta_true_ocs}
+\includegraphics[scale=0.8]{eta_true_ocs}
 \caption{Type I (solid line) and II (dashed line) error rates of three-outcome designs, each locally optimal for an assumed $\eta$, when in fact $\eta = 0.5$.}
 \label{fig:eta_true_ocs}
 \end{figure}
@@ -469,13 +354,13 @@ Given the challenges of estimating $\eta$ and the implications of doing it badly
 
 \subsection{Incorporating other information}\label{sec:information}
 
-We have argued that, without strong assumptions, using other sources of information to make progression decisions via an intermediate result will not improve statistical efficiency. We may, nevertheless, want to use such a procedure to allow this other information to inform the progression decision, rather then being ignored completely. For example, in addition to requiring sufficient adherence we may also want to see good recruitment and retention in the pilot trial. In the event of a \emph{pause} outcome when assessing adherence, we could then decide to proceed to the main trial only if the estimated recruitment and retention rates are large enough. A \emph{pause} outcome could also provide an opportunity for discussion amongst the various stakeholders (such as the trial team, steering committee and funder) to arrive at a collective decision on progression.
+Although three-outcome progression criteria are not more efficient than their two-outcome alternatives, we may nevertheless wish to use them to allow other information to inform the progression decision rather then being ignored completely. For example, in addition to requiring sufficient adherence we may also want to see good recruitment and retention in the pilot trial. In the event of a \emph{pause} outcome when assessing adherence, we could then decide to proceed to the main trial only if the estimated recruitment and retention rates are large enough. A \emph{pause} outcome could also provide an opportunity for discussion amongst the various stakeholders (such as the trial team, steering committee, funder, and patients) to arrive at a collective decision on progression.
 
 To facilitate this we can encourage the design to have an appropriate intermediate zone $| x_1 - x_0|$ by constraining the operating characteristic $\gamma = \gamma_L + \gamma_U$ defined in Table \ref{tab:ocs}, thus limiting the chance of making a conclusive \emph{stop} or \emph{go} decision when $\rho = \rho_m$. With $\rho_0 = 0.5, \rho_1 = 0.7, \alpha \leq 0.05$ and $\beta \leq 0.1$ as before, we set $\rho_m = (\rho_1 - \rho_0)/2 = 0.6$ and found optimal designs for a range of $\gamma^*$ while assuming throughout that $\eta = 0.5$. The sample sizes of these designs are plotted in Figure \ref{fig:gamma_ns}.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/gamma_ns}
+\includegraphics[scale=0.8]{gamma_ns}
 \caption{Minimum required sample size for a three-outcome design as a function of $\gamma^*$ (solid line), along with the corresponding size of the intermediate zone $x_1 - x_0$ (dashed line).}
 \label{fig:gamma_ns}
 \end{figure}
@@ -483,8 +368,6 @@ To facilitate this we can encourage the design to have an appropriate intermedia
 When we set $\gamma^* = 1$, no intermediate zone is required and so the optimal design is the usual two-outcome design. As we decrease the nominal level on this constraint we permit an ever smaller probability of obtaining a conclusive \emph{stop} or \emph{go} outcome when $\rho = \rho_m$. This leads to an increasing width of intermediate zone $|x_1 - x_0|$, alongside an increasing sample size. The required increase in sample size beyond the two-outcome design can be substantial. For example, to ensure a maximum 40\% chance of obtaining a conclusive result when $\rho = \rho_m$, we must increase the sample size from $n = 52$ to $n = 98$. Providing such increases in sample size are considered worthwhile, we conclude that three-outcome designs can be used in pilot trials to allow other information and stakeholders to feed into progression decisions.
 
 \subsection{Allowing for adjustments}
-
-\todo{This subsection is mostly new}
 
 A final rationale for an intermediate outcome in pilot trials is to enable some modifications to be made prior to commencing the main trial. These could be adjustments to the trial design (e.g. to improve recruitment) or to the intervention itself (e.g. to improve adherence). The intermediate \emph{pause} outcome now leads to the decision to either \emph{stop} or to make these modifications and then \emph{go} to the main trial. Recall from Section \ref{sec:adjustments} that the effect of such an adjustment is denoted by $\tau$.
 
@@ -494,12 +377,12 @@ Assume that the effect of adjustment $\tau$ is known \emph{a priori}. Considerin
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/tau_ns}
+\includegraphics[scale=0.8]{tau_ns}
 \caption{Minimum required sample size for a three outcome design as a function of the known adjustment effect $\tau$.}
 \label{fig:tau_ns}
 \end{figure}
 
-When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design with $n = 52$. As $\tau$ increases the required sample size increases with it exponentially. For example, for $\tau = 0.125$ we require $n = 275$. This can be explained by looking back at our error rate definitions in Equations \ref{eqn:alpha} and \ref{eqn:beta}, which show that $\alpha$ constrains the term $\PR(x_1 < \hat{\rho} ~|~ \rho = \rho_0)$ while $\beta$ constrains the term $\PR(\hat{\rho} < x_0 ~|~ \rho = \rho_1 - \tau_{max})$. Note this also implies we must have $\tau < \rho_1 - \rho_0$ in order to have both $\alpha < 0.5$ and $\beta < 0.5$.
+When adjustments have no effect ($\tau = 0$), the optimal three-outcome design reduces to the usual \emph{stop/go} two-outcome design with $n = 52$. As $\tau$ increases the required sample size increases with it exponentially. For example, for $\tau = 0.125$ we require $n = 275$. This can be explained by looking back at our error rate definitions in Equations \ref{eqn:alpha} and \ref{eqn:beta}, which show that $\alpha$ constrains the term $\Pr(x_1 < \hat{\rho} ~|~ \rho = \rho_0)$ and thus places a lower limit on $x_1$; meanwhile, $\beta$ constrains the term $\Pr(\hat{\rho} < x_0 ~|~ \rho = \rho_1 - \tau_{max})$ and thus forces $x_0$ to be lowered as $\tau_{max}$ increases, leading to a larger intermediate zone and correspondingly worse error rates. 
 
 \subsubsection{Partially known adjustment effect}
 
@@ -507,18 +390,18 @@ We now consider the case where the adjustment effect $\tau$ is known only up to 
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.8]{./figures/tau_part_ns}
+\includegraphics[scale=0.8]{tau_part_ns}
 \caption{Minimum required sample size for a three outcome design as a function of the lower limit of the adjustment effect $\tau_{min}$ and the width of the effect interval, $\tau_{max} - \tau_{min}$.}
 \label{fig:tau_part_ns}
 \end{figure}
 
-We see that increasing the width of the adjustement effect interval leads to an increased sample size, and the rate at which this happens increases with the lower interval limit $\tau_{min}$. For example, moving from $[\tau_{min}, \tau_{max}] = [0, 0]$ to [0, 0.05] leads to a change in sample size from $n = 52$ to $n = 93$; while moving from   $[\tau_{min}, \tau_{max}] = [0.1, 0.1]$ to $[0.1, 0.15]$ takes us from $n = 158$ to $n = 620$. Figure \ref{fig:tau_part_ns} suggests that the main driver of sample size is the upper limit $\tau_{max}$, but changing $\tau_{min}$ while keeping this fixed can still lead to considerable changes in $n$. From example, $[\tau_{min}, \tau_{max}] = [0.05, 0.05]$ requires $n = 71$ while $[\tau_{min}, \tau_{max}] = [0.01, 0.05]$ requires $n = 87$.
+We see that increasing the width of the adjustment effect interval leads to an increased sample size, and the rate at which this happens increases with the lower interval limit $\tau_{min}$. For example, moving from $[\tau_{min}, \tau_{max}] = [0, 0]$ to [0, 0.05] leads to a change in sample size from $n = 52$ to $n = 93$; while moving from   $[\tau_{min}, \tau_{max}] = [0.1, 0.1]$ to $[0.1, 0.15]$ takes us from $n = 158$ to $n = 620$. Figure \ref{fig:tau_part_ns} suggests that the main driver of sample size is the upper limit $\tau_{max}$, but changing $\tau_{min}$ while keeping this fixed can still lead to considerable changes in $n$. From example, $[\tau_{min}, \tau_{max}] = [0.05, 0.05]$ (that is, a known $\tau = 0.05$) requires $n = 71$ while $[\tau_{min}, \tau_{max}] = [0.01, 0.05]$ requires $n = 87$.
 
 \subsubsection{The case $\eta < 0.5$}
 
 In the preceding subsections we have assumed $\eta = 0.5$ following the arguments in Section \ref{sec:efficiency}. In the context of allowing adjustments we might argue that $\eta < 0.5$ is plausible because, although we may not be able to learn anything about $\rho$ beyond what is provided by $\hat{\rho}$, we might learn something about the adjustment effect $\tau$ during the pilot. If we can assume this will reduce $\eta$, this will lead to a corresponding reduction in sample size in a manner similar to the no-adjustment case discussed in Section \ref{sec:efficiency} (see supplementary material for more details). We must bear in mind, though, that learning about $\tau$ can only take us so far. Even in the extreme case where we can learn $\tau$ exactly, the residual uncertainty about $\rho$ will place a lower limit on our ability to make the correct decision following a \emph{pause} outcome.
 
-We conclude that three-outcome progression criteria can be used to allow for adjustments, but note that this ability will come at the cost of an increased sample size. This increase can be especially large if the effect of adjustment may be substantial, or if there is considerable uncertainty about how large it is.\todo{Michelle - I have tried to moderate the conclusion here but if you're not happy we should discuss.}
+We conclude that three-outcome progression criteria can be used to allow for adjustments, but note that this ability will come at the cost of an increased sample size. This increase can be especially large if the effect of adjustment may be substantial, or if there is considerable uncertainty about how large it is.
 
 \section{Discussion}\label{sec:discussion}
 
@@ -533,126 +416,69 @@ We conclude that three-outcome progression criteria can be used to allow for adj
 
 % think about three outcome as being somehwre between a design with low power but controlled alpha, and a design with good power but high n? I think Ellas point is that we can use three outcomes to effectively relax error rates. So do we want to include a comparison where we fix n and 
 
-We have shown how the three-outcome progression criteria commonly used in pilot trials can be viewed as three-outcome hypothesis tests, and described how related clinical trial designs from the phase II setting can be used (with some reformulation) to optimise these criteria and the pilot sample size. This allowed for a formal comparison to be made between three- and two-outcome designs for pilot trials. We have shown that three-outcome designs do not improve efficiency in comparison to the two-outcome alternative, but that three-outcome designs can be used to allow for a more realistic decision making process involving multiple sources of information and multiple stakeholders in the event of a borderline result. We have also shown that three-outcome progression criteria can facilitate making adjustments to the intervention or trial design following the pilot, particularly when the effect of such an adjustment is not known precisely in advance. We found that there is a price to pay for these benefits, with three-outcome pilot trials needing a (sometimes considerably) larger sample size than two-outcome alternatives to obtain the same operating characteristics. \todo{Moderated conclusions to be clearer that three-outcomes have some clear benefits which are offset by increased sample size required.} 
+We have shown how the three-outcome progression criteria commonly used in pilot trials can be viewed as three-outcome hypothesis tests, and described how related clinical trial designs from the phase II setting can be used (with some reformulation) to optimise these criteria and the pilot sample size. This allowed for a formal comparison to be made between three- and two-outcome designs for pilot trials, with the latter as a special case of the former. We have shown that three-outcome designs do not improve efficiency in comparison to two-outcome alternatives, but that three-outcome designs can be used to allow for a more realistic decision making process involving multiple sources of information and multiple stakeholders in the event of a borderline result. We have also shown that three-outcome progression criteria can facilitate making adjustments to the intervention or trial design following the pilot when the effect of such an adjustment is known in advance. We found that there is a price to pay for these benefits, with three-outcome pilot trials needing a (sometimes considerably) larger sample size than two-outcome alternatives to obtain the same operating characteristics. This suggests that the small sample sizes typically seen in pilot trials \cite{Billingham2013} may be inadequate for their goals.
 
-Throughout Section \ref{sec:evaluation} we have quantified the impact of using three-outcome progression criteria through the resulting required sample size while keeping operating characteristics constrained. An alternative would be to fix the pilot sample size and examine the impact on operating characteristics. For example, taking $\rho_0 = 0.5$ and $\rho_1 = 0.7$ and fixing $n = 50$, suppose we would like $\beta \leq 0.1$ and $\gamma \leq 0.5$ when anticipating an adjustment effect $\tau \in [0, 0.05]$. This leads to thresholds $x_0 = 23, x_1 = 29$ with $\alpha = 0.38$. While this is considerably higher than type I error rates typically used in definitive trials, it may be acceptable in the pilot setting.
+Throughout Section \ref{sec:evaluation} we have quantified the impact of using three-outcome progression criteria through the resulting required sample size while keeping operating characteristics constrained. An alternative would be to fix the pilot sample size and examine the impact on operating characteristics. For example, taking $\rho_0 = 0.5$ and $\rho_1 = 0.7$ as before and fixing $n = 30$, a two-outcome design with threshold $x_0 = x_1 = 17$ will give us operating characteristics of $\alpha = 0.18, \beta = 0.08, \gamma = 1$. Moving to a three-outcome design will allow us to reduce $\gamma$, but only at the expense of an increased $\alpha$ and $\beta$. For example, the design with $x_0 = 15$ and $x_1 = 20$ gives  $\alpha = 0.22, \beta = 0.21, \gamma = 0.35$. Although this type I error rate is larger than conventional constraints, it has been argued that these may be relaxed in the setting of phase II \cite{Rubinstein2005, Hutson2012} and pilot \cite{Lee2014} trials.
 
 % I think this is getting towards Ella's point - if we fix n then a three outcome design will inflate alpha but control beta, so could compare against a two outcome design where we fix n and beta and just relax alpha directly - should give a larger alpha? In general, think about this example - might be a better choice of n, might be clearer with no adjustment effects.
 
-In order to apply the proposed method in practice we need to specify null and alternative hypotheses for the parameter of interest and put constraints on three error rates. Specifying hypotheses for feasibility parameters like adherence rates may be challenging when compared to the more typical setting of assessing efficacy. Generally speaking there will be no default choice for the null of a feasibility parameter, as opposed to the default efficacy null of no difference to standard care. Moreover, the concept of Minimal Clinically Important Difference, which often guides the choice of target difference in efficacy, will not apply to  feasibility. It may help to begin by determining the midpoint $\rho_m = (\rho_0 + \rho_1)/2$ which we would consider a borderline value and where we would ideally like to obtain a \emph{pause} outcome, then determine the width of the interval $|\rho_1 - \rho_0|$, and finally set constraints on error rates $\alpha$ and $\beta$ based on the relative impact of these errors when defined with respect to $\rho_0$ and $\rho_1$. Having determined these values, one can find optimal designs for a range of constraints on the third operating characteristic $\gamma$ as shown in Figure \ref{fig:gamma_ns}. Alternatively, the choice of $\rho_0$ and $\rho_1$ could be driven by the corresponding impact on any subsequent trial as measured though, for example, its power \cite{Wilson2021a}.
+In order to apply the proposed method in practice we need to specify null and alternative hypotheses for the parameter of interest and put constraints on three error rates. Specifying hypotheses for feasibility parameters like adherence rates may be challenging when compared to the more typical setting of assessing efficacy. Generally speaking there will be no default choice for the null of a feasibility parameter, as opposed to the default efficacy null of no difference to standard care. Moreover, the concept of Minimal Clinically Important Difference, which often guides the choice of target difference in efficacy, will not apply to  feasibility. It may help to begin by determining the midpoint $\rho_m = (\rho_0 + \rho_1)/2$ which we would consider a borderline value and where we would ideally like to obtain a \emph{pause} outcome, then determine the width of the interval $|\rho_1 - \rho_0|$, and finally set constraints on error rates $\alpha$ and $\beta$ based on the relative impact of these errors when defined with respect to $\rho_0$ and $\rho_1$. Having determined these values, one can find optimal designs for a range of constraints on the third operating characteristic $\gamma$ as shown in Figure \ref{fig:gamma_ns}. Alternatively, the choice of $\rho_0$ and $\rho_1$ could be driven by the corresponding impact on any subsequent trial as measured though, for example, its power \cite{Wilson2021a}. 
 
-Our results have highlighted the difficulties of allowing adjustments to be made following a pilot trial when using pre-specified progression criteria, even when the effect of the adjustment is known (or partially known) in advance. This may be an unrealistic assumption, since a primary goal of many pilot trials is to identify \emph{unforeseen} problems and solutions to these. In this context, pre-specifying an upper threshold $x_1$ can help identify cases which are feasible enough, without modification, to proceed to the main trial. In contrast, the lower threshold $x_0$ appears somewhat arbitrary and may force inappropriate decisions. For example, if $x_0$ is set too high, we may be led to a \emph{stop} decision (i.e. $\hat{\rho} \leq x_0$) despite believing, based on what was seen in the pilot, that a certain modification would lead to an adjusted adherence rate greater than $\rho_1$. When a new and unanticipated adjustment is proposed following the pilot trial, undertaking a second pilot to establish that it works as expected may be needed. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}, and is in line with guidance on the development and evaluation of complex interventions \cite{Skivington2021} which emphasises the iterative nature of the process.
+In addition to defining hypotheses, the proposed method also requires values for $\eta_0$ and $\eta_1$, the probabilities of making an incorrect progression decision \emph{with respect to the parameter $\rho$} following a \emph{pause} outcome under the null and alternative hypothesis respectively. We have argued that a default of $\eta_0 = \eta_1 = 0.5$ may be justified as a conservative assumption. Alternatively, we may anticipate a bias towards progressing from the pilot to the definitive trial. This could be modelled by setting $\eta_0 > 0.5, \eta_1 < 0.5$ whilst constraining $\eta_0 + \eta_1 = 1$, although we found this to have little impact on the optimal design in our running example. 
+
+Our results have highlighted the difficulties of allowing adjustments to be made following a pilot trial when using pre-specified progression criteria, even when the effect of the adjustment is known (or partially known) in advance. This may be an unrealistic assumption, since a primary goal of many pilot trials is to identify \emph{unforeseen} problems and solutions to these. In this context, pre-specifying an upper threshold $x_1$ can help identify cases which are feasible enough, without modification, to proceed to the main trial. In contrast, the lower threshold $x_0$ appears somewhat arbitrary and may force inappropriate decisions. For example, if $x_0$ is set too high, we may be led to a \emph{stop} decision (i.e. $\hat{\rho} \leq x_0$) despite believing, based on what was seen in the pilot, that a certain modification would lead to an adjusted adherence rate greater than $\rho_1$. When a new and unanticipated adjustment is proposed following the pilot trial, a second (and potentially internal) pilot may be needed to establish that it works as expected. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}, and is in line with guidance on the development and evaluation of complex interventions \cite{Skivington2021} which emphasises the iterative nature of the process.
 
 %As an alternative means to improve efficiency in pilot trials, adaptive designs incorporating one or more interim analysis may be useful. These would allow the pilot trial to finish early if interim data gave a sufficiently strong indication of feasibility (or lack thereof). The terminal progression criteria in such an adaptive design could be made three-outcome to allow other information to be incorporated at that stage, and indeed this aligns with Sargent et al.'s \cite{Sargent2001} proposal which included both one and two stage versions of their design. 
 
 %To determine if and how the intervention or trial design should be adjusted before the main trial, one could consider a multi-arm pilot trial where each arm implements a different proposed adjustment. This would then inform which adjustment, if any, should be implemented for the main trial. A multi-arm trial will require a larger sample size than a standard two-arm pilot, but this may be mitigated against somewhat by incorporating interim analyses in a Multi-Arm Multi-Stage (MAMS) design. Alternatively, a factorial pilot trial could be used to identify the optimal selection of adjustments to take forward. These solutions would help address the problem of not knowing the effect of some proposed adjustments, but would still require their nature to be known in advance. When a new and unanticipated adjustment is proposed following the pilot trial, undertaking a second pilot to establish that it works as expected may be the best course of action. A similar strategy has been suggested in the context of phase II drug trials \cite{Brown2012}.
 
-The underlying statistical framework considered in this paper is frequentist, focused on pre-specified decision rules chosen based on their long-run operating characteristics. An alternative is to design and analyse the pilot trial under a Bayesian framework \cite{Hampson2017, Wilson2021}. This could improve efficiency by allowing external information or expert knowledge to be incorporated into decision making, and would enable a more flexible approach to analysis which could formally account for anticipated effects of adjustments based on what was seen in the pilot. Willan and Thabane \cite{Willan2020} do not consider the question of optimising pilot sample size, but show through an example how a Bayesian analysis of pilot data can help quantify uncertainty around feasibility parameters by producing posterior distributions which can be used to design the main trial. 
+The underlying statistical framework considered in this paper is frequentist, focused on pre-specified decision rules chosen based on their long-run operating characteristics. An alternative is to design and analyse the pilot trial under a Bayesian framework \cite{Hampson2017, Wilson2021, Lv2023}. This could improve efficiency by allowing external information or expert knowledge to be incorporated into decision making, and would enable a more flexible approach to analysis which could formally account for anticipated effects of adjustments based on what was seen in the pilot. Willan and Thabane \cite{Willan2020} do not consider the question of optimising pilot sample size, but show through an example how a Bayesian analysis of pilot data can help quantify uncertainty around feasibility parameters by producing posterior distributions which can be used to design the main trial. 
 
 %One conclusion of this work is that standard two-outcome hypothesis tests should be used to determine progression criteria and the pilot trial sample size. The standard approach to this requires a null and alternative hypothesis to be specified, alongside constraints on type I and II error rates which refelct the consequences of these errors. An alternative approach is to instead determine the parameter value at which we would be indifferent between making \emph{stop} and \emph{go} and set the progression criteria threshold to that same value, leading to a test with 50\% power at that point. The sample size can then be chosen to give a desired probability of progression at some other point in the parameter space such as the point null hypothesis \cite{Willan1994}. It seems plausible that this is how progression criteria are currently determined in practice.
 
-Our work has been motivated by external pilot trials assessing the feasibility of a subsequent study, but may be equally relevant to other settings such as phase II drug trials where the parameter of interest is some measure of efficacy. For example, the three-outcome framework could be used when making post trial adjustments to improve efficacy by changing eligibility criteria in an attempt to focus on a subgroup of patients. Although our findings should also broadly apply to internal pilot trials, care may be needed when the error rates of the final analysis may be affected by a formal internal pilot analysis of a correlated endpoint (for example, adherence). Finally, we expect our conclusions to carry over from the univariate setting considered here to the more general multivariate setting, where several progression criteria are applied simultaneously\cite{Lewis2021a}, although it has been shown that such multivariate tests can be counter-intuitively inefficient \cite{Wilson2021a}.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                                          %%
-%% Backmatter begins here                   %%
-%%                                          %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\begin{backmatter}
-
-\section*{Competing interests}
-  The authors declare that they have no competing interests.
-
-\section*{Author's contributions}
-
-DTW conceived the project, programmed the software application and drafted the manuscript. EH, SB and MC contributed to the design of the work and the interpretation of the results, and critically reviewed and revised the manuscript. All authors read and approved the final manuscript.
-
-\section*{Acknowledgements}
-  We would like to thank Martyn Lewis for his helpful comments on an earlier draft of this manuscript.
-  
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                  The Bibliography                       %%
-%%                                                         %%
-%%  Bmc_mathpys.bst  will be used to                       %%
-%%  create a .BBL file for submission.                     %%
-%%  After submission of the .TEX file,                     %%
-%%  you will be prompted to submit your .BBL file.         %%
-%%                                                         %%
-%%                                                         %%
-%%  Note that the displayed Bibliography will not          %%
-%%  necessarily be rendered by Latex exactly as specified  %%
-%%  in the online Instructions for Authors.                %%
-%%                                                         %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% if your bibliography is in bibtex format, use those commands:
-\bibliographystyle{bmc-mathphys} % Style BST file (bmc-mathphys, vancouver, spbasic).
-\bibliography{DTWrefs}      % Bibliography file (usually '*.bib' )
-% for author-year bibliography (bmc-mathphys or spbasic)
-% a) write to bib file (bmc-mathphys only)
-% @settings{label, options="nameyear"}
-% b) uncomment next line
-%\nocite{label}
-
-% or include bibliography directly:
-% \begin{thebibliography}
-% \bibitem{b1}
-% \end{thebibliography}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Figures                       %%
-%%                               %%
-%% NB: this is for captions and  %%
-%% Titles. All graphics must be  %%
-%% submitted separately and NOT  %%
-%% included in the Tex document  %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%
-%% Do not use \listoffigures as most will included as separate files
-
-\section*{Figures}
-  \begin{figure}[h!]
-  \caption{\csentence{Sample figure title.}
-      A short description of the figure content
-      should go here.}
-      \end{figure}
-
-\begin{figure}[h!]
-  \caption{\csentence{Sample figure title.}
-      Figure legend text.}
-      \end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Tables                        %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Use of \listoftables is discouraged.
-%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Additional Files              %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{Additional Files}
-
-Supplementary material, including all \texttt{R} code used to generate the results in this manuscript and the associated \texttt{R} package \texttt{TOut}, can be found at \texttt{https://github.com/DTWilson/TOut}.
-
-%  \subsection*{Additional file 1 --- Sample additional file title}
-%%    Additional file descriptions text (including details of how to
-%    view the file, if it is in a non-standard format or the file extension).  This might
-%    refer to a multi-page table or a figure.
-%
-%  \subsection*{Additional file 2 --- Sample additional file title}
-%    Additional file descriptions text.
+Our work has been motivated by external pilot trials assessing the feasibility of a subsequent study, but may be equally relevant to other settings such as phase II drug trials where the parameter of interest is a measure of efficacy. For example, the three-outcome framework could be used when making post trial adjustments to improve efficacy by changing eligibility criteria in an attempt to focus on a subgroup of patients. Although our findings should also broadly apply to internal pilot trials, care may be needed when the error rates of the final analysis may be affected by a formal internal pilot analysis of a correlated endpoint (for example, adherence). Finally, we expect our conclusions to carry over from the univariate setting considered here to the more general multivariate setting, where several progression criteria are applied simultaneously \cite{Lewis2021a}, although it has been shown that such multivariate tests can be counter-intuitively inefficient \cite{Wilson2021a}.
 
 
-\end{backmatter}
+\backmatter
+
+\section*{Declarations}
+
+\bmhead{Ethics approval and consent to participate}
+
+Not applicable.
+
+\bmhead{Consent for publication}
+
+Not applicable.
+
+\bmhead{Availability of data and materials}
+
+Supplementary material, including all \texttt{R} code used to generate the results in this manuscript and the associated \texttt{R} package \texttt{tout}, can be found at \texttt{https://github.com/DTWilson/tout}.
+
+\bmhead{Competing interests}
+
+The authors declare that they have no competing interests.
+
+\bmhead{Funding}
+
+This work was supported by the Medical Research Council under Grant MR/N015444/1 to DTW.
+
+\bmhead{Authors' contributions}
+
+DTW conceived the project, programmed the software application and drafted the manuscript. EH and SB contributed to the design of the work and the interpretation of the results, and critically reviewed and revised the manuscript. All authors read and approved the final manuscript.
+
+\bmhead{Acknowledgements}
+
+We would like to thank Martyn Lewis for his helpful comments on an earlier draft of this manuscript.
+
+%%===========================================================================================%%
+%% If you are submitting to one of the Nature Portfolio journals, using the eJP submission   %%
+%% system, please include the references within the manuscript file itself. You may do this  %%
+%% by copying the reference list from your .bbl file, paste it into the main manuscript .tex %%
+%% file, and delete the associated \verb+\bibliography+ commands.                            %%
+%%===========================================================================================%%
+
+\bibliography{DTWrefs}      %
+
+
 \end{document}
