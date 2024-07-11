@@ -1,4 +1,4 @@
-#' Find optimal progression criteria for a fixed sample size
+# Find optimal progression criteria for a fixed sample size
 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, 
                        tau = c(0,0), eta_0 = 0.5, eta_1 = NULL, x = NULL, sigma = NULL){
@@ -24,7 +24,7 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
     if(is.null(sigma)) {
       ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)
     } else {
-      ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta_0, eta_1)
+      ocs <- get_ocs_cont_z(n, x_0, x_1, rho_0, rho_1, sigma, tau_min, tau_max, eta_0, eta_1)
     }
   } else {
     

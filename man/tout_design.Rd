@@ -65,4 +65,6 @@ tau <- c(0.08, 0.12)
 
 tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 
+tout_design(rho_0=0, rho_1=0.4, alpha_nom=0.02, beta_nom=0.1, sigma=1)
+
 }

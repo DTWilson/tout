@@ -1,19 +1,3 @@
-
-#' @export
-print.tout_design_cont <- function(x, ...){
-  cat("Three-Outcome design (continuous outcome)\n")
-  cat("\n")
-  cat("Sample size:", x$n, "\n")
-  cat("Decision thresholds:", x$thresholds, "\n")
-  cat("\n")
-  cat("alpha =", x$alpha, "\nbeta =", x$beta, "\ngamma =", x$gamma, "\n")
-  cat("\n")
-  cat("Hypotheses:", x$hyps[1], "(null),", x$hyps[2], "(alternative)\n")
-  cat("Satndard deviation:", x$sigma, "\n")
-  cat("Modification effect range:", x$tau, "\n")
-  cat("Error probability following an intermediate result:", x$eta, "\n")
-}
-
 min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta_0){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
