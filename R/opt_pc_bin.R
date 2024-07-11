@@ -11,8 +11,11 @@
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
 #' @param tau vector with lower and upper bounds of adjustment effect.
-#' @param eta probability of an incorrect decision after an intermediate result. 
+#' @param eta_0 probability of an incorrect go after an intermediate result. 
 #' Defaults to 0.5.
+#' @param eta_1 probability of an incorrect stop after an intermediate result. 
+#' Defaults to eta_0.
+#' @param x optional vector of decision thresholds (optimised if left unspecified).
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
@@ -30,32 +33,42 @@
 #' opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom)
 #' 
 opt_pc_bin <- function(n, rho_0, rho_1, alpha_nom, beta_nom, 
-                       tau = c(0,0), eta_0, eta_1){
+                       tau = c(0,0), eta_0 = 0.5, eta_1 = NULL, x = NULL){
   
   tau_min <- tau[1]
   tau_max <- tau[2]
+  
+  if(is.null(eta_1)) eta_1 <- eta_0
   
   # Check that the arguments are specified correctly
   check_arguments(n, alpha_nom, beta_nom, eta_0)
   check_arguments_bin(rho_0, rho_1)
   
-  # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
-  min_x_1 <- min_x_1_bin(n, rho_0, alpha_nom, tau_min, eta_0)
-  max_x_1 <- n
-
-  # Find optimal choice of x_1 - that which gives beta ~ beta_nom
-  # Run an exhaustive search over all possible choices of x_1
-  x_1s <- min_x_1:max_x_1
-  # For each, find the optimal x_0
-  x_0s <- opt_x_0_bin(x_1s, n, rho_0, alpha_nom, tau_min, eta_0)
-  # Get resulting betas
-  betas <- get_ocs_bin(n, x_0s, x_1s, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)[,2]
-  # Convert betas to a measure to be minimised when optimising
-  to_min <- beta_objective(betas, beta_nom, x_0s, x_1s)
-  x_0 <- x_0s[which.min(to_min)]
-  x_1 <- x_1s[which.min(to_min)]
+  if(n <= 0) return(null_design_bin(n, rho_0, rho_1, tau, eta_0, eta_1))
   
-  ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)
+  if(!is.null(x)){
+    x_0 <- x[1]; x_1 <- x[2]
+    ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)
+  } else {
+    # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
+    min_x_1 <- min_x_1_bin(n, rho_0, alpha_nom, tau_min, eta_0)
+    max_x_1 <- n
+    if(max_x_1 < min_x_1) return(null_design_bin(n, rho_0, rho_1, tau, eta_0, eta_1))
+  
+    # Find optimal choice of x_1 - that which gives beta ~ beta_nom
+    # Run an exhaustive search over all possible choices of x_1
+    x_1s <- min_x_1:max_x_1
+    # For each, find the optimal x_0
+    x_0s <- opt_x_0_bin(x_1s, n, rho_0, alpha_nom, tau_min, eta_0)
+    # Get resulting betas
+    betas <- get_ocs_bin(n, x_0s, x_1s, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)[,2]
+    # Convert betas to a measure to be minimised when optimising
+    to_min <- beta_objective(betas, beta_nom, x_0s, x_1s)
+    x_0 <- x_0s[which.min(to_min)]
+    x_1 <- x_1s[which.min(to_min)]
+    
+    ocs <- get_ocs_bin(n, x_0, x_1, rho_0, rho_1, tau_min, tau_max, eta_0, eta_1)
+  }
   
   # Check if all constraints are (approximately) satisfied
   valid <- FALSE
@@ -94,8 +107,8 @@ plot.tout_design_bin <- function(x, y, ...){
   # Vector of possible outcomes
   ys <- 0:x$n
   # Probabilities of these outcomes under the null and alternative hypotheses
-  probs_null <- dbinom(ys, size = x$n, prob = x$hyps[1])
-  probs_alt <- dbinom(ys, size = x$n, prob = x$hyps[2])
+  probs_null <- stats::dbinom(ys, size = x$n, prob = x$hyps[1])
+  probs_alt <- stats::dbinom(ys, size = x$n, prob = x$hyps[2])
   
   # Data frame for plotting, flagging all direct and indirect errors
   df <- data.frame(y = ys,
@@ -147,4 +160,11 @@ check_arguments_bin <- function(rho_0, rho_1){
     if(rho_1 < 0 | rho_1 > 1){
       stop("Hypothesis rho_1 is outside the [0, 1] interval.")
     }
+}
+
+null_design_bin <- function(n, rho_0, rho_1, tau, eta_0, eta_1){
+  structure(list(valid = FALSE, n = n, thresholds = c(NA, NA), 
+                 alpha = NA, beta = NA, gamma = NA,
+                 hyps = c(rho_0, rho_1), tau = tau, eta = c(eta_0, eta_1)),
+            class = "tout_design_bin")
 }

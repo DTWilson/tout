@@ -12,8 +12,10 @@
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
 #' @param tau vector with lower and upper bounds of adjustment effect.
-#' @param eta probability of an incorrect decision after an intermediate result. 
+#' @param eta_0 probability of an incorrect go after an intermediate result. 
 #' Defaults to 0.5.
+#' @param eta_1 probability of an incorrect stop after an intermediate result. 
+#' Defaults to eta_0.
 #'
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold (or NA when no valid designs exist), and 
@@ -32,10 +34,14 @@
 #' opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom)
 #' 
 opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
-                        tau = c(0,0), eta_0, eta_1){
+                        tau = c(0,0), eta_0 = 0.5, eta_1 = NULL){
   
   tau_min <- tau[1]
   tau_max <- tau[2]
+  
+  if(is.null(eta_1)) eta_1 <- eta_0
+  
+  if(n <= 0) return(null_design_cont(n, rho_0, rho_1, sigma, tau, eta_0, eta_1))
   
   # Check that the arguments are specified correctly
   check_arguments(n, alpha_nom, beta_nom, eta_0)
@@ -44,7 +50,7 @@ opt_pc_cont <- function(n, rho_0, rho_1, sigma, alpha_nom, beta_nom,
   # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
   min_x_1 <- min_x_1_cont(n, sigma, alpha_nom, tau_min, eta_0)
   max_x_1 <- max_x_1_cont(alpha_nom, eta_0, rho_0, rho_1, sigma, n)
-  if(max_x_1 < min_x_1) return(rep(NA, 6))
+  if(max_x_1 < min_x_1) return(null_design_cont(n, rho_0, rho_1, sigma, tau, eta_0, eta_1))
   
   # Find optimal choice of x_1 - this will be the largest value such that
   # beta ~ beta_nom
@@ -91,7 +97,7 @@ min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta_0){
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   
   # For the first element, under rho = rho_0:
-  min1 <- qnorm(1 - alpha_nom, mean = 0, sd = 1)
+  min1 <- stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
   
   # Get ncp for the sampling distribution under rho = rho_0 - tau_min
   ncp <- sqrt(n)*(- tau_min)/sigma
@@ -134,4 +140,11 @@ check_arguments_cont <- function(sigma){
   if(sigma < 0){
     stop("Standard deviation sigma is negative.")
   }
+}
+
+null_design_cont <- function(n, rho_0, rho_1, sigma, tau, eta_0, eta_1){
+  structure(list(valid = FALSE, n = n, thresholds = c(NA, NA), 
+                 alpha = NA, beta = NA, gamma = NA,
+                 hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = c(eta_0, eta_1)),
+            class = "tout_design_cont")
 }

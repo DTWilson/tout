@@ -4,7 +4,17 @@
 \alias{opt_pc_bin}
 \title{Find optimal progression criteria for a fixed sample size and binary outcome}
 \usage{
-opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, tau = c(0, 0), eta_0, eta_1)
+opt_pc_bin(
+  n,
+  rho_0,
+  rho_1,
+  alpha_nom,
+  beta_nom,
+  tau = c(0, 0),
+  eta_0 = 0.5,
+  eta_1 = NULL,
+  x = NULL
+)
 }
 \arguments{
 \item{n}{sample size.}
@@ -19,8 +29,13 @@ opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, tau = c(0, 0), eta_0, eta_1)
 
 \item{tau}{vector with lower and upper bounds of adjustment effect.}
 
-\item{eta}{probability of an incorrect decision after an intermediate result.
+\item{eta_0}{probability of an incorrect go after an intermediate result.
 Defaults to 0.5.}
+
+\item{eta_1}{probability of an incorrect stop after an intermediate result.
+Defaults to eta_0.}
+
+\item{x}{optional vector of decision thresholds (optimised if left unspecified).}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,

@@ -9,11 +9,14 @@
 #' @param rho_1 alternative hypothesis.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
+#' @param gamma_nom nominal upper constraint on gamma (defaults to 1).
 #' @param eta probability of an incorrect decision under the null or alternative
 #' after an intermediate result. Defaults to 0.5.
 #' @param tau two element vector denoting lower and upper limits of the 
 #' effect of adjustment.
 #' @param max_n optional upper limit to use in search over sample sizes.
+#' @param n optional sample size (optimised if left unspecified).
+#' @param x optional vector of decision thresholds (optimised if left unspecified).
 #' 
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold; or NULL when no valid designs exist.
@@ -25,13 +28,13 @@
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.2
 #'
-#' TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom)
+#' tout_design_bin(rho_0, rho_1, alpha_nom, beta_nom)
 #' 
 #' tau <- c(0.08, 0.12)
 #' 
-#' TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
+#' tout_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 #' 
-tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
+tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL){
   
   if(length(eta) == 1){
     eta_0 <- eta
@@ -52,17 +55,23 @@ tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
     # Set max_n at an (arbitrarily) large multiple of this
     max_n <- floor(5*n_two)
   }
-
-  # An exhaustive search here due to the non-monotonic relationship with n
-  n <- 0
-  valid <- FALSE
-  while(!valid & n <= max_n){
-    n <- n + 1
-    design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
-                          tau = tau, eta_0 = eta_0, eta_1 = eta_1)
-    if(design$valid & (design$gamma <= gamma_nom)) {
-      final_design <- design
-      valid <- TRUE
+  
+  if(!is.null(n)){
+    valid <- TRUE
+    final_design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
+                         tau = tau, eta_0 = eta_0, eta_1 = eta_1, x = x)
+  } else {
+    # An exhaustive search here due to the non-monotonic relationship with n
+    n <- 0
+    valid <- FALSE
+    while(!valid & n <= max_n){
+      n <- n + 1
+      design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
+                            tau = tau, eta_0 = eta_0, eta_1 = eta_1, x = x)
+      if(design$valid & (design$gamma <= gamma_nom)) {
+        final_design <- design
+        valid <- TRUE
+      }
     }
   }
   
@@ -85,6 +94,7 @@ tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
 #' @param sigma standard deviation of outcome.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
+#' @param gamma_nom nominal upper constraint on gamma (defaults to 1).
 #' @param eta probability of an incorrect decision under the null or alternative
 #' after an intermediate result. Defaults to 0.5.
 #' @param tau two element vector denoting lower and upper limits of the 
@@ -102,11 +112,11 @@ tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
 #' alpha_nom <- 0.05
 #' beta_nom <- 0.2
 #'
-#' TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom)
+#' tout_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom)
 #' 
 #' tau <- c(0.08, 0.12)
 #' 
-#' TOut_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, tau = tau)
+#' tout_design_cont(rho_0, rho_1, sigma, alpha_nom, beta_nom, tau = tau)
 #' 
 tout_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL){
   
@@ -130,7 +140,7 @@ tout_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_no
   
   min_n <- 0
   valid <- FALSE
-  while((max_n - min_n) > 1){
+  while( ((max_n - min_n) > 1) | !valid ){
     n <- ceiling((min_n + max_n)/2)
     design <- opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, 
                           tau = tau, eta_0 = eta_0, eta_1 = eta_1)

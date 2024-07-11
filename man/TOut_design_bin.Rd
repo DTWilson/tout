@@ -12,7 +12,9 @@ tout_design_bin(
   gamma_nom = 1,
   eta = 0.5,
   tau = c(0, 0),
-  max_n = NULL
+  max_n = NULL,
+  n = NULL,
+  x = NULL
 )
 }
 \arguments{
@@ -24,6 +26,8 @@ tout_design_bin(
 
 \item{beta_nom}{nominal upper constraint on beta.}
 
+\item{gamma_nom}{nominal upper constraint on gamma (defaults to 1).}
+
 \item{eta}{probability of an incorrect decision under the null or alternative
 after an intermediate result. Defaults to 0.5.}
 
@@ -31,6 +35,10 @@ after an intermediate result. Defaults to 0.5.}
 effect of adjustment.}
 
 \item{max_n}{optional upper limit to use in search over sample sizes.}
+
+\item{n}{optional sample size (optimised if left unspecified).}
+
+\item{x}{optional vector of decision thresholds (optimised if left unspecified).}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,
@@ -48,10 +56,10 @@ rho_1 <- 0.7
 alpha_nom <- 0.05
 beta_nom <- 0.2
 
-TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom)
+tout_design_bin(rho_0, rho_1, alpha_nom, beta_nom)
 
 tau <- c(0.08, 0.12)
 
-TOut_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
+tout_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 
 }
