@@ -76,17 +76,12 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
     valid <- TRUE
   }
   
-  structure(list(valid = valid, n = n, thresholds = c(x_0, x_1), 
-                 alpha = ocs[1], beta = ocs[2], gamma = ocs[3],
-                 hyps = c(rho_0, rho_1), tau = tau, eta = c(eta_0, eta_1)),
-            class = "tout_design_bin")
+  new_tout(valid, n, x_0, x_1, ocs[1], ocs[2], ocs[3], rho_0, rho_1, tau, eta_0, eta_1, sigma)
 }
 
 null_design <- function(n, rho_0, rho_1, tau, eta_0, eta_1, sigma = NULL){
-  structure(list(valid = FALSE, n = n, thresholds = c(NA, NA), 
-                 alpha = NA, beta = NA, gamma = NA,
-                 hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = c(eta_0, eta_1)),
-            class = "tout")
+  
+  new_tout(FALSE, n, NA, NA, NA, NA, NA, rho_0, rho_1, tau, eta_0, eta_1, sigma)
 }
 
 check_arguments <- function(n, rho_0, rho_1, alpha_nom, beta_nom, eta_0, sigma){
