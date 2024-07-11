@@ -3,8 +3,6 @@
 S3method(plot,tout_design_bin)
 S3method(print,tout_design_bin)
 S3method(print,tout_design_cont)
-export(opt_pc_bin)
-export(opt_pc_cont)
 export(tout_design_bin)
 export(tout_design_cont)
 importFrom(ggplot2,aes)

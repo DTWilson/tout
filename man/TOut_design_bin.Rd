@@ -14,7 +14,8 @@ tout_design_bin(
   tau = c(0, 0),
   max_n = NULL,
   n = NULL,
-  x = NULL
+  x = NULL,
+  sigma = NULL
 )
 }
 \arguments{
@@ -39,6 +40,8 @@ effect of adjustment.}
 \item{n}{optional sample size (optimised if left unspecified).}
 
 \item{x}{optional vector of decision thresholds (optimised if left unspecified).}
+
+\item{sigma}{standard deviation of outcome. If left NULL, a binary outcome is assumed.}
 }
 \value{
 A numeric vector containing the sample size, lower decision threshold,

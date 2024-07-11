@@ -17,6 +17,7 @@
 #' @param max_n optional upper limit to use in search over sample sizes.
 #' @param n optional sample size (optimised if left unspecified).
 #' @param x optional vector of decision thresholds (optimised if left unspecified).
+#' @param sigma standard deviation of outcome. If left NULL, a binary outcome is assumed.
 #' 
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold; or NULL when no valid designs exist.
@@ -34,7 +35,7 @@
 #' 
 #' tout_design_bin(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 #' 
-tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL){
+tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
   
   if(length(eta) == 1){
     eta_0 <- eta
@@ -58,7 +59,7 @@ tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
   
   if(!is.null(n)){
     valid <- TRUE
-    final_design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
+    final_design <- opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, 
                          tau = tau, eta_0 = eta_0, eta_1 = eta_1, x = x)
   } else {
     # An exhaustive search here due to the non-monotonic relationship with n
@@ -66,7 +67,7 @@ tout_design_bin <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, e
     valid <- FALSE
     while(!valid & n <= max_n){
       n <- n + 1
-      design <- opt_pc_bin(n, rho_0, rho_1, alpha_nom, beta_nom, 
+      design <- opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, 
                             tau = tau, eta_0 = eta_0, eta_1 = eta_1, x = x)
       if(design$valid & (design$gamma <= gamma_nom)) {
         final_design <- design
@@ -142,8 +143,8 @@ tout_design_cont <-  function(rho_0, rho_1, sigma, alpha_nom, beta_nom, gamma_no
   valid <- FALSE
   while( ((max_n - min_n) > 1) | !valid ){
     n <- ceiling((min_n + max_n)/2)
-    design <- opt_pc_cont(n, rho_0, rho_1, sigma, alpha_nom, beta_nom, 
-                          tau = tau, eta_0 = eta_0, eta_1 = eta_1)
+    design <- opt_pc(n, rho_0, rho_1, alpha_nom, beta_nom, 
+                          tau = tau, eta_0 = eta_0, eta_1 = eta_1, sigma = sigma)
     if(design$valid & (design$gamma <= gamma_nom)) {
       max_n <- n
       final_design <- design
