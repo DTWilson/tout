@@ -7,10 +7,6 @@ new_tout <- function(valid, n, x_0, x_1, alpha, beta, gamma, rho_0, rho_1, tau, 
             class = "tout")
 }
 
-validate_tout <- function() {
-  
-}
-
 # Don't require a helper as users will not construct tout objects themselves
 
 #' @export
@@ -32,7 +28,6 @@ print.tout <- function(x, ...){
     cat("the maximum sample size (max_n).")
   }
 }
-
 
 #' @importFrom ggplot2 aes
 #' @export

@@ -1,27 +1,24 @@
-min_x_1_cont <- function(n, sigma, alpha_nom, tau_min, eta_0){
+min_x_1_cont <- function(alpha_nom){
   # For given n, find the minimum x_1 which can lead to a valid choice of
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   
+  stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
+  
   # For the first element, under rho = rho_0:
-  min1 <- stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
+  #min1 <- stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
   
   # Get ncp for the sampling distribution under rho = rho_0 - tau_min
-  ncp <- sqrt(n)*(- tau_min)/sigma
-  min2 <- stats::qnorm((1 - 1/eta_0 + alpha_nom/eta_0)/(1 - 1/eta_0), mean = ncp, sd = 1)
+  #ncp <- sqrt(n)*(- tau_min)/sigma
+  #min2 <- stats::qnorm((1 - 1/eta_0 + alpha_nom/eta_0)/(1 - 1/eta_0), mean = ncp, sd = 1)
   
-  return(max(min1, min2))
+  #return(max(min1, min2))
 }
 
-max_x_1_cont <- function(alpha_nom, eta_0, rho_0, rho_1, sigma, n){
-  if(eta_0 <= alpha_nom){
-    stop("The probability of an error following in intermediate outcome should
-         not be less than the nominal type I error rate.")
-  } else {
-    # Use a high upper quantile of the test statistic distribution under the alternative
-    # hypothesis as the upper limit of x_1 since this will always mean a
-    # type II error rate of at least eta*0.5
-    return(stats::qnorm(0.99, mean = sqrt(n)*(rho_1 - rho_0)/sigma))
-  }
+max_x_1_cont <- function(rho_0, rho_1, sigma, n){
+  # Use a high upper quantile of the test statistic distribution under the alternative
+  # hypothesis as the upper limit of x_1 since this will always mean a
+  # type II error rate of at least eta*0.5
+  stats::qnorm(0.99, mean = sqrt(n)*(rho_1 - rho_0)/sigma)
 }
 
 opt_x_0_cont <- function(x_1, n, sigma, alpha_nom, tau_min, eta_0){

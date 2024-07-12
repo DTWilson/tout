@@ -51,8 +51,8 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
     } else {
       
       # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
-      min_x_1 <- min_x_1_cont(n, sigma, alpha_nom, tau_min, eta_0)
-      max_x_1 <- max_x_1_cont(alpha_nom, eta_0, rho_0, rho_1, sigma, n)
+      min_x_1 <- min_x_1_cont(alpha_nom)
+      max_x_1 <- max_x_1_cont(rho_0, rho_1, sigma, n)
       if(max_x_1 < min_x_1) return(null_design(n, rho_0, rho_1, tau, eta_0, eta_1, sigma))
       
       # Find optimal choice of x_1 - this will be the largest value such that

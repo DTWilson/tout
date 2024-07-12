@@ -49,6 +49,11 @@ tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta =
     stop("eta must be a vector of length 1 (implying eta_1 = eta_2) or 2.")
   }
   
+  if(eta_0 <= alpha_nom){
+    stop("The probability of an error following in intermediate outcome should
+         not be less than the nominal type I error rate.")
+  }
+  
   check_tau(tau, eta)
   
   if(is.null(max_n)){
