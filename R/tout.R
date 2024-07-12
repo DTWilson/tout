@@ -32,32 +32,66 @@ print.tout <- function(x, ...){
 #' @importFrom ggplot2 aes
 #' @export
 plot.tout <- function(x, y, ...){
-  # Vector of possible outcomes
-  ys <- 0:x$n
-  # Probabilities of these outcomes under the null and alternative hypotheses
-  probs_null <- stats::dbinom(ys, size = x$n, prob = x$hyps[1])
-  probs_alt <- stats::dbinom(ys, size = x$n, prob = x$hyps[2])
   
-  # Data frame for plotting, flagging all direct and indirect errors
-  df <- data.frame(y = ys,
-                   p_n = probs_null,
-                   tI = c(rep("None", x$thresholds[1] + 1), 
-                          rep("Indirect type I", x$thresholds[2] - x$thresholds[1]), 
-                          rep("Direct type I", x$n - x$thresholds[2])),
-                   p_a = probs_alt,
-                   tII = c(rep("Direct type II", x$thresholds[1] + 1), 
-                           rep("Indirect type II", x$thresholds[2] - x$thresholds[1]), 
-                           rep("None", x$n - x$thresholds[2])))
-  
-  ggplot2::ggplot(df, aes(x = y)) + 
-    ggplot2::geom_bar(aes(y = p_n, fill = tI, colour = tI), stat = "identity", alpha = 0.4) + 
-    ggplot2::geom_bar(aes(y = probs_alt, fill = tII, colour = tII), stat = "identity", alpha = 0.4) +
-    ggplot2::scale_fill_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
-                               name = "Error") +
-    ggplot2::scale_colour_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
+  if(is.null(x$sigma)){
+    # Binary case
+    # Vector of possible outcomes
+    ys <- 0:x$n
+    # Probabilities of these outcomes under the null and alternative hypotheses
+    probs_null <- stats::dbinom(ys, size = x$n, prob = x$hyps[1])
+    probs_alt <- stats::dbinom(ys, size = x$n, prob = x$hyps[2])
+    
+    # Data frame for plotting, flagging all direct and indirect errors
+    df <- data.frame(y = ys,
+                     p_n = probs_null,
+                     tI = c(rep("None", x$thresholds[1] + 1), 
+                            rep("Indirect type I", x$thresholds[2] - x$thresholds[1]), 
+                            rep("Direct type I", x$n - x$thresholds[2])),
+                     p_a = probs_alt,
+                     tII = c(rep("Direct type II", x$thresholds[1] + 1), 
+                             rep("Indirect type II", x$thresholds[2] - x$thresholds[1]), 
+                             rep("None", x$n - x$thresholds[2])))
+    
+    barplot(names=df$y, height=df$p_n,
+            col=ifelse(df$tI == "Direct type I", "darkgreen",
+                       ifelse(df$tI == "Indirect type I", "green", "gray70")))
+    par(new = TRUE)
+    barplot(names=df$y, height=df$p_a,  yaxt = "n",
+            col=ifelse(df$tII == "Direct type II", t_col("red"),
+                       ifelse(df$tII == "Indirect type II", t_col("orange"), t_col("gray70"))))
+    
+    
+    ggplot2::ggplot(df, aes(x = y)) + 
+      ggplot2::geom_bar(aes(y = p_n, fill = tI, colour = tI), stat = "identity", alpha = 0.4) + 
+      ggplot2::geom_bar(aes(y = probs_alt, fill = tII, colour = tII), stat = "identity", alpha = 0.4) +
+      ggplot2::scale_fill_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
                                  name = "Error") +
-    ggplot2::geom_vline(xintercept = x$thresholds[1], linetype = 2) +
-    ggplot2::geom_vline(xintercept = x$thresholds[2], linetype = 2) +
-    ggplot2::ylab("Probability") + ggplot2::xlab("Outcome") + 
-    ggplot2::theme_minimal()
+      ggplot2::scale_colour_manual(values = c("red", "darkgreen", "orange",  "green", "gray70"), 
+                                   name = "Error") +
+      ggplot2::geom_vline(xintercept = x$thresholds[1], linetype = 2) +
+      ggplot2::geom_vline(xintercept = x$thresholds[2], linetype = 2) +
+      ggplot2::ylab("Probability") + ggplot2::xlab("Outcome") + 
+      ggplot2::theme_minimal()
+  } else {
+    # Continuous case
+
+  }
+}
+
+t_col <- function(color, percent = 50, name = NULL) {
+  #      color = color name
+  #    percent = % transparency
+  #       name = an optional name for the color
+  
+  ## Get RGB values for named color
+  rgb.val <- col2rgb(color)
+  
+  ## Make new color using input color as base and alpha set by transparency
+  t.col <- rgb(rgb.val[1], rgb.val[2], rgb.val[3],
+               max = 255,
+               alpha = (100 - percent) * 255 / 100,
+               names = name)
+  
+  ## Save the color
+  invisible(t.col)
 }
