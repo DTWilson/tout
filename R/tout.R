@@ -75,33 +75,48 @@ plot.tout <- function(x, y, ...){
     
   } else {
     # Continuous case
+    ncp <- sqrt(x$n)*(x$hyps[2] - x$hyps[1])/x$sigma
     # Vector of possible outcomes
-    ys <- 0:x$n
+    ys <- seq(-3, ncp + 3, 0.01)
     # Probabilities of these outcomes under the null and alternative hypotheses
-    probs_null <- stats::dbinom(ys, size = x$n, prob = x$hyps[1])
-    probs_alt <- stats::dbinom(ys, size = x$n, prob = x$hyps[2])
+    probs_null <- stats::dnorm(ys, mean = 0, sd = 1)
+    probs_alt <- stats::dnorm(ys, mean = ncp, 1)
     
     # Data frame for plotting, flagging all direct and indirect errors
     df <- data.frame(y = ys,
                      p_n = probs_null,
-                     tI = c(rep("None", x$thresholds[1] + 1), 
-                            rep("Indirect type I", x$thresholds[2] - x$thresholds[1]), 
-                            rep("Direct type I", x$n - x$thresholds[2])),
-                     p_a = probs_alt,
-                     tII = c(rep("Direct type II", x$thresholds[1] + 1), 
-                             rep("Indirect type II", x$thresholds[2] - x$thresholds[1]), 
-                             rep("None", x$n - x$thresholds[2])))
+                     p_a = probs_alt)
+    df$tI <- ifelse(df$y <= x$thresholds[1], "None",
+                    ifelse(df$y >= x$thresholds[2], "Direct type I", "Indirect type I"))
+    df$tII <- ifelse(df$y >= x$thresholds[2], "None",
+                    ifelse(df$y <= x$thresholds[1], "Direct type II", "Indirect type II"))
     
     df <- df[df$p_n > 0.00001 | df$p_a > 0.00001,]
     
-    barplot(names=df$y, height=df$p_n,
-            col=ifelse(df$tI == "Direct type I", t_col("darkgreen"),
-                       ifelse(df$tI == "Indirect type I", t_col("orange"), t_col("gray70", 100))),
-            main = expression(paste("Sampling distributions under null (", rho[0], ") and alternative (", rho[1], ") hypotheses")))
+    plot(df$y, df$p_n, type = "l",  lwd=1, ylab='', xlab='',
+         main = expression(paste("Sampling distributions under null (", rho[0], ") and alternative (", rho[1], ") hypotheses")))
+    
+    polygon(x = c(df$y[df$tI == "Direct type I"], max(df$y), x$thresholds[2], x$thresholds[2]),
+            y = c(df$p_n[df$tI == "Direct type I"], 0, 0, stats::dnorm(x$thresholds[2], mean = 0, sd = 1)),
+            col = t_col("darkgreen"), lty=0)
+    
+    polygon(x = c(df$y[df$tI == "Indirect type I"], x$thresholds[2], x$thresholds[1], x$thresholds[1]),
+            y = c(df$p_n[df$tI == "Indirect type I"], 0, 0, stats::dnorm(x$thresholds[1], mean = 0, sd = 1)),
+            col = t_col("orange"), lty=0)
+
     par(new = TRUE)
-    barplot(names=df$y, height=df$p_a,  yaxt = "n",
-            col=ifelse(df$tII == "Direct type II", t_col("red"),
-                       ifelse(df$tII == "Indirect type II", t_col("orange"), t_col("gray70", 100))))
+    
+    plot(df$y, df$p_a, type = "l", lwd=1, ylab='', xlab='')
+    
+    polygon(x = c(min(df$y), df$y[df$tII == "Direct type II"], x$thresholds[1], x$thresholds[1]),
+            y = c(0, df$p_a[df$tII == "Direct type II"], stats::dnorm(x$thresholds[1], mean = ncp, sd = 1), 0),
+            col = t_col("red"), lty=0)
+    
+    polygon(x = c(x$thresholds[1], df$y[df$tII == "Indirect type II"], x$thresholds[2], x$thresholds[2], x$thresholds[1]),
+            y = c(stats::dnorm(x$thresholds[1], mean = ncp, sd = 1), df$p_a[df$tII == "Indirect type II"], 
+                  stats::dnorm(x$thresholds[2], mean = ncp, sd = 1), 0, 0),
+            col = t_col("orange"), lty=0)
+
     legend("topright", 
            legend = c("Direct type I", "Direct type II", "Pause"), 
            col = c(t_col("darkgreen"), t_col("red"), t_col("orange")),
