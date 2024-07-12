@@ -19,8 +19,7 @@
 #' @param x optional vector of decision thresholds (optimised if left unspecified).
 #' @param sigma standard deviation of outcome. If left unspecified, a binary outcome is assumed.
 #' 
-#' @return A numeric vector containing the sample size, lower decision threshold,
-#' and upper decision threshold; or NULL when no valid designs exist.
+#' @return An object of class `tout`.
 #'
 #' @examples
 #' rho_0 <- 0.5
