@@ -59,18 +59,18 @@ design
 
 Plotting the returned object gives an illustration of the sampling
 distribution of the estimated adherence probability under each
-hypothesis, along side the optimal progression criteria and the
-decisions they will lead to:
+hypothesis, alongside the optimal progression criteria and the decisions
+they will lead to:
 
 ``` r
 plot(design)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-3-1.png" width="70%" />
 
 The same function can be used when we anticipate making some adjustments
 following a pause outcome (see the `tau` argument); when assuming
 particular probabilities of making correct decisions following a pause
 outcome (see the `eta` argument); and when the outcome is continuous
-rather than binary (see the `sigma` argument). Furhter details can be
-found in the vingette and in the associated manuscript.
+rather than binary (see the `sigma` argument). Further details can be
+found in the vignette and in the associated manuscript.

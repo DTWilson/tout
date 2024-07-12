@@ -44,11 +44,11 @@ design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2
 design
 ```
 
-Plotting the returned object gives an illustration of the sampling distribution of the estimated adherence probability under each hypothesis, along side the optimal progression criteria and the decisions they will lead to:
+Plotting the returned object gives an illustration of the sampling distribution of the estimated adherence probability under each hypothesis, alongside the optimal progression criteria and the decisions they will lead to:
 
-```{r}
+```{r, out.width="70%"}
 plot(design)
 ```
 
-The same function can be used when we anticipate making some adjustments following a pause outcome (see the `tau` argument); when assuming particular probabilities of making correct decisions following a pause outcome (see the `eta` argument); and when the outcome is continuous rather than binary (see the `sigma` argument). Furhter details can be found in the vingette and in the associated manuscript.
+The same function can be used when we anticipate making some adjustments following a pause outcome (see the `tau` argument); when assuming particular probabilities of making correct decisions following a pause outcome (see the `eta` argument); and when the outcome is continuous rather than binary (see the `sigma` argument). Further details can be found in the vignette and in the associated manuscript.
 
