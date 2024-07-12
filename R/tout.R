@@ -65,8 +65,8 @@ plot.tout <- function(x, y, ...){
                        ifelse(df$tII == "Indirect type II", t_col("orange"), t_col("gray70", 100))))
     
     graphics::legend("topright", 
-           legend = c("Direct type I", "Direct type II", "Pause"), 
-           col = c(t_col("darkgreen"), t_col("red"), t_col("orange")),
+           legend = c("Stop", "Go", "Pause"), 
+           col = c(t_col("red"), t_col("darkgreen"), t_col("orange")),
            pch = 15,
            bty = "n", 
            pt.cex = 2, 
@@ -120,8 +120,8 @@ plot.tout <- function(x, y, ...){
             col = t_col("orange"), lty=0)
 
     graphics::legend("topright", 
-           legend = c("Direct type I", "Direct type II", "Pause"), 
-           col = c(t_col("darkgreen"), t_col("red"), t_col("orange")),
+           legend = c("Stop", "Go", "Pause"), 
+           col = c(t_col("red"), t_col("darkgreen"), t_col("orange")),
            pch = 15,
            bty = "n", 
            pt.cex = 2, 
