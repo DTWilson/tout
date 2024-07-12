@@ -3,4 +3,3 @@
 S3method(plot,tout)
 S3method(print,tout)
 export(tout_design)
-importFrom(ggplot2,aes)

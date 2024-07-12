@@ -21,7 +21,6 @@
 #' 
 #' @return A numeric vector containing the sample size, lower decision threshold,
 #' and upper decision threshold; or NULL when no valid designs exist.
-#' @export
 #'
 #' @examples
 #' rho_0 <- 0.5
@@ -31,12 +30,17 @@
 #'
 #' tout_design(rho_0, rho_1, alpha_nom, beta_nom)
 #' 
+#' # Allowing for adjustment effects:
+#' 
 #' tau <- c(0.08, 0.12)
 #' 
 #' tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
 #' 
+#' # Designs for continuous outcomes:
+#' 
 #' tout_design(rho_0=0, rho_1=0.4, alpha_nom=0.02, beta_nom=0.1, sigma=1)
 #' 
+#' @export
 tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
   
   if(length(eta) == 1){
