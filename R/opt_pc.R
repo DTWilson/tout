@@ -1,13 +1,11 @@
 # Find optimal progression criteria for a fixed sample size
 
 opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom, 
-                       tau = c(0,0), eta_0 = 0.5, eta_1 = NULL, x = NULL, sigma = NULL){
+                       tau = c(0,0), eta_0 = 0.5, eta_1 = eta_0, x = NULL, sigma = NULL){
   
   tau_min <- tau[1]
   tau_max <- tau[2]
-  
-  if(is.null(eta_1)) eta_1 <- eta_0
-  
+
   design <- new_tout(FALSE, n, NA, NA, NA, NA, NA, alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma)
   
   validate_tout(design)

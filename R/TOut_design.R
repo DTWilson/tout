@@ -10,8 +10,10 @@
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
 #' @param gamma_nom nominal upper constraint on gamma (defaults to 1).
-#' @param eta probability of an incorrect decision under the null or alternative
+#' @param eta_0 probability of an incorrect decision under the null hypothesis
 #' after an intermediate result. Defaults to 0.5.
+#' @param eta_1 probability of an incorrect decision under the alternative hypothesis
+#' after an intermediate result. Defaults to eta_0.
 #' @param tau two element vector denoting lower and upper limits of the 
 #' effect of adjustment.
 #' @param max_n optional upper limit to use in search over sample sizes.
@@ -31,25 +33,19 @@
 #' 
 #' # Allowing for adjustment effects:
 #' 
-#' tau <- c(0.08, 0.12)
+#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = c(0.08, 0.12))
 #' 
-#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
+#' # Allowing for different error probabilities following a pause decision
+#' 
+#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, eta_0 = 0.3)
 #' 
 #' # Designs for continuous outcomes:
 #' 
-#' tout_design(rho_0=0, rho_1=0.4, alpha_nom=0.02, beta_nom=0.1, sigma=1)
+#' tout_design(rho_0 = 0, rho_1 = 0.4, alpha_nom, beta_nom, sigma = 1)
 #' 
 #' @export
-tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
-  
-  if(length(eta) == 1){
-    eta_0 <- eta
-    eta_1 <- eta
-  } else {
-    eta_0 <- eta[1]
-    eta_1 <- eta[2]    
-  } 
-  
+tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta_0 = 0.5, eta_1 = eta_0, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
+
   validate_tout(new_tout(FALSE, n, NA, NA, NA, NA, NA, alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma))
   
   if(is.null(max_n)){
