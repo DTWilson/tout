@@ -28,7 +28,7 @@ tout_design(
 
 \item{beta_nom}{nominal upper constraint on beta.}
 
-\item{gamma_nom}{nominal upper constraint on gamma (defaults to 1).}
+\item{gamma_nom}{nominal upper constraint on gamma. Defaults to 1.}
 
 \item{eta_0}{probability of an incorrect decision under the null hypothesis
 after an intermediate result. Defaults to 0.5.}
@@ -48,7 +48,14 @@ effect of adjustment.}
 \item{sigma}{standard deviation of outcome. If left unspecified, a binary outcome is assumed.}
 }
 \value{
-An object of class \code{tout}.
+An object of class \code{tout}, which is a list containing the following components:
+
+\item{\code{valid}}{boolean indicating if the nominal constraints are met.}
+\item{\code{n}}{sample size.}
+\item{\code{thesholds}}{numeric vector of the two decision thresholds.}
+\item{\code{alpha}}{attained value of operating characteristic alpha.}
+\item{\code{beta}}{attained value of operating characteristic beta.}
+\item{\code{gamma}}{attained value of operating characteristic gamma.}
 }
 \description{
 Given a null and alternative hypothesis, this function finds the

@@ -14,7 +14,13 @@ criteria.
 
 ## Installation
 
-You can install the development version of tout from
+Install the released version of tout from CRAN:
+
+``` r
+install.packages("usethis")
+```
+
+Or you can install the development version of tout from
 [GitHub](https://github.com/) with:
 
 ``` r

@@ -9,7 +9,7 @@
 #' @param rho_1 alternative hypothesis.
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
-#' @param gamma_nom nominal upper constraint on gamma (defaults to 1).
+#' @param gamma_nom nominal upper constraint on gamma. Defaults to 1.
 #' @param eta_0 probability of an incorrect decision under the null hypothesis
 #' after an intermediate result. Defaults to 0.5.
 #' @param eta_1 probability of an incorrect decision under the alternative hypothesis
@@ -21,7 +21,14 @@
 #' @param x optional vector of decision thresholds (optimised if left unspecified).
 #' @param sigma standard deviation of outcome. If left unspecified, a binary outcome is assumed.
 #' 
-#' @return An object of class `tout`.
+#' @return An object of class `tout`, which is a list containing the following components:
+#' 
+#' \item{`valid`}{boolean indicating if the nominal constraints are met.}
+#' \item{`n`}{sample size.}
+#' \item{`thesholds`}{numeric vector of the two decision thresholds.}
+#' \item{`alpha`}{attained value of operating characteristic alpha.} 
+#' \item{`beta`}{attained value of operating characteristic beta.} 
+#' \item{`gamma`}{attained value of operating characteristic gamma.} 
 #'
 #' @examples
 #' rho_0 <- 0.5
