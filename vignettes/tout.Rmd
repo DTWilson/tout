@@ -24,7 +24,7 @@ library(ggplot2)
 
 Early phase clinical trials typically employ a hypothesis test as their primary analysis, with this test having two possible outcomes: we will either **go** to the next stage of evaluation (e.g. a large phase III trial), or we will **stop** development. In a testing framework these decisions correspond with the rejection of the null hypothesis, or the failure to reject it, respectively.
 
-Some authors have suggested that phase II drug trials can extend this approach to allow for a third intermediate outcome, where we **pause** if we observe data that is not so bad as to warrant an immediate stop, nor so good as to warrant an immediate go. A similar approach is very common in pilot trials of complex interventions. In both settings, the mechanics are the same: we compute a test statistic $\hat{\rho}$ and compare it against two thresholds, $x_0$ and $x_1$, such that
+Some authors have suggested that phase II drug trials can extend this approach to allow for a third intermediate outcome, where we **pause** if we observe data that is not so bad as to warrant an immediate stop, nor so good as to warrant an immediate go. A similar approach is very common in pilot trials of complex interventions. In both settings, the mechanics are the same: we compute an estimate $\hat{\rho}$ of the parameter of interest, $\rho$, and compare it against two thresholds, $x_0$ and $x_1$, such that
 
 \begin{equation}\label{eqn:three_outcome}
 \text{Decision} = 
@@ -35,7 +35,7 @@ Some authors have suggested that phase II drug trials can extend this approach t
 \end{cases}
 \end{equation}
 
-The `tout` package lets us determine optimal values for the decision thresholds $x_0$ and $x_1$, together with the sample size $n$. In particular, it will find the smallest possible trial which will satisfy constraints on the following three operating characteristics:
+The `tout` package lets us determine optimal values for the decision thresholds $x_0$ and $x_1$ and the sample size $n$. In particular, it will find the smallest possible trial which will satisfy constraints on the following three operating characteristics:
 
 - $\alpha$, the probability of proceeding to the main trial when $\rho \leq \rho_0$;
 - $\beta$, the probability of not proceeding to the main trial when $\rho \geq \rho_1$$; and
@@ -58,17 +58,17 @@ plot(design)
 
 ## Making decisions following a pause outcome
 
-The testing framework employed in `tout` acknowledges that a final stop/go decision must be made following a pause outcome, and factors this into the calculation of error rates. This requires an assumption about how wee such decisions will be made; in particular, we must estimate the probabilities that we will incorrectly go when $\rho \leq \rho_0$ (denoted $\eta_0$), and that we will incorrectly stop when $\rho \geq \rho_1$ (denoted $eta_1$). By default, `tout_design()` assumes that $\eta_0 = \eta_1 = 0.5$, but we can reduce these if we wish:
+The testing framework employed in `tout` acknowledges that a final stop/go decision must be made following a pause outcome, and factors this into the calculation of error rates. This requires an assumption about how well such decisions will be made; in particular, we must estimate the probabilities that we will incorrectly go when $\rho \leq \rho_0$ (denoted $\eta_0$), and that we will incorrectly stop when $\rho \geq \rho_1$ (denoted $eta_1$). By default, `tout_design()` assumes that $\eta_0 = \eta_1 = 0.5$, but we can change these if we wish:
 
 ```{r}
-design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom  = 0.2, gamma_nom = 0.5, eta = c(0.3, 0.4))
+design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom  = 0.2, gamma_nom = 0.5, eta_0 = 0.3, eta_1 = 0.4)
 
 design
 ```
 
 ## Making adjustments following a pause outcome
 
-Often, we anticipate making some adjustments to the intervention and/or the trial design following a pause outcome, in an attempt to improve the parameter of interest and ensure the subsequent trial is successful. We can incorporate this in `tout`, providing we can specify an interval for the effect of this modification $\tau \in [\tau_{min}, \tau_{max}]$. For example, suppose we anticipate an improvement in adherence in the range of $\tau \in [0.01, 0.05]$. The optimal design is then
+We often anticipate making some adjustments to the intervention and/or the trial design following a pause outcome, in an attempt to improve the parameter of interest and ensure the subsequent trial is successful. We can incorporate this in `tout` if we can specify an interval for the effect of this modification $\tau \in [\tau_{min}, \tau_{max}]$. For example, suppose we anticipate an improvement in adherence in the range of $\tau \in [0.01, 0.05]$. The optimal design is then
 
 ```{r}
 design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom  = 0.2, gamma_nom = 0.5, tau = c(0.01, 0.05))
@@ -76,7 +76,7 @@ design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom  = 0.
 design
 ```
 
-# Designs for continuous endpoints
+## Designs for continuous endpoints
 
 By default, `tout_design()` assumes a binary endpoint. We can find designs for continuous endpoints if we supply the (assumed known) standard deviation of the outcome via the `sigma` argument. For example,
 
