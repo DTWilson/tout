@@ -8,16 +8,14 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
   
   if(is.null(eta_1)) eta_1 <- eta_0
   
-  # Check that the arguments are specified correctly
-  check_arguments(n, rho_0, rho_1, alpha_nom, beta_nom, eta_0, sigma)
+  design <- new_tout(FALSE, n, NA, NA, NA, NA, NA, alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma)
   
-  if(n <= 0) {
-    if(is.null(sigma)) {
-      return(null_design(n, rho_0, rho_1, tau, eta_0, eta_1))
-    } else {
-      return(null_design(n, rho_0, rho_1, tau, eta_0, eta_1, sigma))
-    }
-  }
+  validate_tout(design)
+  
+  # Check that the arguments are specified correctly
+  #check_arguments(n, rho_0, rho_1, alpha_nom, beta_nom, eta_0, sigma)
+  
+  if(n == 0) return(design)
   
   if(!is.null(x)){
     x_0 <- x[1]; x_1 <- x[2]
@@ -33,7 +31,7 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
       # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
       min_x_1 <- min_x_1_bin(n, rho_0, alpha_nom, tau_min, eta_0)
       max_x_1 <- n
-      if(max_x_1 < min_x_1) return(null_design(n, rho_0, rho_1, tau, eta_0, eta_1))
+      if(max_x_1 < min_x_1) return(design)
       
       # Find optimal choice of x_1 - that which gives beta ~ beta_nom
       # Run an exhaustive search over all possible choices of x_1
@@ -53,7 +51,7 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
       # Get minimum x_1 s.t. alpha can be controlled, and default max x_1
       min_x_1 <- min_x_1_cont(alpha_nom)
       max_x_1 <- max_x_1_cont(rho_0, rho_1, sigma, n)
-      if(max_x_1 < min_x_1) return(null_design(n, rho_0, rho_1, tau, eta_0, eta_1, sigma))
+      if(max_x_1 < min_x_1) return(design)
       
       # Find optimal choice of x_1 - this will be the largest value such that
       # beta ~ beta_nom
@@ -76,44 +74,9 @@ opt_pc <- function(n, rho_0, rho_1, alpha_nom, beta_nom,
     valid <- TRUE
   }
   
-  new_tout(valid, n, x_0, x_1, ocs[1], ocs[2], ocs[3], rho_0, rho_1, tau, eta_0, eta_1, sigma)
-}
-
-null_design <- function(n, rho_0, rho_1, tau, eta_0, eta_1, sigma = NULL){
+  design <- new_tout(valid, n, x_0, x_1, ocs[1], ocs[2], ocs[3], alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma)
   
-  new_tout(FALSE, n, NA, NA, NA, NA, NA, rho_0, rho_1, tau, eta_0, eta_1, sigma)
-}
-
-check_arguments <- function(n, rho_0, rho_1, alpha_nom, beta_nom, eta_0, sigma){
-  
-  if(n < 0){
-    stop("Sample size n is negative.")
-  }
-  
-  if(alpha_nom < 0 | alpha_nom > 1){
-    stop("Contraint alpha_nom is outside the [0, 1] interval.")
-  }
-  
-  if(beta_nom < 0 | beta_nom > 1){
-    stop("Contraint beta_nom is outside the [0, 1] interval.")
-  }
-  
-  if(eta_0 < 0 | eta_0 > 1){
-    stop("Probability eta_0 is outside the [0, 1] interval.")
-  }
-  
-  if(!is.null(sigma)){
-    if(sigma < 0){
-      stop("Standard deviation sigma is negative.")
-    }
-  } else {
-    if(rho_0 < 0 | rho_0 > 1){
-      stop("Hypothesis rho_0 is outside the [0, 1] interval.")
-    }
-    if(rho_1 < 0 | rho_1 > 1){
-      stop("Hypothesis rho_1 is outside the [0, 1] interval.")
-    }
-  }
+  return(design)
 }
 
 beta_objective <- function(beta, beta_nom, x_0, x_1){
@@ -121,5 +84,5 @@ beta_objective <- function(beta, beta_nom, x_0, x_1){
   beta2 <- abs(beta - beta_nom)
   # Find largest x_1 while penalising (i) beta constrain violation, 
   # and (ii) cases where x_0 > x_1
-  return(-x_1 + 100000*(beta > beta_nom)*(beta - beta_nom) + (x_0 > x_1)*1000)
+  return(-x_1 + 100000*(beta > beta_nom)*(beta - beta_nom))
 }
