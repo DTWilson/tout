@@ -10,8 +10,10 @@
 #' @param alpha_nom nominal upper constraint on alpha.
 #' @param beta_nom nominal upper constraint on beta.
 #' @param gamma_nom nominal upper constraint on gamma (defaults to 1).
-#' @param eta probability of an incorrect decision under the null or alternative
+#' @param eta_0 probability of an incorrect decision under the null hypothesis
 #' after an intermediate result. Defaults to 0.5.
+#' @param eta_1 probability of an incorrect decision under the alternative hypothesis
+#' after an intermediate result. Defaults to eta_0.
 #' @param tau two element vector denoting lower and upper limits of the 
 #' effect of adjustment.
 #' @param max_n optional upper limit to use in search over sample sizes.
@@ -19,8 +21,7 @@
 #' @param x optional vector of decision thresholds (optimised if left unspecified).
 #' @param sigma standard deviation of outcome. If left unspecified, a binary outcome is assumed.
 #' 
-#' @return A numeric vector containing the sample size, lower decision threshold,
-#' and upper decision threshold; or NULL when no valid designs exist.
+#' @return An object of class `tout`.
 #'
 #' @examples
 #' rho_0 <- 0.5
@@ -32,33 +33,20 @@
 #' 
 #' # Allowing for adjustment effects:
 #' 
-#' tau <- c(0.08, 0.12)
+#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = c(0.08, 0.12))
 #' 
-#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
+#' # Allowing for different error probabilities following a pause decision
+#' 
+#' tout_design(rho_0, rho_1, alpha_nom, beta_nom, eta_0 = 0.3)
 #' 
 #' # Designs for continuous outcomes:
 #' 
-#' tout_design(rho_0=0, rho_1=0.4, alpha_nom=0.02, beta_nom=0.1, sigma=1)
+#' tout_design(rho_0 = 0, rho_1 = 0.4, alpha_nom, beta_nom, sigma = 1)
 #' 
 #' @export
-tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta = 0.5, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
-  
-  if(length(eta) == 1){
-    eta_0 <- eta
-    eta_1 <- eta
-  } else if (length(eta) == 2) {
-    eta_0 <- eta[1]
-    eta_1 <- eta[2]    
-  } else {
-    stop("eta must be a vector of length 1 (implying eta_1 = eta_2) or 2.")
-  }
-  
-  if(eta_0 <= alpha_nom){
-    stop("The probability of an error following in intermediate outcome should
-         not be less than the nominal type I error rate.")
-  }
-  
-  check_tau(tau, eta)
+tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta_0 = 0.5, eta_1 = eta_0, tau = c(0,0), max_n = NULL, n = NULL, x = NULL, sigma = NULL){
+
+  validate_tout(new_tout(FALSE, n, NA, NA, NA, NA, NA, alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma))
   
   if(is.null(max_n)){
     # Get sample size for standard two outcome design taking a normal approx
@@ -95,17 +83,5 @@ tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta =
     return(final_design)
   } else {
     cat("No valid design found. Consider increasing the maximum sample size (max_n).")
-  }
-}
-
-check_tau <- function(tau, eta){
-  if(!is.null(tau)){
-    if(length(tau) != 2){
-      stop("tau must be a two-element vector giving lower and upper bounds
-                              of the adjustment effect.")
-    } else {
-      if(tau[2] < tau[1]) stop("Upper limit of tau must be less than or equal to
-                                lower limit.")
-    }
   }
 }

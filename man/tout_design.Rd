@@ -10,7 +10,8 @@ tout_design(
   alpha_nom,
   beta_nom,
   gamma_nom = 1,
-  eta = 0.5,
+  eta_0 = 0.5,
+  eta_1 = eta_0,
   tau = c(0, 0),
   max_n = NULL,
   n = NULL,
@@ -29,8 +30,11 @@ tout_design(
 
 \item{gamma_nom}{nominal upper constraint on gamma (defaults to 1).}
 
-\item{eta}{probability of an incorrect decision under the null or alternative
+\item{eta_0}{probability of an incorrect decision under the null hypothesis
 after an intermediate result. Defaults to 0.5.}
+
+\item{eta_1}{probability of an incorrect decision under the alternative hypothesis
+after an intermediate result. Defaults to eta_0.}
 
 \item{tau}{two element vector denoting lower and upper limits of the
 effect of adjustment.}
@@ -44,8 +48,7 @@ effect of adjustment.}
 \item{sigma}{standard deviation of outcome. If left unspecified, a binary outcome is assumed.}
 }
 \value{
-A numeric vector containing the sample size, lower decision threshold,
-and upper decision threshold; or NULL when no valid designs exist.
+An object of class \code{tout}.
 }
 \description{
 Given a null and alternative hypothesis, this function finds the
@@ -63,12 +66,14 @@ tout_design(rho_0, rho_1, alpha_nom, beta_nom)
 
 # Allowing for adjustment effects:
 
-tau <- c(0.08, 0.12)
+tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = c(0.08, 0.12))
 
-tout_design(rho_0, rho_1, alpha_nom, beta_nom, tau = tau)
+# Allowing for different error probabilities following a pause decision
+
+tout_design(rho_0, rho_1, alpha_nom, beta_nom, eta_0 = 0.3)
 
 # Designs for continuous outcomes:
 
-tout_design(rho_0=0, rho_1=0.4, alpha_nom=0.02, beta_nom=0.1, sigma=1)
+tout_design(rho_0 = 0, rho_1 = 0.4, alpha_nom, beta_nom, sigma = 1)
 
 }

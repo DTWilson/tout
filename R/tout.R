@@ -1,10 +1,62 @@
-new_tout <- function(valid, n, x_0, x_1, alpha, beta, gamma, rho_0, rho_1, tau, eta_0, eta_1, sigma) {
+new_tout <- function(valid, n, x_0, x_1, alpha, beta, gamma, alpha_nom, beta_nom, rho_0, rho_1, tau, eta_0, eta_1, sigma) {
 
   structure(list(valid = valid, 
             n = n, thresholds = c(x_0, x_1), 
             alpha = alpha, beta = beta, gamma = gamma,
+            alpha_nom = alpha_nom, beta_nom = beta_nom,
             hyps = c(rho_0, rho_1), sigma = sigma, tau = tau, eta = c(eta_0, eta_1)),
             class = "tout")
+}
+
+validate_tout <- function(y) {
+  if(!is.null(y$n)){
+    if(y$n < 0){
+      stop("Sample size n is negative.")
+    }
+  }
+  
+  if(y$alpha_nom < 0 | y$alpha_nom > 1){
+    stop("Contraint alpha_nom is outside the [0, 1] interval.")
+  }
+  
+  if(y$beta_nom < 0 | y$beta_nom > 1){
+    stop("Contraint beta_nom is outside the [0, 1] interval.")
+  }
+  
+  if(y$eta[1] < 0 | y$eta[1] > 1){
+    stop("Probability eta_0 is outside the [0, 1] interval.")
+  }
+  if(y$eta[2] < 0 | y$eta[2] > 1){
+    stop("Probability eta_1 is outside the [0, 1] interval.")
+  }
+  
+  if(!is.null(y$sigma)){
+    if(y$sigma < 0){
+      stop("Standard deviation sigma is negative.")
+    }
+  } else {
+    if(y$hyps[1] < 0 | y$hyps[1] > 1){
+      stop("Hypothesis rho_0 is outside the [0, 1] interval.")
+    }
+    if(y$hyps[2] < 0 | y$hyps[2] > 1){
+      stop("Hypothesis rho_1 is outside the [0, 1] interval.")
+    }
+  }
+  
+
+  if(length(y$tau) != 2){
+    stop("tau must be a two-element vector giving lower and upper bounds
+                              of the adjustment effect.")
+  } else {
+    if(y$tau[2] < y$tau[1]) stop("Upper limit of tau must be less than or equal to
+                             lower limit.")
+  }
+  
+  if(y$eta[1] <= y$alpha_nom){
+    stop("The probability of an error following in intermediate outcome should
+         not be less than the nominal type I error rate.")
+  }
+  
 }
 
 # Don't require a helper as users will not construct tout objects themselves
