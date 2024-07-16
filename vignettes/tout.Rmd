@@ -2,7 +2,7 @@
 title: "Three-outcome clinical trial design (tout)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Research_report}
+  %\VignetteIndexEntry{Three-outcome clinical trial design (tout)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,7 +10,6 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  eval = FALSE,
   comment = "#>"
 )
 ```
