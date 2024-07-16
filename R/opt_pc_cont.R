@@ -3,15 +3,6 @@ min_x_1_cont <- function(alpha_nom){
   # x_0 (i.e. one which will give alpha <= alpha_nom).
   
   stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
-  
-  # For the first element, under rho = rho_0:
-  #min1 <- stats::qnorm(1 - alpha_nom, mean = 0, sd = 1)
-  
-  # Get ncp for the sampling distribution under rho = rho_0 - tau_min
-  #ncp <- sqrt(n)*(- tau_min)/sigma
-  #min2 <- stats::qnorm((1 - 1/eta_0 + alpha_nom/eta_0)/(1 - 1/eta_0), mean = ncp, sd = 1)
-  
-  #return(max(min1, min2))
 }
 
 max_x_1_cont <- function(rho_0, rho_1, sigma, n){
