@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(tout)
-library(ggplot2)
 ```
 
 ## Introduction
@@ -28,16 +27,16 @@ Some authors have suggested that phase II drug trials can extend this approach t
 \begin{equation}\label{eqn:three_outcome}
 \text{Decision} = 
 \begin{cases}
-\text{\emph{go}} & \text{ if } \hat{\rho} \geq x_1 \\
-\text{\emph{pause}} & \text{ if } x_0 < \hat{\rho} < x_1 \\
-\text{\emph{stop}} & \text{ if } \hat{\rho} < x_0. \\
+\text{go} & \text{ if } \hat{\rho} \geq x_1 \\
+\text{pause} & \text{ if } x_0 < \hat{\rho} < x_1 \\
+\text{stop} & \text{ if } \hat{\rho} < x_0. \\
 \end{cases}
 \end{equation}
 
 The `tout` package lets us determine optimal values for the decision thresholds $x_0$ and $x_1$ and the sample size $n$. In particular, it will find the smallest possible trial which will satisfy constraints on the following three operating characteristics:
 
 - $\alpha$, the probability of proceeding to the main trial when $\rho \leq \rho_0$;
-- $\beta$, the probability of not proceeding to the main trial when $\rho \geq \rho_1$$; and
+- $\beta$, the probability of not proceeding to the main trial when $\rho \geq \rho_1$; and
 - $\gamma$, the probability of making an immediate stop or go decision when $\rho = (\rho_0 + \rho_1)/2$.
 
 ## A simple example
@@ -51,7 +50,7 @@ design
 ```
 We can visualise the sampling distribution of the test statistic under each hypothesis, highlighting the decisions which will be made:
 
-```{r}
+```{r, out.width="70%"}
 plot(design)
 ```
 
@@ -84,4 +83,29 @@ design <- tout_design(rho_0 = 2, rho_1 = 5, alpha_nom = 0.05, beta_nom  = 0.2, g
 
 design
 ```
+
 Note that the decision thresholds are given on the scale of the z-statistic.
+
+## Further details
+
+For the case of a binary endpoint, the three error rates are formally defined as:
+
+$$
+\begin{align}
+\alpha =& \max \big[ \Pr(x_1 < \hat{\rho} ~|~ \rho = \rho_0), ~\eta \Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_0 - \tau_{min}) \nonumber \\
+&+ \Pr(x_1 < \hat{\rho} ~|~ \rho = \rho_0 - \tau_{min}) \big] \\
+\beta =& \Pr(\hat{\rho} \leq x_0 ~|~ \rho = \rho_1 - \tau_{max}) + \eta \Pr(x_0 < \hat{\rho} \leq x_1 ~|~ \rho = \rho_1 - \tau_{max}) \\
+\gamma =& \Pr(\hat{\rho} \leq x_0 ~|~ \rho = [\rho_0 + \rho_1 - \tau_{min} - \tau_{max}]/2) \\
+&+ \Pr(x_1 < \hat{\rho} ~|~ \rho = [\rho_0 + \rho_1 - \tau_{min} - \tau_{max}]/2).
+\end{align}
+$$
+
+Derivations of these are given in the associated manuscript. The case of continuous endpoints follows, now considering the test statistic to be a z-statistic $Z$ with distribution
+
+$$
+Z \sim N \left( \frac{\rho - \rho_0}{\sqrt{\sigma^2/n}}, 1 \right).
+$$
+
+Given any $n$ and $x_1$, the $x_0$ corresponding to the nominal constraint on $\alpha$ can be found exactly. The optimal $x_1$ is determined numerically (using an exhaustive search in the binary case and `optimize()` in the continuous case) with respect to the nominal constraint on $\beta$. Finally, a bisection search is used to find the lowest $n$ which satisfies the nominal constraint on $\gamma$.
+
+
