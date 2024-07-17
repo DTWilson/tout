@@ -100,7 +100,7 @@ $$
 \end{align}
 $$
 
-Derivations of these are given in the associated manuscript. The case of continuous endpoints follows, now considering the test statistic to be a z-statistic $Z$ with distribution
+Derivations of these are given in the associated manuscript. The case of continuous endpoints follows, now considering the test statistic to be a z-statistic with distribution
 
 $$
 Z \sim N \left( \frac{\rho - \rho_0}{\sqrt{\sigma^2/n}}, 1 \right).
