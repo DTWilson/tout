@@ -61,6 +61,13 @@ validate_tout <- function(y) {
 
 # Don't require a helper as users will not construct tout objects themselves
 
+#' Print a tout object
+#' 
+#' The default print method for a `tout` object.
+#' 
+#' @param x object of class `tout` as produced by `tout_design()`.
+#' @param ... further arguments passed to or from other methods.
+#' 
 #' @export
 print.tout <- function(x, ...){
   cat("Three-outcome design\n")
@@ -81,8 +88,17 @@ print.tout <- function(x, ...){
   }
 }
 
+#' Plot sampling distributions of three-outcome designs
+#' 
+#' Takes an object of class `tout` and plots sampling distributions under the 
+#' null and alternative hypotheses, highlighting which portions correspond 
+#' to stop, pause, and go outcomes.
+#' 
+#' @param x object of class `tout` as produced by `tout_design().`
+#' @param ... further arguments passed to or from other methods.
+#' 
 #' @export
-plot.tout <- function(x, y, ...){
+plot.tout <- function(x, ...){
   
   if(is.null(x$sigma)){
     # Binary case

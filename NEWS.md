@@ -1,3 +1,3 @@
 # tout (development version)
 
-* Initial CRAN submission.
+* Initial CRAN submission. 

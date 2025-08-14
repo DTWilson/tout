@@ -17,7 +17,7 @@ criteria.
 Install the released version of tout from CRAN:
 
 ``` r
-install.packages("usethis")
+install.packages("tout")
 ```
 
 Or you can install the development version of tout from

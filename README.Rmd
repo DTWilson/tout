@@ -26,7 +26,7 @@ The goal of tout is to optimise the design of **t**hree-**out**come clinical tri
 Install the released version of tout from CRAN:
 
 ``` r
-install.packages("usethis")
+install.packages("tout")
 ```
 
 Or you can install the development version of tout from [GitHub](https://github.com/) with:
