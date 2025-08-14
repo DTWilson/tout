@@ -108,4 +108,8 @@ $$
 
 Given any $n$ and $x_1$, the $x_0$ corresponding to the nominal constraint on $\alpha$ can be found exactly. The optimal $x_1$ is determined numerically (using an exhaustive search in the binary case and `optimize()` in the continuous case) with respect to the nominal constraint on $\beta$. Finally, a bisection search is used to find the lowest $n$ which satisfies the nominal constraint on $\gamma$.
 
+## References
+
+- Wilson, D.T., Hudson, E. & Brown, S. Three-outcome designs for external pilot trials with progression criteria. _BMC Med Res Methodol_ 24, 226 (2024). https://doi.org/10.1186/s12874-024-02351-x
+
 
