@@ -56,7 +56,7 @@ plot(design)
 
 ## Making decisions following a pause outcome
 
-The testing framework employed in `tout` acknowledges that a final stop/go decision must be made following a pause outcome, and factors this into the calculation of error rates. This requires an assumption about how well such decisions will be made; in particular, we must estimate the probabilities that we will incorrectly go when $\rho \leq \rho_0$ (denoted $\eta_0$), and that we will incorrectly stop when $\rho \geq \rho_1$ (denoted $eta_1$). By default, `tout_design()` assumes that $\eta_0 = \eta_1 = 0.5$, but we can change these if we wish:
+The testing framework employed in `tout` acknowledges that a final stop/go decision must be made following a pause outcome, and factors this into the calculation of error rates. This requires an assumption about how well such decisions will be made; in particular, we must estimate the probabilities that we will incorrectly go when $\rho \leq \rho_0$ (denoted $\eta_0$), and that we will incorrectly stop when $\rho \geq \rho_1$ (denoted $\eta_1$). By default, `tout_design()` assumes that $\eta_0 = \eta_1 = 0.5$, but we can change these if we wish:
 
 ```{r}
 design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom  = 0.2, gamma_nom = 0.5, eta_0 = 0.3, eta_1 = 0.4)
