@@ -1,3 +1,3 @@
-# tout (development version)
+# tout 1.0.0
 
-* Initial CRAN submission. 
++ First version released to CRAN
