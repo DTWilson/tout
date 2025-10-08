@@ -4,8 +4,8 @@
 # tout <a href="https://dtwilson.github.io/tout/"><img src="man/figures/logo.png" align="right" height="139" alt="tout website" /></a>
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/DTWilson/tout/graph/badge.svg)](https://app.codecov.io/gh/DTWilson/tout)
 <!-- badges: end -->
 
 The goal of tout is to optimise the design of **t**hree-**out**come
