@@ -9,3 +9,4 @@ Paper/
 ^docs$
 ^pkgdown$
 ^R/sticker\.R$
+^CRAN-SUBMISSION$
