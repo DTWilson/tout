@@ -6,8 +6,9 @@ Authors@R:
     role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0001-7949-8718"))
 Description: Find the optimal decision rules (AKA progression criteria)
     and sample size for clinical trials with three (stop/pause/go)
-    outcomes. Both binary and continuous endpoints can be accomodated,
-    as can cases where an adjustment is planned following a pause outcome.
+    outcomes. Both binary and continuous endpoints can be accommodated,
+    as can cases where an adjustment is planned following a pause outcome. 
+    For more details see Wilson et al. (2024) <doi:10.1186/s12874-024-02351-x>.
 License: MIT + file LICENSE
 Suggests: 
     knitr,
