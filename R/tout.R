@@ -130,7 +130,8 @@ plot.tout <- function(x, ...){
                        ifelse(df$tI == "Indirect type I", t_col("orange"), t_col("gray70", 100))),
             main = expression(paste("Sampling distributions under null (", rho[0], ") and alternative (", rho[1], ") hypotheses")))
     
-    graphics::par(new = TRUE)
+    old_par <- graphics::par(new = TRUE)
+    on.exit(old_par)
     
     graphics::barplot(names=df$y, height=df$p_a,  yaxt = "n",
             col=ifelse(df$tII == "Direct type II", t_col("red"),
@@ -178,7 +179,8 @@ plot.tout <- function(x, ...){
             y = c(df$p_n[df$tI == "Indirect type I"], 0, 0, stats::dnorm(x$thresholds[1], mean = 0, sd = 1)),
             col = t_col("orange"), lty=0)
 
-    graphics::par(new = TRUE)
+    old_par <- graphics::par(new = TRUE)
+    on.exit(old_par)
     
     graphics::plot(df$y, df$p_a, type = "l", lwd=1, ylab='', xlab='')
     
