@@ -89,6 +89,6 @@ tout_design <-  function(rho_0, rho_1, alpha_nom, beta_nom, gamma_nom = 1, eta_0
   if(valid){
     return(final_design)
   } else {
-    cat("No valid design found. Consider increasing the maximum sample size (max_n).")
+    warning("No valid design found. Consider increasing the maximum sample size (max_n).")
   }
 }
