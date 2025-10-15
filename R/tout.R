@@ -68,6 +68,8 @@ validate_tout <- function(y) {
 #' @param x object of class `tout` as produced by `tout_design()`.
 #' @param ... further arguments passed to or from other methods.
 #' 
+#' @return no return value, called for side effects.
+#' 
 #' @export
 print.tout <- function(x, ...){
   cat("Three-outcome design\n")
@@ -96,6 +98,8 @@ print.tout <- function(x, ...){
 #' 
 #' @param x object of class `tout` as produced by `tout_design().`
 #' @param ... further arguments passed to or from other methods.
+#' 
+#' @return no return value, called for side effects.
 #' 
 #' @export
 plot.tout <- function(x, ...){
