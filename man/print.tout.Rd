@@ -11,6 +11,9 @@
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+no return value, called for side effects.
+}
 \description{
 The default print method for a \code{tout} object.
 }

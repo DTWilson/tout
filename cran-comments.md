@@ -1,13 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Added a citation to the associated manuscript in the DESCRIPTION
-
-* Added explicit return values to the plot() and print() functions
-
-* Changed some console printing from cat() to warning()
-
-* Used on.exit() to reset user setting in the print() function
+* Updated the documentation of plot and print methods to explicit about return values
 
 ## R CMD check results
 

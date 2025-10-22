@@ -11,6 +11,9 @@
 
 \item{...}{further arguments passed to or from other methods.}
 }
+\value{
+no return value, called for side effects.
+}
 \description{
 Takes an object of class \code{tout} and plots sampling distributions under the
 null and alternative hypotheses, highlighting which portions correspond
