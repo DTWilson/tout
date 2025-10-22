@@ -1,6 +1,6 @@
 Package: tout
 Title: Optimal Sample Size and Progression Criteria for Three-Outcome Trials
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: 
     person("Duncan", "Wilson", , "d.t.wilson@leeds.ac.uk", 
     role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0001-7949-8718"))
