@@ -1,3 +1,7 @@
+# tout 1.0.3
+
+* Fixed restting of user graphics par
+
 # tout 1.0.2
 
 * Updated documentation
