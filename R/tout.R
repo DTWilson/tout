@@ -131,7 +131,7 @@ plot.tout <- function(x, ...){
             main = expression(paste("Sampling distributions under null (", rho[0], ") and alternative (", rho[1], ") hypotheses")))
     
     old_par <- graphics::par(new = TRUE)
-    on.exit(old_par)
+    on.exit(graphics::par(old_par))
     
     graphics::barplot(names=df$y, height=df$p_a,  yaxt = "n",
             col=ifelse(df$tII == "Direct type II", t_col("red"),
@@ -180,7 +180,7 @@ plot.tout <- function(x, ...){
             col = t_col("orange"), lty=0)
 
     old_par <- graphics::par(new = TRUE)
-    on.exit(old_par)
+    on.exit(graphics::par(old_par))
     
     graphics::plot(df$y, df$p_a, type = "l", lwd=1, ylab='', xlab='')
     

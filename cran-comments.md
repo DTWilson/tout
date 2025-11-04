@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Updated the documentation of plot and print methods to explicit about return values
+* Amended plot and print methods to properly rest back to user settings.
 
 ## R CMD check results
 
