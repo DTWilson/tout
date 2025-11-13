@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/DTWilson/tout/graph/badge.svg)](https://app.codecov.io/gh/DTWilson/tout)
+[![codecov](https://codecov.io/gh/LICTR/tout/graph/badge.svg?token=JFTCAJLU0R)](https://codecov.io/gh/LICTR/tout)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tout)](https://cran.r-project.org/package=tout)
 <!-- badges: end -->
 
