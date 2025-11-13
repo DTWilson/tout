@@ -8,16 +8,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/DTWilson/tout/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/LICTR/tout/blob/main/DESCRIPTION)
 
 Wilson D (2025). *tout: Optimal Sample Size and Progression Criteria for
 Three-Outcome Trials*. R package version 1.0.3.9000,
-<https://github.com/DTWilson/tout>.
+<https://github.com/LICTR/tout>.
 
     @Manual{,
       title = {tout: Optimal Sample Size and Progression Criteria for Three-Outcome Trials},
       author = {Duncan Wilson},
       year = {2025},
       note = {R package version 1.0.3.9000},
-      url = {https://github.com/DTWilson/tout},
+      url = {https://github.com/LICTR/tout},
     }
