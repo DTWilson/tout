@@ -38,6 +38,7 @@ function:
 
 ``` r
 library(tout)
+#> Warning: package 'tout' was built under R version 4.5.2
 
 design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.6)
 

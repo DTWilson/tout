@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   tout: tout.html
-last_built: 2025-11-13T11:55Z
+last_built: 2025-11-13T13:49Z
 urls:
   reference: https://dtwilson.github.io/tout/reference
   article: https://dtwilson.github.io/tout/articles
