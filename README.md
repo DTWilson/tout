@@ -7,7 +7,7 @@
 
 [![R-CMD-check](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LICTR/tout/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/DTWilson/tout/graph/badge.svg)](https://app.codecov.io/gh/LICTR/tout)
+coverage](https://codecov.io/gh/LICTR/tout/graph/badge.svg)](https://app.codecov.io/gh/LICTR/tout)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tout)](https://cran.r-project.org/package=tout)
 <!-- badges: end -->
 
@@ -48,6 +48,7 @@ the smallest possible design satisfying these constraints using the
 
 ``` r
 library(tout)
+#> Warning: package 'tout' was built under R version 4.5.2
 
 design <- tout_design(rho_0 = 0.5, rho_1 = 0.7, alpha_nom = 0.05, beta_nom = 0.2, gamma_nom = 0.6)
 
