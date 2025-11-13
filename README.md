@@ -4,8 +4,10 @@
 # tout <a href="https://dtwilson.github.io/tout/"><img src="man/figures/logo.png" align="right" height="139" alt="tout website" /></a>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/LICTR/tout/graph/badge.svg?token=JFTCAJLU0R)](https://codecov.io/gh/LICTR/tout)
+
+[![R-CMD-check](https://github.com/DTWilson/tout/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/LICTR/tout/actions/workflows/R-CMD-check.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/DTWilson/tout/graph/badge.svg)](https://app.codecov.io/gh/LICTR/tout)
 [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/tout)](https://cran.r-project.org/package=tout)
 <!-- badges: end -->
 
